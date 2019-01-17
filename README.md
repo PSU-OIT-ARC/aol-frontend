@@ -1,5 +1,7 @@
 # aol_frontend
 
+Vue Frontend application for the Atlas of Oregon Lakes project.
+
 ## Project setup
 ```
 yarn install
