@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav-bar></nav-bar>
     <router-view/>
   </div>
 </template>
+
+<script>
+import NavBar from '@/components/NavBar';
+export default {
+  name: 'app',
+  components: {
+    NavBar
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
@@ -16,14 +23,5 @@
   text-align: center;
   color: $font-white;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #71b5f1;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+
 </style>
