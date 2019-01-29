@@ -68,8 +68,8 @@ export default {
 <style lang="scss" scoped>
   /* Is this funny? */
   .map-container {
-    height: 60vh;
-    width: 50vw;
+    height: 99vh;
+    width: 100vw;
     margin: auto;
   }
   .map {
