@@ -2,12 +2,14 @@
   <div id="search-bar">
     <input
       placeholder="Search for lakes" type="text"
-      v-model="query" @input="searchMe"/>
+      v-model="query" @input="searchLakes(query)"/>
     <div id="clear" @click="clear">X</div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'search-bar',
   data () {
@@ -16,12 +18,10 @@ export default {
     }
   },
   methods: {
-    searchMe () {
-      this.$emit('searched', this.query);
-    },
+    ...mapActions(['searchLakes']),
     clear () {
       this.query = null;
-      this.$emit('searched', this.query);
+      this.searchLakes();
     }
   }
 }

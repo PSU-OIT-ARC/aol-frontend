@@ -1,11 +1,12 @@
 <template>
   <div id="search-wrapper">
-    <search-bar @searched="displayResults"></search-bar>
+    <search-bar></search-bar>
     <search-results :results="results" v-if="results"></search-results>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import SearchBar from "@/components/search/SearchBar";
 import SearchResults from "@/components/search/SearchResults";
 
@@ -15,14 +16,14 @@ export default {
     SearchBar,
     SearchResults
   },
-  data () {
-    return {
-      results: null
-    }
+  computed: {
+    ...mapGetters({
+      results: 'searchResults'
+    })
   },
   methods: {
     displayResults (val) {
-      this.results = val;
+      //this.results =;
     }
   }
 }

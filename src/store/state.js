@@ -1,6 +1,7 @@
 const state = {
     user: {},
-    lake: {}
+    lake: {},
+    search_results: null,
 }
 
 export default state;

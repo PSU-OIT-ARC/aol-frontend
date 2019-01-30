@@ -1,7 +1,8 @@
 <template>
   <div id="search-results-wrapper">
-    <p>Results for: {{ results }}</p>
-    <search-result v-for="result in results"></search-result>
+    <p v-if="loading">Loading...</p>
+    <p v-else="loading">Results for: {{ getResults }}</p>
+    <search-result v-for="result in getResults"></search-result>
   </div>
 </template>
 
@@ -13,6 +14,21 @@ export default {
   props: ["results"],
   components: {
     SearchResult
+  },
+  data () {
+    return {
+        loading: false
+    }
+  },
+  computed: {
+    getResults () {
+      if (this.results == 'loading') {
+        this.loading = true;
+        return;
+      }
+      this.loading = false;
+      return this.results;
+    }
   }
 }
 </script>
