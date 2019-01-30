@@ -22,6 +22,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
+        path: '/lake/:slug',
+        name: 'lake',
+        component: () => import(/* webpackChunkName: "lake" */ './views/Lake.vue')
+    },
+    {
         path: '*',
         name: '404',
         component: () => import(/* webpackChunkName: "NotFound" */ './views/NotFound.vue')
