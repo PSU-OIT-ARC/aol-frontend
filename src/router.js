@@ -24,6 +24,9 @@ export default new Router({
     {
         path: '/lake/:slug',
         name: 'lake',
+        props: (route) => ({
+            slug: route.params.slug,
+        }),
         component: () => import(/* webpackChunkName: "lake" */ './views/Lake.vue')
     },
     {

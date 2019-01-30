@@ -7,6 +7,14 @@
       <l-polygon
         :lat-lngs="polygon.latlngs"
         :color="polygon.color">
+        <l-popup>
+          <div>
+            <router-link
+              :to="{ name: 'lake', params: { slug: lake.slug }}">
+              {{ lake.name}}
+            </router-link>
+          </div>
+        </l-popup>
       </l-polygon>
       <l-circle-marker
           :lat-lng="marker.center"
@@ -16,7 +24,12 @@
           :fillOpacity="marker.fillOpacity"
           :fillColor="marker.fillColor">
         <l-popup>
-          <div>I am a popup with cool text</div>
+          <div>
+            <router-link
+              :to="{ name: 'lake', params: { slug: lake.slug }}">
+              {{ lake.name}}
+            </router-link>
+          </div>
         </l-popup>
       </l-circle-marker>
     </l-map>
@@ -52,6 +65,10 @@ export default {
           [45.11552, -121.75110],
         ],
         color: 'yellow'
+      },
+      lake: {
+        name: "Timothy Lake",
+        slug: "timothy"
       }
     }
   },
