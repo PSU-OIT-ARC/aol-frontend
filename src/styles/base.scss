@@ -1,0 +1,13 @@
+body {
+  font-family: "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+  background-color: lightgray;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+body, .about-wrapper {
+  animation: ease-in-on-load 500ms forwards;
+  animation-fill-mode: both;
+}

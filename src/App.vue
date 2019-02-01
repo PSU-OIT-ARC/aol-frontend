@@ -1,3 +1,7 @@
+<style lang="scss">
+  @import './styles/application';
+</style>
+
 <template>
   <div id="app">
     <nav-bar></nav-bar>
@@ -15,11 +19,5 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: $font-white;
-}
 
 </style>

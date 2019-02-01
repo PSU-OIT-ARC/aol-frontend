@@ -1,0 +1,81 @@
+/* VIEWPORT BREAKPOINTS */
+$break-small: 600px;
+$break-med: 900px;
+$break-large: 1200px;
+// $break-xlarge: 1400px; if necessary
+
+@mixin respond-to($media) {
+  @if $media == handheld {
+    @media only screen and (max-width: $break-small) {
+      @content;
+    }
+  } @else if $media == medscreen {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-med - 1) {
+      @content;
+    }
+  } @else if $media == widescreen {
+    @media only screen and (min-width: $break-large + 1) and (max-width: $break-xlarge - 1) {
+      @content;
+    }
+  }
+  //	@else if $media == xwidescreen {
+  //	  @media only screen and (min-width: $break-xlarge) { @content; }
+  //	}
+}
+
+/* COLOR VARS */
+/* move to variables file and import */
+$primary-color: #333;
+$font-white: white;
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+}
+
+//Animations
+
+@keyframes ease-in-on-load {
+  0%   { opacity:0; }
+  85% {opacity:1;}
+  100% { transform:scale(1);}
+}
+
+@keyframes vertical-expand {
+  0%   { max-height: 0px; }
+  100% { max-height: 1000px;}
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out-alert {
+  0%   {
+    opacity: 1;
+    display: block;
+    height: 70px;
+  }
+  70% {
+    opacity: 1;
+    display: block;
+    height: 70px;
+  }
+  80% {
+    opacity: .7;
+    display: block;
+    height: 70px;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+    height: 0;
+  }
+}

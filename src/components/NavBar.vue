@@ -8,7 +8,7 @@
 <style scoped lang='scss'>
 #nav {
   padding: 30px;
-  background-color: grey;
+  background-color: gray;
   text-align: left;
   padding-left: 5vw;
 
