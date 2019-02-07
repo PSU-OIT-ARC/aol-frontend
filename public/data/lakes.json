@@ -1,0 +1,49 @@
+[
+  {
+    "reachcode": 12345867,
+    "name": "Timothy Lake",
+    "slug": "timothy",
+    "shape_length": 322.44,
+    "shape_area" : 122.22,
+    "gnis_id" : "fh24",
+    "gnis_name" : "Tomithy Lake",
+    "area_sq_km" : 2.1,
+    "elevation" : 1222.3,
+    "aol_page" : 52,
+    "body" : "Timothy Lake is a rad lake that has been called 'the coolest lake in Oregon.'",
+    "fishing_zone" : 12,
+    "county_set" : ["Deschutes"],
+    "plants" : [
+      {"name": "Elodea canadensis (common elodea, Canadian waterweed)"},
+      {"name": "Lemna sp. (duckweed)"}
+    ],
+    "has_mussels" : true,
+    "has_plants" : true,
+    "has_docs": true,
+    "has_photos" : true,
+    "is_in_oregon" : true,
+    "geom": []
+  },
+  {
+    "reachcode": 4376595,
+    "name": "Horsehoe Lake",
+    "slug": "horseshoe",
+    "shape_length": 32.44,
+    "shape_area" : 12.22,
+    "gnis_id" : "ttfsdh4",
+    "gnis_name" : "horse-shoe lake 124",
+    "area_sq_km" : 0.3,
+    "elevation" : 821.1,
+    "aol_page" : 22,
+    "body" : "Horseshoe lake, so named due to its distinctive shape, is one of the coolest lakes in Oregon",
+    "fishing_zone" : 32,
+    "county_set" : ["Multnomah"],
+    "plants" : [],
+    "has_mussels" : true,
+    "has_plants" : false,
+    "has_docs": true,
+    "has_photos" : true,
+    "is_in_oregon" : true,
+    "geom": []
+  }
+]

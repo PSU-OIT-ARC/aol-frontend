@@ -1,27 +1,47 @@
 <template>
-  <div id="lake-detail">
-    <h2>I'm {{ lake }} Lake</h2>
+  <div v-if='lake' id="lake-detail">
+    <h2>I'm {{ lake.name }}</h2>
     <div class='back'>
       <router-link :to="{ name: 'home' }">
         Go back
       </router-link>
     </div>
     <p>Here's all my information</p>
-    <p>information</p>
-    <p>information</p>
+    <p>
+      <strong>Area</span>&nbsp;</strong>{{ lake.area_sq_km}}</span>
+    </p>
+    <p>
+      <strong>Reachcode</strong>&nbsp;<span>{{ lake.reachcode}}</span>
+    </p>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
   name: 'lake',
   props: {
-    slug: String
+    slug: String,
   },
   computed: {
-    /* to be replaced with a getter */
-    lake() {
-      return this.slug.toUpperCase();
+    ...mapGetters(['getCurrentLake']),
+    lake () {
+      return this.getCurrentLake;
+    }
+  },
+  methods: {
+    ...mapActions(['fetchLake', 'fetchLakes'])
+  },
+  created () {
+    if (this.getCurrentLake == null) {
+      // get this lake first, then fetch the other lakes.
+      this.fetchLake(this.slug).then(()=>{
+        this.fetchLakes();
+      })
+    }
+    else {
+      console.log("I already have a lake, don't make me fetch them again")
     }
   }
 }

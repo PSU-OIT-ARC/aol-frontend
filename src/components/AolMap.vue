@@ -1,6 +1,6 @@
 <template>
   <div class='map-container'>
-    <l-map class='map' ref='AolMap'
+    <l-map class='map' ref='AolMap' v-if='lake'
       :zoom="zoom"
       :center="center">
       <l-tile-layer :url="baseLayerUrl"></l-tile-layer>
@@ -38,6 +38,8 @@
 
 <script>
 import {LMap, LTileLayer, LCircleMarker, LPopup, LPolygon} from 'vue2-leaflet';
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'aol-map',
   data () {
@@ -66,10 +68,6 @@ export default {
         ],
         color: 'yellow'
       },
-      lake: {
-        name: "Timothy Lake",
-        slug: "timothy"
-      }
     }
   },
   components: {
@@ -78,7 +76,24 @@ export default {
     LCircleMarker,
     LPopup,
     LPolygon
-  }
+  },
+  computed: {
+    ...mapGetters(['getLakes']),
+    lake () {
+      return this.getLakes[0];
+    }
+  },
+  methods: {
+    ...mapActions(['fetchLakes'])
+  },
+  created () {
+    if(!this.getLakes.length) {
+      this.fetchLakes();
+    }
+    else {
+      console.log('I already have the lakes. I will not fetch them again');
+    }
+  },
 }
 </script>
 
