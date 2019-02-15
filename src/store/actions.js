@@ -49,6 +49,10 @@ const actions = {
       });
     },
 
+    setCurrentLake (context, lake) {
+        context.commit("setCurrentLake", lake);
+    },
+
 }
 
 export default actions;
