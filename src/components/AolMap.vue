@@ -1,46 +1,32 @@
 <template>
   <div class='map-container'>
-    <l-map class='map' ref='AolMap' v-if='getLakes'
+    <l-map class='map' ref='AolMap' v-if='lakes'
       :zoom="zoom"
       :center="center">
       <l-tile-layer :url="baseLayerUrl"></l-tile-layer>
-      <span v-for='lake in getLakes'>
-        <l-polygon
+      <span v-for='lake in lakes'>
+        <l-polygon @click="showSideBar(lake)"
           :lat-lngs="lake.geom"
           :color="polygon_color">
-          <l-popup>
-            <div>
-              <router-link
-                :to="{ name: 'lake', params: { slug: lake.slug }}">
-                {{ lake.name}}
-              </router-link>
-            </div>
-          </l-popup>
         </l-polygon>
-        <l-circle-marker
+        <l-circle-marker @click="showSideBar(lake)"
             :lat-lng="lake.center"
             :radius="marker.radius"
             :color="marker.color"
             :fill="marker.fill"
             :fillOpacity="marker.fillOpacity"
             :fillColor="marker.fillColor">
-          <l-popup>
-            <div>
-              <router-link
-                :to="{ name: 'lake', params: { slug: lake.slug }}">
-                {{ lake.name}}
-              </router-link>
-            </div>
-          </l-popup>
         </l-circle-marker>
       </span>
     </l-map>
+    <side-bar v-if="currentLake" :lake="currentLake"></side-bar>
   </div>
 </template>
 
 <script>
 import {LMap, LTileLayer, LCircleMarker, LPopup, LPolygon} from 'vue2-leaflet';
 import { mapActions, mapGetters } from 'vuex';
+import SideBar from '@/components/SideBar';
 
 export default {
   name: 'aol-map',
@@ -51,7 +37,7 @@ export default {
       baseLayerUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       center: [44.72925, -121.8811856],
       marker: {
-        radius: 2,
+        radius: 3,
         color: 'blue',
         fill: true,
         fillColor: 'blue',
@@ -65,16 +51,20 @@ export default {
     LTileLayer,
     LCircleMarker,
     LPopup,
-    LPolygon
+    LPolygon,
+    SideBar
   },
   computed: {
-    ...mapGetters(['getLakes']),
+    ...mapGetters({lakes: 'getLakes', currentLake: 'getCurrentLake'}),
   },
   methods: {
-    ...mapActions(['fetchLakes'])
+    ...mapActions(['fetchLakes', 'setCurrentLake']),
+    showSideBar (lake) {
+      this.setCurrentLake(lake);
+    },
   },
   created () {
-    if(!this.getLakes.length) {
+    if(!this.lakes.length) {
       this.fetchLakes();
     }
     else {
@@ -97,5 +87,6 @@ export default {
     overflow: hidden;
     position: relative;
   }
+
 
 </style>
