@@ -1,6 +1,7 @@
 const state = {
     user: {},
-    lake: {},
+    current_lake: null,
+    lakes: [],
     search_results: null,
 }
 
