@@ -20,7 +20,7 @@ export default {
   methods: {
     ...mapActions(['searchLakes']),
     clear () {
-      this.query = null;
+      this.query = '';
       this.searchLakes();
     }
   }
@@ -29,11 +29,12 @@ export default {
 
 <style scoped lang="scss">
   #search-bar {
-    padding: 0px 60px;
     input {
       padding: 10px;
       min-width: 15vw;
     }
+    z-index: 1000;
+    position: absolute;
   }
   #clear {
     display: inline;

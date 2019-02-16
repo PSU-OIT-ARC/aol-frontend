@@ -1,12 +1,21 @@
 <template>
   <div id="search-result">
-    <p>I am a result</p>
+    <a href="#"
+      @click="setCurrentLake(lake)">
+      {{ lake.name }}
+    </a>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'search-result',
+  props: ['lake'],
+  methods: {
+    ...mapActions(['setCurrentLake']),
+  }
 }
 </script>
 

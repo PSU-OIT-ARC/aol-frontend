@@ -1,8 +1,12 @@
 <template>
   <div id="search-results-wrapper">
     <p v-if="loading">Loading...</p>
-    <p v-else="loading">Results for: {{ getResults }}</p>
-    <search-result v-for="result in getResults"></search-result>
+    <div v-if="!getResults.length && !loading">
+      <p>Sorry, no results</p>
+    </div>
+    <search-result v-else
+      v-for="result in getResults" :lake="result">
+    </search-result>
   </div>
 </template>
 
@@ -17,14 +21,19 @@ export default {
   },
   data () {
     return {
-        loading: false
+        loading: false,
+        hide: false,
     }
   },
   computed: {
     getResults () {
       if (this.results == 'loading') {
         this.loading = true;
-        return;
+        return false;
+      }
+      else if (this.results.length == 0) {
+        this.loading = false;
+        return false;
       }
       this.loading = false;
       return this.results;
@@ -37,7 +46,7 @@ export default {
   #search-results-wrapper {
     background-color: white;
     height: auto;
-    margin: 10px 60px;
+    margin-top: 52px;
     padding: 5px 15px;
     color: #333;
   }

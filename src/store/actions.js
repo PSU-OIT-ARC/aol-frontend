@@ -4,15 +4,15 @@ const BASE_URL = '//localhost:8080';
 const actions = {
 
     searchLakes (context, query) {
-        if (query == null) {
-            context.commit('setSearchResults', null);
+        if (query == null || query == '') {
+            context.commit('setSearchResults', []);
             return;
         }
         context.commit('setSearchResults', LOADING);
-        let results = query;
-        setTimeout(() => {
-            context.commit('setSearchResults', results);
-        }, 400);
+        let results = context.getters.getLakes.filter(lake => {
+            return lake.name.toLowerCase().startsWith(query.toLowerCase());
+        });
+        context.commit('setSearchResults', results);
     },
 
     fetchLakes (context) {

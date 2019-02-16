@@ -1,6 +1,6 @@
 <template>
   <div class='map-container'>
-    <l-map class='map' ref='AolMap' v-if='lakes'
+    <l-map class='map' ref='AolMap' v-if='lakes' @click="latLn($event)"
       :zoom="zoom"
       :center="center">
       <l-tile-layer :url="baseLayerUrl"></l-tile-layer>
@@ -19,7 +19,9 @@
         </l-circle-marker>
       </span>
     </l-map>
-    <side-bar v-if="currentLake" :lake="currentLake"></side-bar>
+    <side-bar
+      v-if="currentLake" :lake="currentLake">
+    </side-bar>
   </div>
 </template>
 
@@ -32,10 +34,10 @@ export default {
   name: 'aol-map',
   data () {
     return {
-      zoom: 9,
+      zoom: 8,
       /* Open Street Maps Base Layer */
       baseLayerUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      center: [44.72925, -121.8811856],
+      center: [44.72925, -121.0411856],
       marker: {
         radius: 3,
         color: 'blue',
@@ -61,7 +63,11 @@ export default {
     ...mapActions(['fetchLakes', 'setCurrentLake']),
     showSideBar (lake) {
       this.setCurrentLake(lake);
+      this.side_bar_active = true;
     },
+    latLn (e) {
+      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
+    }
   },
   created () {
     if(!this.lakes.length) {
@@ -70,6 +76,11 @@ export default {
     else {
       console.log('I already have the lakes. I will not fetch them again');
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.map = this.$refs.AolMap.mapObject;
+    })
   }
 }
 </script>

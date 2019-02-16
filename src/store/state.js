@@ -2,7 +2,7 @@ const state = {
     user: {},
     current_lake: null,
     lakes: [],
-    search_results: null,
+    search_results: [],
 }
 
 export default state;

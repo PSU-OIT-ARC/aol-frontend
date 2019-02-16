@@ -1,5 +1,5 @@
 <template>
-  <div class='sidebar' v-if='lake'>
+  <div class='sidebar' v-if="lake">
     <div class="lake-card">
       <div class="photo">
         <img src="/"></img>
@@ -64,7 +64,7 @@ export default {
     left: 0;
     top: 133px;
     margin: 10px 70px;
-    z-index: 1001;
+    z-index: 1002;
     background: white;
   }
 
