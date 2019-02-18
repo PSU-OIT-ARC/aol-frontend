@@ -5,9 +5,10 @@
     </div>
     <div class="info">
       <div class="title">
-        <a href='#' @click="setCurrentLake(lake)">
+        <router-link :to="href"
+         @click.native="setCurrentLake(lake)">
           {{ lake.name }}
-        </a>
+        </router-link>
       </div>
       <div class="data-icons">
         <div class="icon mussels"></div>
@@ -25,9 +26,15 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'lake-card',
-  props: ['lake'],
+  props: ['lake', 'to_detail'],
   methods: {
     ...mapActions(['setCurrentLake'])
+  },
+  data () {
+    let detail_route =  {'name': 'lake', params: {'slug': this.lake.slug}};
+    return {
+        href: this.to_detail ? detail_route: {}
+      }
   }
 }
 </script>

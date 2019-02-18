@@ -1,7 +1,7 @@
 <template>
   <div class='sidebar' v-if="lake">
     <div class='close' @click="close">x</div>
-    <lake-card :lake='lake'></lake-card>
+    <lake-card :lake='lake' :to_detail="true"></lake-card>
     <div class='lake-content'>
       <div>
         <label>Area </label>
