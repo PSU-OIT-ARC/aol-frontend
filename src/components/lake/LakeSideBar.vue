@@ -50,11 +50,13 @@ export default {
 <style scoped lang='scss'>
 
   .lake-sidebar {
-    margin-top: 50px;
     background: white;
     height: 100%;
     z-index: 1001;
     position: relative;
+    padding-left: 42px;
+    padding-right: 15px;
+    padding-top: 45px;
   }
 
   .lake-content {
@@ -71,7 +73,7 @@ export default {
 
   .close {
     position: absolute;
-    right: 0px;
+    right: 25px;
     padding: 10px;
     cursor: pointer;
     font-size: 1.33em;

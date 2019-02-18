@@ -29,11 +29,10 @@ export default {
 
 <style scoped lang='scss'>
   .sidebar {
-    width: 26vw;
+    width: 30vw;
     height: 85vh;
     position: absolute;
     left: 0;
-    margin: 10px 70px;
-    z-index: 1000;
+    z-index: 1001;
   }
 </style>

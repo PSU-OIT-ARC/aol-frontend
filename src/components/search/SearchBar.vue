@@ -3,7 +3,7 @@
     <input
       placeholder="Search for lakes" type="text"
       v-model="query" @input="search(query)"/>
-    <div id="clear" @click="clear">X</div>
+      <div id="clear" @click="clear">X</div>
   </div>
 </template>
 
@@ -43,8 +43,11 @@ export default {
   #clear {
     display: inline;
     color: #333;
-    padding: 5px;
+    padding: 9px 12px 12px;
     background: white;
+    border: solid 1px #ccc;
+    border-left: none;
+    cursor: pointer;
   }
 
 </style>
