@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import LakeCard from '@/components/LakeCard';
+import LakeCard from '@/components/lake/LakeCard';
 
 export default {
   name: 'search-results',
@@ -46,7 +46,7 @@ export default {
   #search-results-wrapper {
     background-color: white;
     height: auto;
-    margin-top: 52px;
+    margin-top: 50px;
     padding: 5px 15px;
     color: #333;
   }

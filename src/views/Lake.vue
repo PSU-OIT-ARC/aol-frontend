@@ -31,9 +31,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchLake', 'fetchLakes'])
+    ...mapActions(['fetchLake', 'fetchLakes', 'searchLakes'])
   },
   created () {
+    // clear out any search SearchResults
+    this.searchLakes(null);
+
     if (this.getCurrentLake == null) {
       // get this lake first, then fetch the other lakes.
       this.fetchLake(this.slug).then(()=>{

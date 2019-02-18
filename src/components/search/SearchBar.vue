@@ -2,7 +2,7 @@
   <div id="search-bar">
     <input
       placeholder="Search for lakes" type="text"
-      v-model="query" @input="searchLakes(query)"/>
+      v-model="query" @input="search(query)"/>
     <div id="clear" @click="clear">X</div>
   </div>
 </template>
@@ -18,7 +18,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['searchLakes']),
+    ...mapActions(['searchLakes', 'setCurrentLake']),
+    search (query) {
+      this.setCurrentLake();
+      this.searchLakes(query);
+    },
     clear () {
       this.query = '';
       this.searchLakes();

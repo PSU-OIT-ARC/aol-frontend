@@ -19,16 +19,12 @@
         </l-circle-marker>
       </span>
     </l-map>
-    <side-bar
-      v-if="currentLake" :lake="currentLake">
-    </side-bar>
   </div>
 </template>
 
 <script>
 import {LMap, LTileLayer, LCircleMarker, LPopup, LPolygon} from 'vue2-leaflet';
 import { mapActions, mapGetters } from 'vuex';
-import SideBar from '@/components/SideBar';
 
 export default {
   name: 'aol-map',
@@ -54,16 +50,14 @@ export default {
     LCircleMarker,
     LPopup,
     LPolygon,
-    SideBar
   },
   computed: {
-    ...mapGetters({lakes: 'getLakes', currentLake: 'getCurrentLake'}),
+    ...mapGetters({lakes: 'getLakes'}),
   },
   methods: {
     ...mapActions(['fetchLakes', 'setCurrentLake']),
     showSideBar (lake) {
       this.setCurrentLake(lake);
-      this.side_bar_active = true;
     },
     latLn (e) {
       console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);

@@ -1,6 +1,6 @@
 <template>
-  <div id="search-wrapper"
-    v-bind:style="[results ? {'z-index': 1000} : {'z-index': 'auto'}]">
+  <div id="search-wrapper">
+    <!--v-bind:style="[results ? {'z-index': 1000} : {'z-index': 'auto'}]"-->
     <search-bar></search-bar>
     <search-results :results="results" v-if="results.length"></search-results>
   </div>
@@ -27,7 +27,6 @@ export default {
 
 <style scoped lang="scss">
   #search-wrapper {
-    margin: 10px 70px;
     height: 90vh;
     width: 26vw;
     position: absolute;
