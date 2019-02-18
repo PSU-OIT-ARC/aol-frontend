@@ -4,20 +4,20 @@
     <div v-if="!getResults.length && !loading">
       <p>Sorry, no results</p>
     </div>
-    <search-result v-else
-      v-for="result in getResults" :lake="result">
-    </search-result>
+    <lake-card v-else class="search-card"
+      v-for="result in getResults" :lake="result" :key="result.slug">
+    </lake-card>
   </div>
 </template>
 
 <script>
-import SearchResult from "@/components/search/SearchResult";
+import LakeCard from '@/components/LakeCard';
 
 export default {
   name: 'search-results',
   props: ["results"],
   components: {
-    SearchResult
+    LakeCard
   },
   data () {
     return {
@@ -49,5 +49,8 @@ export default {
     margin-top: 52px;
     padding: 5px 15px;
     color: #333;
+  }
+  .search-card {
+    margin: 15px 0px;
   }
 </style>
