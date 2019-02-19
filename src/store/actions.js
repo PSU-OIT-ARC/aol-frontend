@@ -1,7 +1,16 @@
+import { L } from 'vue2-leaflet'
+
+// this should be moved to a central place
 const LOADING = 'loading';
 const BASE_URL = '//localhost:8080';
+const MAP_CENTER = [44.72925, -121.0411856];
+const BOUNDS_PADDING = 0.30;
 
 const actions = {
+
+    setMapObject (context, map) {
+        context.commit('setMap', map);
+    },
 
     searchLakes (context, query) {
         if (query == null || query == '') {
@@ -15,10 +24,16 @@ const actions = {
         context.commit('setSearchResults', results);
     },
 
-    setCenter (context, payload) {
-        const map = payload['map'];
-        const center = payload['center'];
-        map.panTo(center);
+    fitBounds (context, geom) {
+        const map = context.rootState.map_object;
+        if (geom === null) {
+            map.panTo(MAP_CENTER);
+            map.setZoom(8);
+            return;
+        }
+        let bounds = L.latLngBounds(geom);
+        // pad the bounds so we don't zoom into too much
+        map.fitBounds(bounds.pad(BOUNDS_PADDING));
     },
 
     fetchLakes (context) {

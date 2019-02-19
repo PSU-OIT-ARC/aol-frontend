@@ -28,10 +28,10 @@ export default {
   name: 'lake-card',
   props: ['lake', 'to_detail'],
   methods: {
-    ...mapActions(['setCurrentLake', 'setCenter']),
+    ...mapActions(['setCurrentLake', 'fitBounds']),
     activateLake (lake) {
       this.setCurrentLake(lake);
-      this.setCenter({map: this.$root.$map, center: lake.center})
+      this.fitBounds(lake.geom);
     }
   },
   data () {

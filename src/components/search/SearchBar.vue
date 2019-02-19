@@ -18,7 +18,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['searchLakes', 'setCurrentLake']),
+    ...mapActions(['searchLakes', 'setCurrentLake', 'fitBounds']),
     search (query) {
       this.setCurrentLake();
       this.searchLakes(query);
@@ -26,6 +26,7 @@ export default {
     clear () {
       this.query = '';
       this.searchLakes();
+      this.fitBounds(null);
     }
   }
 }

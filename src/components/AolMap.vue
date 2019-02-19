@@ -1,12 +1,13 @@
 <template>
   <div class='map-container'>
-    <l-map class='map' ref='AolMap' v-if='lakes' @click="latLn($event)"
+    <l-map class='map' ref='AolMap' v-if="lakes" @click="getFeature($event)"
       :zoom="zoom"
       :center="center">
       <l-tile-layer :url="baseLayerUrl"></l-tile-layer>
       <span v-for='lake in lakes'>
-        <l-polygon @click="showSideBar(lake)"
+        <l-polygon
           :lat-lngs="lake.geom"
+          :lake="lake"
           :color="polygon_color">
         </l-polygon>
         <l-circle-marker @click="showSideBar(lake)"
@@ -55,15 +56,37 @@ export default {
     ...mapGetters({lakes: 'getLakes'}),
   },
   methods: {
-    ...mapActions(['fetchLakes', 'setCurrentLake', 'setCenter', 'searchLakes']),
+    ...mapActions([
+      'fetchLakes', 'setCurrentLake', 'fitBounds',
+      'searchLakes', 'setMapObject'
+    ]),
+    getFeature (e) {
+      // not sure if there will be a feature layer for lakes geom that
+      // we can query or if we'll due this all on the client (slow)?
+      // this is hacky and not how we would actually do this but
+      // can act as a proxy for querying features by click location
+      let polygon = this.$refs.AolMap.$children.map(child => {
+        let reference = {};
+        reference['component'] = child;
+        reference['layer'] = child.mapObject;
+        return reference;
+      }).find(p => {
+          if ('getBounds' in p.layer) {
+            // check if click is within 10% of bounds of polygon
+            return p.layer.getBounds().pad(0.1).contains(e.latlng)
+          }
+      })
+      if (polygon) {
+        this.showSideBar(polygon.component.$attrs.lake);
+      }
+      // DEBUG
+      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
+    },
     showSideBar (lake) {
       this.setCurrentLake(lake);
       this.searchLakes(null); // reset search
-      this.setCenter({map: this.$root.$map, center: lake.center});
+      this.fitBounds(lake.geom);
     },
-    latLn (e) {
-      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
-    }
   },
   created () {
     if(!this.lakes.length) {
@@ -75,9 +98,8 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      const map = this.$refs.AolMap.mapObject;
-      // this should be in store instead?
-      this.$root.$map = map;
+      this.map = this.$refs.AolMap.mapObject;
+      this.setMapObject(this.map);
     })
   }
 }

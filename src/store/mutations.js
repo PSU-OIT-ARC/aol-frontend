@@ -11,6 +11,10 @@ const mutations = {
     setCurrentLake (state, data) {
       state.current_lake = data;
     },
+
+    setMap (state, map) {
+        state.map_object = map;
+    },
 }
 
 export default mutations;
