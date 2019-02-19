@@ -34,11 +34,11 @@ export default {
       this.fitBounds(lake.geom);
     }
   },
-  data () {
-    let detail_route =  {'name': 'lake', params: {'slug': this.lake.slug}};
-    return {
-        href: this.to_detail ? detail_route: {}
-      }
+  computed: {
+    href () {
+      let detail_route =  {name: 'lake', params: {'slug': this.lake.slug}};
+      return this.to_detail ? detail_route : {};
+    }
   }
 }
 </script>
