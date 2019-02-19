@@ -55,9 +55,11 @@ export default {
     ...mapGetters({lakes: 'getLakes'}),
   },
   methods: {
-    ...mapActions(['fetchLakes', 'setCurrentLake']),
+    ...mapActions(['fetchLakes', 'setCurrentLake', 'setCenter', 'searchLakes']),
     showSideBar (lake) {
       this.setCurrentLake(lake);
+      this.searchLakes(null); // reset search
+      this.setCenter({map: this.$root.$map, center: lake.center});
     },
     latLn (e) {
       console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
@@ -73,7 +75,9 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.map = this.$refs.AolMap.mapObject;
+      const map = this.$refs.AolMap.mapObject;
+      // this should be in store instead?
+      this.$root.$map = map;
     })
   }
 }

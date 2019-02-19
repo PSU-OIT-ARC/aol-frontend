@@ -38,7 +38,7 @@ export default {
       min-width: 15vw;
     }
     z-index: 1000;
-    position: absolute;
+    position: relative;
   }
   #clear {
     display: inline;

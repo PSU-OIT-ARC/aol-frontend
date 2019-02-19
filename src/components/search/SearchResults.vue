@@ -46,7 +46,7 @@ export default {
   #search-results-wrapper {
     background-color: white;
     height: auto;
-    margin-top: 50px;
+    margin-top: 30px;
     padding: 5px 15px;
     color: #333;
   }

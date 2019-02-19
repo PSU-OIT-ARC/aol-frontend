@@ -15,6 +15,12 @@ const actions = {
         context.commit('setSearchResults', results);
     },
 
+    setCenter (context, payload) {
+        const map = payload['map'];
+        const center = payload['center'];
+        map.panTo(center);
+    },
+
     fetchLakes (context) {
       fetch(
         `${BASE_URL}/data/lakes.json`

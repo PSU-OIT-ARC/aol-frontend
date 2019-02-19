@@ -6,7 +6,7 @@
     <div class="info">
       <div class="title">
         <router-link :to="href"
-         @click.native="setCurrentLake(lake)">
+         @click.native="activateLake(lake)">
           {{ lake.name }}
         </router-link>
       </div>
@@ -28,7 +28,11 @@ export default {
   name: 'lake-card',
   props: ['lake', 'to_detail'],
   methods: {
-    ...mapActions(['setCurrentLake'])
+    ...mapActions(['setCurrentLake', 'setCenter']),
+    activateLake (lake) {
+      this.setCurrentLake(lake);
+      this.setCenter({map: this.$root.$map, center: lake.center})
+    }
   },
   data () {
     let detail_route =  {'name': 'lake', params: {'slug': this.lake.slug}};

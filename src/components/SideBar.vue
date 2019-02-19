@@ -33,6 +33,5 @@ export default {
     height: 85vh;
     position: absolute;
     left: 0;
-    z-index: 1001;
   }
 </style>

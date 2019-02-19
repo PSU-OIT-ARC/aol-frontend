@@ -51,7 +51,7 @@ export default {
 
   .lake-sidebar {
     background: white;
-    height: 100%;
+    height: 100vh;
     z-index: 1001;
     position: relative;
     padding-left: 42px;
