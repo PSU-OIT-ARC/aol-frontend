@@ -55,7 +55,7 @@ const actions = {
 
     fetchLake (context, slug) {
       fetch(
-        `${BASE_URL}/data/lake.json`
+        `${BASE_URL}/data/${slug}.json`
       ).then(
         response => {
           return response.json();
