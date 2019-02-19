@@ -3,7 +3,25 @@
     <l-map class='map' ref='AolMap' v-if="lakes" @click="getFeature($event)"
       :zoom="zoom"
       :center="center">
-      <l-tile-layer :url="baseLayerUrl"></l-tile-layer>
+
+      <l-control-layers
+        :collapsed="false"
+        :sort-layers="true">
+      </l-control-layers>
+
+      <l-tile-layer
+        name="Watercolor"
+        :url="otherLayerUrl"
+        layer-type="base"
+        :visible="false">
+      </l-tile-layer>
+      <l-tile-layer
+        name="Open Street Maps"
+        :url="baseLayerUrl"
+        layer-type="base">
+      </l-tile-layer>
+
+
       <span v-for='lake in lakes'>
         <l-polygon
           :lat-lngs="lake.geom"
@@ -19,12 +37,15 @@
             :fillColor="marker.fillColor">
         </l-circle-marker>
       </span>
+
     </l-map>
   </div>
 </template>
 
 <script>
-import {LMap, LTileLayer, LCircleMarker, LPopup, LPolygon} from 'vue2-leaflet';
+import {
+  LMap, LTileLayer, LCircleMarker, LPopup, LPolygon, LControlLayers
+} from 'vue2-leaflet';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -33,7 +54,8 @@ export default {
     return {
       zoom: 8,
       /* Open Street Maps Base Layer */
-      baseLayerUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      baseLayerUrl: 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      otherLayerUrl: 'http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',
       center: [44.72925, -121.0411856],
       marker: {
         radius: 3,
@@ -51,6 +73,7 @@ export default {
     LCircleMarker,
     LPopup,
     LPolygon,
+    LControlLayers
   },
   computed: {
     ...mapGetters({lakes: 'getLakes'}),
