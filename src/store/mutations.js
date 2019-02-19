@@ -1,7 +1,8 @@
 const mutations = {
 
-    setSearchResults (state, results) {
-        state.search_results = results;
+    setSearchResults (state, data) {
+        state.search.query = data.query;
+        state.search.results = data.results;
     },
 
     setLakes (state, data) {

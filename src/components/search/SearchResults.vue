@@ -1,11 +1,11 @@
 <template>
-  <div id="search-results-wrapper">
+  <div id="search-results-wrapper" v-if="query">
     <p v-if="loading">Loading...</p>
-    <div v-if="!getResults.length && !loading">
-      <p>Sorry, no results</p>
+    <div v-else-if="!loading && query && !results.length">
+      <div class="no-results">Sorry, no results</div>
     </div>
-    <lake-card v-else class="search-card"
-      v-for="result in getResults" :lake="result" :key="result.slug">
+    <lake-card v-else
+      v-for="result in results" :lake="result" :key="result.slug">
     </lake-card>
   </div>
 </template>
@@ -15,28 +15,16 @@ import LakeCard from '@/components/lake/LakeCard';
 
 export default {
   name: 'search-results',
-  props: ["results"],
+  props: ["results", "query"],
   components: {
     LakeCard
   },
-  data () {
-    return {
-        loading: false,
-        hide: false,
-    }
-  },
   computed: {
-    getResults () {
+    loading () {
       if (this.results == 'loading') {
-        this.loading = true;
-        return false;
+        return true;
       }
-      else if (this.results.length == 0) {
-        this.loading = false;
-        return false;
-      }
-      this.loading = false;
-      return this.results;
+      return false;
     }
   }
 }
@@ -47,10 +35,12 @@ export default {
     background-color: white;
     height: auto;
     margin-top: 30px;
-    padding: 5px 15px;
+    padding: 15px;
     color: #333;
   }
-  .search-card {
-    margin: 15px 0px;
+
+  .no-results {
+    padding: 15px;
   }
+
 </style>

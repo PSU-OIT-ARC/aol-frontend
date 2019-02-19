@@ -1,7 +1,11 @@
 const getters = {
 
     searchResults (state) {
-        return state.search_results;
+        return state.search.results;
+    },
+
+    searchQuery (state) {
+        return state.search.query;
     },
 
     getLakes (state) {

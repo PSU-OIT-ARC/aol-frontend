@@ -13,15 +13,20 @@ const actions = {
     },
 
     searchLakes (context, query) {
+        let search = {};
+        search.query = query;
+        search.results = LOADING;
+
+        context.commit('setSearchResults', search);
         if (query == null || query == '') {
-            context.commit('setSearchResults', []);
+            search.results = [];
+            context.commit('setSearchResults', search)
             return;
         }
-        context.commit('setSearchResults', LOADING);
-        let results = context.getters.getLakes.filter(lake => {
+        search.results = context.getters.getLakes.filter(lake => {
             return lake.name.toLowerCase().startsWith(query.toLowerCase());
         });
-        context.commit('setSearchResults', results);
+        context.commit('setSearchResults', search)
     },
 
     fitBounds (context, geom) {

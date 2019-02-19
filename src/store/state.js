@@ -2,7 +2,10 @@ const state = {
     user: {},
     current_lake: null,
     lakes: [],
-    search_results: [],
+    search: {
+        results: [],
+        query: null
+    },
     map_object: null
 }
 

@@ -1,8 +1,7 @@
 <template>
-  <div id="search-wrapper"
-    v-bind:style="[results.length ? {'z-index': 1001} : {'z-index': 'auto'}]">
+  <div id="search-wrapper">
     <search-bar></search-bar>
-    <search-results :results="results" v-if="results.length"></search-results>
+    <search-results :results="results" :query="query"></search-results>
   </div>
 </template>
 
@@ -19,7 +18,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      results: 'searchResults'
+      results: 'searchResults',
+      query: 'searchQuery'
     })
   },
 }
@@ -32,5 +32,6 @@ export default {
     position: absolute;
     left: 0;
     overflow-y: scroll;
+    z-index: 1001;
   }
 </style>
