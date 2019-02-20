@@ -31,8 +31,10 @@ export default {
     ...mapActions(['setCurrentLake', 'fitBounds']),
     activateLake (lake) {
       this.setCurrentLake(lake);
-      this.$router.push({name: 'home', query: {'lake': lake.slug}});
       this.fitBounds(lake.geom);
+      if (!this.to_detail) {
+        this.$router.push({name: 'home', query: {'lake': lake.slug}});
+      }
     }
   },
   computed: {
