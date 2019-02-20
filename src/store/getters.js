@@ -8,6 +8,15 @@ const getters = {
         return state.search.query;
     },
 
+    getLakeBySlug (state) {
+        return (slug) => {
+            return state.lakes.find((lake) => {
+
+                return lake.slug === slug
+            });
+        }
+    },
+
     getLakes (state) {
       return state.lakes;
     },

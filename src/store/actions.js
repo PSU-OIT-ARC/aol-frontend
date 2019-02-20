@@ -42,19 +42,23 @@ const actions = {
     },
 
     fetchLakes (context) {
-      fetch(
-        `${BASE_URL}/data/lakes.json`
-      ).then(
-        response => {
-          return response.json();
-        }
-      ).then(
-        data => {
-          context.commit("setLakes", data)
-        }
-      ).catch(
-        e => {
-          console.log(e.message);
+        return new Promise((resolve, reject) => {
+          fetch(
+            `${BASE_URL}/data/lakes.json`
+          ).then(
+            response => {
+              return response.json();
+            }
+          ).then(
+            data => {
+              context.commit("setLakes", data);
+              resolve();
+            }
+          ).catch(
+              e => {
+                console.log(e.message);
+                reject();
+          });
       });
     },
 

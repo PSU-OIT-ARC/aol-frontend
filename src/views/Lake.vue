@@ -3,7 +3,7 @@
     <div class="gutter"></div>
     <div class="lake-detail">
       <div class='back'>
-        <router-link :to="{ name: 'home' }">
+        <router-link :to="{ name: 'home', query: back }">
           Go back
         </router-link>
       </div>
@@ -58,6 +58,12 @@ export default {
     ...mapGetters(['getCurrentLake']),
     lake () {
       return this.getCurrentLake;
+    },
+    back () {
+      if (this.lake) {
+        return {lake: this.lake.slug };
+      }
+      return {};
     }
   },
   methods: {

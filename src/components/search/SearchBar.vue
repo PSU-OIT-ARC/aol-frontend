@@ -26,6 +26,7 @@ export default {
     clear () {
       this.query = '';
       this.searchLakes();
+      this.$router.push({name: 'home'});
       this.fitBounds(null);
     }
   }

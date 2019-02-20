@@ -76,7 +76,7 @@ export default {
     LControlLayers
   },
   computed: {
-    ...mapGetters({lakes: 'getLakes'}),
+    ...mapGetters({lakes: 'getLakes', getLakeBySlug: 'getLakeBySlug'}),
   },
   methods: {
     ...mapActions([
@@ -109,11 +109,19 @@ export default {
       this.setCurrentLake(lake);
       this.searchLakes(null); // reset search
       this.fitBounds(lake.geom);
+      this.$router.push({name: 'home', query: {'lake': lake.slug}})
     },
   },
   created () {
     if(!this.lakes.length) {
-      this.fetchLakes();
+      this.fetchLakes().then(()=> {
+        let slug = this.$route.query['lake'];
+        if (slug) {
+          let lake = this.getLakeBySlug(slug);
+          this.setCurrentLake(lake);
+          this.fitBounds(lake.geom);
+        }
+      });
     }
     else {
       console.log('I already have the lakes. I will not fetch them again');
