@@ -106,10 +106,10 @@ export default {
       console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
     },
     showSideBar (lake) {
+      this.$router.push({name: 'home', query: {'lake': lake.slug}})
       this.setCurrentLake(lake);
       this.searchLakes(null); // reset search
       this.fitBounds(lake.geom);
-      this.$router.push({name: 'home', query: {'lake': lake.slug}})
     },
   },
   created () {
@@ -138,14 +138,10 @@ export default {
 
 <style lang="scss" scoped>
   /* Is this funny? */
+
   .map-container {
-    height: 99vh;
-    width: 100vw;
-    margin: auto;
   }
   .map {
-    width: 100%;
-    height: 100%;
     overflow: hidden;
     position: relative;
   }

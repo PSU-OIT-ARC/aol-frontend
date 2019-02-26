@@ -27,7 +27,8 @@ export default {
 
 <style scoped lang="scss">
   #search-wrapper {
-    width: 85%;
+    max-width: 800px;
+    min-width: 500px;
     margin: 12px 70px;
     position: absolute;
     left: 0;
