@@ -112,7 +112,11 @@ export default {
       this.fitBounds(lake.geom);
     },
   },
-  created () {
+  mounted () {
+    this.$nextTick(() => {
+      this.map = this.$refs.AolMap.mapObject;
+      this.setMapObject(this.map);
+    });
     if(!this.lakes.length) {
       this.fetchLakes().then(()=> {
         let slug = this.$route.query['lake'];
@@ -126,12 +130,6 @@ export default {
     else {
       console.log('I already have the lakes. I will not fetch them again');
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.map = this.$refs.AolMap.mapObject;
-      this.setMapObject(this.map);
-    })
   }
 }
 </script>
