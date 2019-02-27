@@ -32,8 +32,7 @@ const actions = {
     fitBounds (context, geom) {
         const map = context.rootState.map_object;
         if (geom === null) {
-            map.panTo(MAP_CENTER);
-            map.setZoom(8);
+            map.setView(MAP_CENTER, 8);
             return;
         }
         let bounds = L.latLngBounds(geom);
