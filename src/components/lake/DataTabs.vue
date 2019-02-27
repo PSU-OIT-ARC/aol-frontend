@@ -46,11 +46,13 @@ export default {
     // select correct tab based on hash at load time
     let hash = this.$route.hash;
     hash = hash.replace(/#/g,'');
-    let component = Object.entries(this.$options.components).find(
-      i => i[1].name == hash
-    )
-    this.currentSection = component[0];
-    this.currentSectionTitle = component[1].title
+    if (hash) {
+      let component = Object.entries(this.$options.components).find(
+        i => i[1].name == hash
+      )
+      this.currentSection = component[0];
+      this.currentSectionTitle = component[1].title
+    }
   }
 }
 </script>
