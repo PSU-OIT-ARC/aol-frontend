@@ -22,6 +22,16 @@ export default {
   },
   computed: {
     ...mapGetters(['getCurrentLake']),
+  },
+  created () {
+    // set query param to current lake when 'returning' home?
+    // alternatively we could clear current_lake
+    // when navigating to other pages
+    let lake = this.getCurrentLake;
+    let hash = this.$route.hash;
+    if (lake && !hash) {
+      this.$router.push({name: 'home', query: {'lake': lake.slug}})
+    }
   }
 }
 </script>
