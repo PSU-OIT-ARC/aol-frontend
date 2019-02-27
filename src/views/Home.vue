@@ -38,7 +38,10 @@ export default {
 
   .home.sidebar_active {
     grid-template-columns: minmax(400px, 1000px) auto;
+  }
 
+  .sidebar-wrapper {
+    background: white;
   }
 
 </style>
