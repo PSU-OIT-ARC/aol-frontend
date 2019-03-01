@@ -1,14 +1,13 @@
 <template>
   <div class='data-sections'>
     <div class='tabs'>
-      <a
-        v-for="section in sections" :href="'#'+section.name.toLowerCase()" :key="section.title"
-        v-bind:class="[section.title == currentSectionTitle ? 'active' : '', section.name]"
-        @click="setCurrentSection(section.title)">
-        <span>{{ section.title }}</span>
-      </a>
+      <tab
+        v-for="section in sections" :key="section.name"
+        :section="section" :lake="lake"
+        :active="currentSectionTitle === section.title">
+      </tab>
     </div>
-    <keep-alive>
+    <keep-alive v-if='with_sections'>
       <component
         class='data-section' :lake='lake' v-bind:is="currentSection">
       </component>
@@ -18,13 +17,15 @@
 
 <script>
 import { PlantData, MusselData, TextSection } from '@/components/lake/metadata';
+import Tab from '@/components/lake/Tab';
 
 export default {
-  props: ['lake'],
+  props: ['lake', 'with_sections'],
   components: {
     TextSection,
     PlantData,
     MusselData,
+    Tab
   },
   data () {
     return {
@@ -34,75 +35,32 @@ export default {
     }
   },
   methods: {
-    setCurrentSection (section_title) {
-      let component = Object.entries(this.$options.components).find(
-        i => i[1].title == section_title
-      )
-      this.currentSection = component[0];
-      this.currentSectionTitle = component[1].title
+    setCurrentSection () {
+      let hash = this.$route.hash;
+      hash = hash.replace(/#/g,'');
+      if (hash) {
+        let component = Object.entries(this.$options.components).find(
+          i => i[1].name == hash
+        )
+        this.currentSection = component[0];
+        this.currentSectionTitle = component[1].title
+      }
     }
   },
   created () {
-    // select correct tab based on hash at load time
-    let hash = this.$route.hash;
-    hash = hash.replace(/#/g,'');
-    if (hash) {
-      let component = Object.entries(this.$options.components).find(
-        i => i[1].name == hash
-      )
-      this.currentSection = component[0];
-      this.currentSectionTitle = component[1].title
-    }
-  }
+    this.setCurrentSection ();
+  },
+  watch: {
+      '$route.hash': function () {
+        this.setCurrentSection();
+      }
+  },
 }
 </script>
 
 <style scoped lang='scss'>
   .tabs {
     margin-top: 80px;
-  }
-
-  a {
-    margin-right: 30px;
-    padding-left: 3px;
-    position: relative;
-
-    &.active {
-      font-weight: bold;
-    }
-
-    &.plants::before {
-      content: '\01F33F';
-    }
-
-    &.mussels::before {
-      content: '\1F41A';
-    }
-
-    &.atlas_text {
-      margin-right: 18px;
-    }
-
-    &.atlas_text::before {
-      content: '\1F4D6';
-      padding: 10px 45px;
-    }
-
-  }
-
-  a.active::before {
-    border-top: 5px solid green;
-    padding-bottom: 10px;
-    top: -71px;
-  }
-
-  a::before {
-    font-size: 50px;
-    position: absolute;
-    top: -68px;
-    left: -5px;
-    border: 1px solid grey;
-    padding: 10px;
   }
 
   .data-section {

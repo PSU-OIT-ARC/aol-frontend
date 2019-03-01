@@ -7,7 +7,7 @@
         <label>Area </label>
         <div>{{ lake.area_sq_km }}sq. km.</div>
       </div>
-      <data-tabs :lake='lake'></data-tabs>
+      <data-tabs :lake='lake' :with_sections='false'></data-tabs>
     </div>
   </div>
 </template>

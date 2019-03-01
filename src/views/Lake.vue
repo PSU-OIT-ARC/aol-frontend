@@ -10,15 +10,7 @@
       <lake-card class="card" :lake="lake"></lake-card>
       <div class="lake-detail--body">
         <div class='col-1'>
-          <p>{{ lake.body }}...</p>
-          <p>
-            <strong>Plants data</strong>
-            <p>...</p>
-          </p>
-          <p>
-            <strong>Mussels data</strong>
-            <p>...</p>
-          </p>
+          <data-tabs :lake='lake' :with_sections='true'></data-tabs>
         </div>
         <div class="col-2">
           <p class="map-image--wrapper">
@@ -32,7 +24,6 @@
             <ul>
               <li><a href="#">Basin Statistics (pdf)</a></li>
               <li><a href="#">Atlas of Oregon Lakes Original book page (pdf)</a></li>
-
             </ul>
           </p>
         </div>
@@ -45,6 +36,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import LakeCard from '@/components/lake/LakeCard';
+import DataTabs from '@/components/lake/DataTabs';
 
 export default {
   name: 'lake',
@@ -52,7 +44,8 @@ export default {
     slug: String,
   },
   components: {
-    LakeCard
+    LakeCard,
+    DataTabs
   },
   computed: {
     ...mapGetters(['getCurrentLake']),
