@@ -47,7 +47,7 @@ export default {
   }
 
   .home.sidebar_active {
-    grid-template-columns: minmax(400px, 1000px) auto;
+    grid-template-columns: minmax(400px, 35%) auto;
   }
 
   .sidebar-wrapper {

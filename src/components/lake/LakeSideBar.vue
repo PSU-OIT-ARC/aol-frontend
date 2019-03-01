@@ -39,10 +39,13 @@ export default {
   .lake-sidebar {
     background: white;
     z-index: 1001;
-    position: relative;
+    position: absolute;
     padding-left: 42px;
     padding-right: 15px;
     padding-top: 45px;
+    min-width: 420px;
+    width: 35%;
+    height: 85vh;
   }
 
   .lake-content {
