@@ -103,7 +103,7 @@ export default {
         this.showSideBar(polygon.component.$attrs.lake);
       }
       // DEBUG
-      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
+      console.log("Clicked: Lat, Lon: " + e.latlng.lat + ", " + e.latlng.lng);
     },
     showSideBar (lake) {
       this.$router.push({name: 'home', query: {'lake': lake.slug}})
@@ -111,25 +111,29 @@ export default {
       this.searchLakes(null); // reset search
       this.fitBounds(lake.geom);
     },
+    selectLakeFromUrl () {
+      let slug = this.$route.query['lake'];
+      if (slug) {
+        let lake = this.getLakeBySlug(slug);
+        this.setCurrentLake(lake);
+        this.fitBounds(lake.geom);
+      }
+    }
   },
   mounted () {
     this.$nextTick(() => {
       this.map = this.$refs.AolMap.mapObject;
       this.setMapObject(this.map);
+      if(!this.lakes.length) {
+        this.fetchLakes().then(()=> {
+          this.selectLakeFromUrl();
+        });
+      }
+      else {
+        console.log('I already have the lakes. I will not fetch them again');
+        this.selectLakeFromUrl();
+      }
     });
-    if(!this.lakes.length) {
-      this.fetchLakes().then(()=> {
-        let slug = this.$route.query['lake'];
-        if (slug) {
-          let lake = this.getLakeBySlug(slug);
-          this.setCurrentLake(lake);
-          this.fitBounds(lake.geom);
-        }
-      });
-    }
-    else {
-      console.log('I already have the lakes. I will not fetch them again');
-    }
   }
 }
 </script>

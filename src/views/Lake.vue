@@ -73,7 +73,7 @@ export default {
       })
     }
     else {
-      console.log("I already have a lake, don't make me fetch them again")
+      console.log("I already have a lake, don't make me fetch it again")
     }
   }
 }
