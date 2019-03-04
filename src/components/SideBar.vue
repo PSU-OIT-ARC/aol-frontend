@@ -29,9 +29,7 @@ export default {
 
 <style scoped lang='scss'>
   .sidebar {
-    width: 30vw;
-    height: 85vh;
-    position: absolute;
-    left: 0;
+    overflow-y: scroll;
   }
+
 </style>

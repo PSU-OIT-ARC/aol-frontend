@@ -35,6 +35,9 @@ export default {
 
 <style scoped lang="scss">
   #search-bar {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+
     input {
       padding: 10px;
       min-width: 15vw;

@@ -7,23 +7,7 @@
         <label>Area </label>
         <div>{{ lake.area_sq_km }}sq. km.</div>
       </div>
-      <div class='atlas-text'>
-        <p>
-          {{ lake.body }}...
-          <router-link
-            :to="{ name: 'lake', params: {slug: lake.slug } }">
-            <span class='read-more'>READ MORE</span>
-          </router-link>
-        </p>
-      </div>
-      <div class='metadata section'>
-        <div>Plants data</div>
-        <div>...</div>
-      </div>
-      <div class='metadata section'>
-        <div>Mussels data</div>
-        <div>...</div>
-      </div>
+      <data-tabs :lake='lake' :with_sections='false'></data-tabs>
     </div>
   </div>
 </template>
@@ -31,18 +15,21 @@
 <script>
 import { mapActions } from 'vuex';
 import LakeCard from '@/components/lake/LakeCard';
+import DataTabs from '@/components/lake/DataTabs';
 
 export default {
   name: 'lake-sidebar',
   props: ['lake'],
   methods: {
-    ...mapActions(['setCurrentLake']),
+    ...mapActions(['setCurrentLake', 'fitBounds']),
     close () {
       this.setCurrentLake();
+      this.fitBounds(this.lake.geom);
     }
   },
   components: {
-    LakeCard
+    LakeCard,
+    DataTabs
   }
 }
 </script>
@@ -51,20 +38,18 @@ export default {
 
   .lake-sidebar {
     background: white;
-    height: 100vh;
     z-index: 1001;
-    position: relative;
+    position: absolute;
     padding-left: 42px;
     padding-right: 15px;
     padding-top: 45px;
+    min-width: 420px;
+    width: 35%;
+    height: 85vh;
   }
 
   .lake-content {
     padding: 15px;
-  }
-
-  .atlas-text {
-    font-size: 0.75em;
   }
 
   .section {
@@ -77,6 +62,10 @@ export default {
     padding: 10px;
     cursor: pointer;
     font-size: 1.33em;
+  }
+
+  table {
+    width: 100%;
   }
 
 </style>
