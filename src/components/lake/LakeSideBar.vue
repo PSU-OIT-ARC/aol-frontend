@@ -24,7 +24,7 @@ export default {
     ...mapActions(['setCurrentLake', 'fitBounds']),
     close () {
       this.setCurrentLake();
-      this.fitBounds(this.lake.geom);
+      this.fitBounds({geom: this.lake.geom, buffer: 300});
     }
   },
   components: {
@@ -45,7 +45,7 @@ export default {
     padding-top: 45px;
     min-width: 420px;
     width: 35%;
-    height: 85vh;
+    height: 88vh;
   }
 
   .lake-content {

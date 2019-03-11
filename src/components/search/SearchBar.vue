@@ -27,7 +27,7 @@ export default {
       this.query = '';
       this.searchLakes();
       this.$router.push({name: 'home'});
-      this.fitBounds(null);
+      this.fitBounds({geom: null, buffer: undefined});
     }
   }
 }
