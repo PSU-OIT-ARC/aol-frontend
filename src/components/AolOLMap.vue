@@ -55,9 +55,6 @@ export default {
       zoom: 8,
       baseLayerUrl: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
       VectorPubUrl: "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/Vector_Publands/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=WlTafmvrujX0RXuKfJg3EP-pTf3RVpG-cy_sRsrA1u1l3807JLmogJVzQMvuS0Gw5F3iqyxZ1nYwG-sg6CSZYfsfCHEVjxs8ghQqHIgaw3Qjv_T93x-O0Y4thLto5iacqfN-TfLWYBlBnwXr60RGjan7-Jm3nhcwAlh69L8DDNJlLJU-_WkbVjUtjlE13O1QOHuTfZVizdmBkUjDTfx4q0xPkzNoJZUcpPr0-vhTH0GznGQH64ytxag82P89G0tfbyaVu7gwkUZSqVA7V9TaPMQSCSR-YrDXqyMwjxAD7zg",
-      controls: {
-        zoom: true,
-      },
       marker: {
         radius: 3,
         color: 'blue',
@@ -147,7 +144,7 @@ export default {
         },
         {
           layerFilter: (layer_candidate) => {
-            return layer_candidate.getProperties().id != 'publands';
+            return layer_candidate.getProperties().id  != 'publand';
         }
       });
     },
