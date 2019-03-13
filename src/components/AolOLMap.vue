@@ -12,14 +12,14 @@
         </vl-source-xyz>
       </vl-layer-tile>
 
-      <vl-layer-vector-tile  id="publand" ref="publand">
+      <vl-layer-vector-tile  id="publand" ref="publand" :declutter="true">
         <vl-source-vector-tile
           :url="VectorPubUrl">
         </vl-source-vector-tile>
       </vl-layer-vector-tile>
 
-      <vl-layer-vector id='boundaries' ref="lakes_layer" >
-        <vl-source-vector :features="lake_polygons">
+      <vl-layer-vector id='boundaries' ref="lakes_layer">
+        <vl-source-vector :features="lake_polygons" >
           <vl-style-box>
             <vl-style-stroke :color="polygon.stroke" :width="polygon.width"/>
             <vl-style-fill :color="polygon.fill"/>
@@ -45,7 +45,7 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex';
-import stylefunction from 'ol-mapbox-style/stylefunction';
+import {applyStyle} from 'ol-mapbox-style';
 import * as proj from 'ol/proj';
 
 export default {
@@ -172,17 +172,24 @@ export default {
 
     // get vector tile layer styles from arcgis online
     this.$refs.publand.$createPromise.then(() => {
-        let style_url = "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/Vector_Publands/VectorTileServer/resources/styles/root.json?f=json&token=X_yghsylypn97rtHbkDQs2jSvCCfJFjy9c21yubfP5lsiH_i09SBK0N3sjots2YJAyLgyHqhYp1OVPd1X30Bu0PRVPEapAF37bl88xVHK9Yya8Vw_10h0AGKVpXpdZwpSBLj3A5zu6ZGfoB6vJyE13zSCqOPxVYzBIpSoc9HHQiUNwlhAs0swj6FlB4oh-uMHe-1F2ELK-ifG-V0veMnwhuNPn-YNA5W-uOkbjH7SffbwT_rEq1xTqvcBrwP2cpxJtSIWkPfYgIZnP8tdkngqqt-ueTydQcnSctPfD1lLV8.";
+      let base_style_url = 'https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/Vector_Publands/VectorTileServer/resources';
+
+      let sprite_path = 'sprites/sprite';
+      let style_path = "styles/root.json";
+      let token = 'X_yghsylypn97rtHbkDQs2jSvCCfJFjy9c21yubfP5lsiH_i09SBK0N3sjots2YJAyLgyHqhYp1OVPd1X30Bu0PRVPEapAF37bl88xVHK9Yya8Vw_10h0AGKVpXpdZwpSBLj3A5zu6ZGfoB6vJyE13zSCqOPxVYzBIpSoc9HHQiUNwlhAs0swj6FlB4oh-uMHe-1F2ELK-ifG-V0veMnwhuNPn-YNA5W-uOkbjH7SffbwT_rEq1xTqvcBrwP2cpxJtSIWkPfYgIZnP8tdkngqqt-ueTydQcnSctPfD1lLV8.';
+
+      let style_url = `${base_style_url}/${style_path}?f=json&token=${token}`;
+      let sprite_url = `${base_style_url}/${sprite_path}?f=json&token=${token}`;
 
         fetch(style_url).then((response)=>{
           return response.json()
         }).then((style) => {
           // HACK: zoom seems to be off-by-one?
           style.layers.map((layer) => {
-            layer.minzoom -= 1;
-            layer.maxzoom += 1;
+            layer.minzoom -= 0.6;
+            layer.maxzoom += 0.6;
           });
-          stylefunction(this.$refs.publand.$olObject, style, 'esri');
+          applyStyle(this.$refs.publand.$olObject, style, 'esri', sprite_url);
         });
     });
 
