@@ -1,6 +1,5 @@
 body {
-  font-family: "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
-  background-color: lightgray;
+  font-family: "Lato-Regular", serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -10,6 +9,14 @@ body {
 body, .about-wrapper {
   animation: ease-in-on-load 500ms forwards;
   animation-fill-mode: both;
+}
+
+h1 {
+  font-family: "Gentium", sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 
 

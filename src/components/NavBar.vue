@@ -1,11 +1,19 @@
 <template>
   <div id='nav'>
-    <router-link
+
+    <h1><router-link
       @click.native="setCurrentLake()"
       to="/">
-      Home
-    </router-link>
-    <router-link to="/about">About</router-link>
+      Atlas
+    </router-link></h1>
+
+    <div class="nav-links">
+      <router-link to="/aquatic-invasives">Aquatic Invasives</router-link>
+      <router-link to="/about">About</router-link>
+    </div>
+
+
+
   </div>
 </template>
 
@@ -21,20 +29,35 @@ export default {
 
 <style scoped lang='scss'>
 #nav {
-  padding: 30px;
-  background-color: gray;
+  padding: 3px 0px;
+  background-color: black;
   text-align: left;
-  padding-left: 5vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 
-  a {
-    font-weight: bold;
-    color: #71b5f1;
-    padding-right: 2vw;
+  h1 {
+    padding: 0px;
+    margin: 0px;
+    color: white;
+    font-size: 26px;
+    margin-left: 20px;
+  }
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  .nav-links {
+    text-align: right;
+    margin-right: 10px;
+    margin-top: 8px;
+  }
+}
 
+a:link, a:visited {
+  color: white;
+  padding: 10px;
+  font-size: 1em;
+  text-decoration: none;
+
+  &:hover {
+    color: lightgray;
   }
 }
 </style>
