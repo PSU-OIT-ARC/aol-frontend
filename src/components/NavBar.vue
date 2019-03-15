@@ -29,11 +29,12 @@ export default {
 
 <style scoped lang='scss'>
 #nav {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+
   padding: 3px 0px;
   background-color: black;
   text-align: left;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 
   h1 {
     padding: 0px;
@@ -47,13 +48,16 @@ export default {
     text-align: right;
     margin-right: 10px;
     margin-top: 8px;
+    font-size: 1em;
+    @include respond-to(handheld) {
+      font-size: .8em;
+    }
   }
 }
 
 a:link, a:visited {
   color: white;
   padding: 10px;
-  font-size: 1em;
   text-decoration: none;
 
   &:hover {

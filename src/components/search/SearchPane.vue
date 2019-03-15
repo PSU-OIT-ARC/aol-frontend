@@ -27,11 +27,18 @@ export default {
 
 <style scoped lang="scss">
   #search-wrapper {
-    min-width: 400px;
-    margin: 12px 70px;
     position: absolute;
-    left: 0;
-    overflow-y: scroll;
     z-index: 1001;
+    width: 400px;
+    left: 0px;
+    padding: 15px;
+    min-height: 500px;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    @include respond-to(handheld) {
+      left: 0px;
+      width: 100%;
+      padding: 15px;
+    }
   }
 </style>
