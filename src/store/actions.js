@@ -1,10 +1,11 @@
-import { L } from 'vue2-leaflet'
+import * as proj from 'ol/proj';
+import * as olExtent from  'ol/extent';
 
 // this should be moved to a central place
 const LOADING = 'loading';
 const BASE_URL = '//localhost:8080';
-const MAP_CENTER = [44.72925, -121.0411856];
-const BOUNDS_PADDING = 0.50;
+const MAP_CENTER = [-121.011856, 43.902925];
+const BOUNDS_PADDING = 120;
 
 const actions = {
 
@@ -29,16 +30,36 @@ const actions = {
         context.commit('setSearchResults', search)
     },
 
-    fitBounds (context, geom) {
-        const map = context.rootState.map_object;
+    fitBounds (context, options) {
+
+        let geom = options['geom'];
+        let buffer = options['buffer'];
+
+        const map = context.rootState.map_object.$map;
         if (geom === null) {
-            map.setView(MAP_CENTER, 8);
+            map.getView().setZoom(8)
+            setTimeout(() => {
+                map.getView().setCenter(
+                    proj.fromLonLat(MAP_CENTER, 'EPSG:3857')
+                )
+            }, 0);
             return;
         }
-        let bounds = L.latLngBounds(geom);
-        setTimeout(()=> {map.invalidateSize(true)}, 0);
-        // pad the bounds so we don't zoom into too much
-        map.fitBounds(bounds.pad(BOUNDS_PADDING));
+        setTimeout(() => {
+            map.updateSize();}, 2);
+        let transformed_geom = geom.map((coord) => {
+            return proj.fromLonLat([coord[1], coord[0]], 'EPSG:3857');
+        });
+        let bounds = olExtent.boundingExtent(transformed_geom)
+        let bounds_buffer = buffer !== undefined ? buffer : BOUNDS_PADDING;
+        let padding = Array(4).fill(bounds_buffer);
+        let lake_bounds= olExtent.buffer(bounds, bounds_buffer)
+        //console.log('viewport: '+ map.getViewport().height)
+
+        setTimeout(() => {
+            // possibly just keep zoom the same?
+            map.getView().fit(lake_bounds, {padding: padding});
+        }, 0);
     },
 
     fetchLakes (context) {
