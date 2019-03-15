@@ -1,5 +1,4 @@
 <template>
-  <div>
   <li>
   <router-link :to="href"
    @click.native="activateLake(lake)">
@@ -22,7 +21,6 @@
 </router-link>
 
 </li>
-</div>
 </template>
 
 
