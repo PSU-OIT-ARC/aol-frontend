@@ -86,7 +86,7 @@
     "plants" : [],
     "has_mussels" : true,
     "has_plants" : false,
-    "has_docs": true,
+    "has_docs": false,
     "has_photos" : true,
     "is_in_oregon" : true,
     "center": [44.3711111, -121.9951998],
