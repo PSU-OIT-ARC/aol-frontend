@@ -1,7 +1,7 @@
 <template>
   <div id="search-bar">
     <input
-      placeholder="Search for lakes" type="text"
+      placeholder="Search for Oregon lakes" type="text"
       v-model="query" @input="search(query)" autofocus="true" />
 
       <div class="search-clear" @click="clear">

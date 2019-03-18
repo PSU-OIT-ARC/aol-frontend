@@ -1,6 +1,9 @@
 <template>
   <div class='sidebar'>
+    
     <search-pane></search-pane>
+
+
     <lake-side-bar
         v-if="getCurrentLake" :lake="getCurrentLake">
     </lake-side-bar>
