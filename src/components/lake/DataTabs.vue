@@ -1,5 +1,6 @@
 <template>
   <div class='data-sections'>
+
     <div class='tabs'>
       <tab
         v-for="section in sections" :key="section.name"
@@ -7,11 +8,13 @@
         :active="currentSectionTitle === section.title">
       </tab>
     </div>
+
     <keep-alive v-if='with_sections'>
       <component
         class='data-section' :lake='lake' v-bind:is="currentSection">
       </component>
     </keep-alive>
+
   </div>
 </template>
 
@@ -59,7 +62,17 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+
+  .data-sections {
+    margin-top: 20px;
+  }
+
   .tabs {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 50% 50%;
+    grid-gap: 20px;
+    width: 90%;
   }
 
   .data-section {

@@ -1,7 +1,7 @@
 <template>
   <div class='tab'>
     <router-link
-      v-bind:class="[active ? 'active' : '', section.name]"
+      v-bind:class="[active ? 'active' : '', section.name, 'tab-icon']"
       :to="{
         name: 'lake',
         params: {'slug': lake.slug},
@@ -21,55 +21,53 @@ export default {
 <style scoped lang='scss'>
 
   .tab {
-    display: inline-block;
   }
 
-  a {
-    margin-right: 30px;
-    padding-left: 3px;
-    position: relative;
+  a:link, a:visited {
+    font-family: "Lato-Regular", sans-serif;
+    background-color: #ECECEC;
+    padding: 10px 20px 10px 50px;
+    display: block;
+    text-decoration: none;
+    color: #000;
+
+    &:hover, &:focus {
+      background-color: #D8D8D8;
+    }
 
     &.active {
-      font-weight: bold;
+      font-family: "Lato-Bold", sans-serif;
+      font-weight: 700;
     }
-
-    &.plants::before {
-      content: '\01F33F';
-    }
-
-    &.mussels::before {
-      content: '\1F41A';
-    }
-
-    &.atlas_text {
-      margin-right: 18px;
-    }
-
-    &.atlas_text::before {
-      content: '\1F4D6';
-      padding: 10px 45px;
-    }
-
   }
 
-  a::before {
-    font-size: 50px;
-    position: absolute;
-    top: -68px;
-    left: -5px;
-    border: 1px solid grey;
-    padding: 10px;
+  .plants {
+    background-image: url(~@/assets/icon_search.svg);
   }
+
+  .mussels {
+    background-image: url(~@/assets/icon_search.svg);
+  }
+
+  .atlas_text {
+    background-image: url(~@/assets/icon_search.svg);
+  }
+
+  .tab-icon {
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-size: 13% auto;
+  }
+
 
   /* only use 'active tab' styles on lakes detail page */
   .lake-detail--body a.active {
     font-weight: bold;
   }
 
-  .lake-detail--body a.active::before {
-      border-top: 5px solid green;
+  .lake-detail--body a.active {
+      border-top: 5px solid red;
       padding-bottom: 10px;
-      top: -71px;
   }
 
 </style>

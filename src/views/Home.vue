@@ -41,7 +41,7 @@ export default {
     display: grid;
     grid-template-columns: 0 1fr; /* sidebar closed on load */
     width: 100vw;
-    height: calc(100vh - 42px); /* prefer calc */
+    height: calc(100vh - 42px); /* full height - header */
     overflow: hidden;
     background-color: lightblue; /* you see this as map tiles load */
   }
