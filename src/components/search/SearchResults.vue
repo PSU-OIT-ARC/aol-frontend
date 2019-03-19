@@ -4,9 +4,10 @@
     <div v-else-if="!loading && query && !results.length">
       <div class="no-results">Sorry, no results</div>
     </div>
-    <lake-card v-else
-      v-for="result in results" :lake="result" :key="result.slug">
+    <li v-else v-for="result in results">
+      <lake-card :lake="result" :key="result.slug">
     </lake-card>
+    </li>
   </ul>
 </template>
 
@@ -33,7 +34,6 @@ export default {
 <style scoped lang="scss">
   #search-results-wrapper {
     background-color: white;
-    height: auto;
     margin-top: 20px;
     color: #333;
     padding: 10px 0px;

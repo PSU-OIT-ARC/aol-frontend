@@ -60,7 +60,6 @@ export default {
 
 <style scoped lang='scss'>
   .tabs {
-    margin-top: 80px;
   }
 
   .data-section {

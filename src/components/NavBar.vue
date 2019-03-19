@@ -29,6 +29,7 @@ export default {
 
 <style scoped lang='scss'>
 #nav {
+
   display: grid;
   grid-template-columns: 20% 1fr;
 

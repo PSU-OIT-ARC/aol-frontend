@@ -47,9 +47,10 @@ export default {
     width: 400px;
     left: 0px;
     padding: 15px;
-    min-height: 95vh;
     overflow-y: scroll;
     box-sizing: border-box;
+    animation: ease-in-on-load 200ms forwards;
+
     @include respond-to(handheld) {
       left: 0px;
       width: 100%;
@@ -69,7 +70,7 @@ export default {
       box-shadow: none;
       position: absolute;
       bottom: 15px;
-      width: 91%;
+      margin-right: 15px;
     }
 
     .intro__photo {

@@ -38,19 +38,20 @@ export default {
 <style scoped>
 
   .home {
-    width: 100vw;
-    height: 92vh;
-    overflow: hidden;
     display: grid;
-    grid-template-columns: 0 1fr;
+    grid-template-columns: 0 1fr; /* sidebar closed on load */
+    width: 100vw;
+    height: calc(100vh - 42px); /* prefer calc */
+    overflow: hidden;
+    background-color: lightblue; /* you see this as map tiles load */
   }
 
   .home.sidebar_active {
-    grid-template-columns: minmax(400px, 35%) auto;
+    grid-template-columns: 420px 1fr;
   }
 
   .sidebar-wrapper {
-    background: white;
+    /* not in use  */
   }
 
 </style>

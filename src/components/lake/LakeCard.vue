@@ -1,5 +1,4 @@
 <template>
-  <li>
   <router-link :to="href"
    @click.native="activateLake(lake)">
 
@@ -15,12 +14,11 @@
         <div class="icon documents"></div>
         <div class="icon other"></div>
       </div>
+      <p>093234582348</p>
     </div>
 
   </div>
 </router-link>
-
-</li>
 </template>
 
 
@@ -51,13 +49,13 @@ export default {
 
 <style scoped>
 
-a.router-link-exact-active:link, a.router-link-exact-active:visited {
+a:link, a:visited {
   display: block;
   text-decoration: none;
   color: black;
-  font-family: "Lato-Bold", sans-serif;
 }
-a.router-link-exact-active:hover, a.router-link-exact-active:focus {
+
+a:hover, a:focus {
   background-color: #E7E7E7;
 }
 
@@ -72,6 +70,13 @@ h3 {
   margin: 0px;
   font-size: 17px;
   padding-bottom: 5px;
+  font-family: "Lato-Bold", sans-serif;
+}
+
+p {
+  font-size: 1em;
+  font-weight: 400;
+  margin-top: 5px;
 }
 
 .photo {

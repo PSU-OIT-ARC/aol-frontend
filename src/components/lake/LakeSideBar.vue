@@ -1,15 +1,29 @@
 <template>
   <div class='lake-sidebar' v-if="lake">
-    <div class='close' @click="close">x</div>
-    <lake-card :lake='lake' :to_detail="true"></lake-card>
-    <div class='lake-content'>
+
+    <div class="sidebar__nav">
+      <div class='close' @click="close">╳</div>
+      <lake-card :lake='lake' :to_detail="true"></lake-card>
+    </div>
+
+
+    <div class='lake-summary'>
       <div>
         <label>Area </label>
         <div>{{ lake.area_sq_km }}sq. km.</div>
       </div>
+
+      <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
+
       <data-tabs :lake='lake' :with_sections='false'></data-tabs>
+
+
     </div>
+
+
   </div>
+
+
 </template>
 
 <script>
@@ -37,32 +51,43 @@ export default {
 <style scoped lang='scss'>
 
   .lake-sidebar {
-    background: white;
-    z-index: 1001;
+    display: grid;
     position: absolute;
-    padding-left: 42px;
-    padding-right: 15px;
-    padding-top: 45px;
-    min-width: 420px;
-    width: 35%;
-    height: 88vh;
+    grid-template-rows: 160px 1fr;
+    width: 420px;
+    z-index: 1001;
+    background-color: #fff;
+    opacity: .9;
+    animation: ease-in-on-load 200ms forwards;
   }
 
-  .lake-content {
-    padding: 15px;
-  }
-
-  .section {
-    margin-top: 25px;
+  .sidebar__nav {
+    position: relative;
+    background-color: #838383;
   }
 
   .close {
     position: absolute;
-    right: 25px;
+    right: 0px;
     padding: 10px;
     cursor: pointer;
-    font-size: 1.33em;
+    font-size: 1.5em;
+    color: white;
   }
+
+  p {
+    font-size: .9em;
+    line-height: 1.5em;
+  }
+
+  .lake-summary {
+    display: grid;
+    overflow: hidden;
+    padding: 45px 15px 0px 15px;
+    height: calc(100vh - (45px + 40px + 160px));//45px padding + 40px header + 160px graybar
+  }
+
+
 
   table {
     width: 100%;
