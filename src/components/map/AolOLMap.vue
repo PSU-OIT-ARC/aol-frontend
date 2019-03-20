@@ -278,16 +278,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  /* Is this funny? */
 
   .map-container {
   }
+
   .map {
     overflow: hidden;
     position: relative;
     height: 100%;
     max-height: 100vh;
+    grid-area: sidebar;
+    @include respond-to(handheld) {
+      width: 100vw;
+    }
   }
+
   .filter-layer-controls-container {
     width: 600px;
     height: 40px;
