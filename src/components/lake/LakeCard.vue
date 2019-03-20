@@ -59,10 +59,9 @@ a:hover, a:focus {
   background-color: #E7E7E7;
 }
 
-
 .lake-card {
   display: grid;
-  grid-template-columns: 110px auto;
+  grid-template-columns: 110px 1fr;
   padding: 10px 20px;
 }
 
@@ -77,12 +76,6 @@ p {
   font-size: 1em;
   font-weight: 400;
   margin-top: 5px;
-}
-
-.photo {
-}
-
-.info {
 }
 
 .icon {

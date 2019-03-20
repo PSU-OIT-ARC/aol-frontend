@@ -71,8 +71,14 @@ $font-white: white;
 }
 
 @keyframes drop-in {
-  0%   { transform: translateY(20px); opacity:0; }
-  100% { transform: translateY(45px); opacity:1;}
+  0%   {
+    transform: translateY(20px) /*rotateX(110deg) */;
+    opacity:0;
+  }
+  100% {
+    transform: translateY(45px) /* rotateX(0deg) */;
+    opacity:1;
+  }
 }
 
 

@@ -53,8 +53,10 @@ export default {
 
     @include respond-to(handheld) {
       left: 0px;
-      width: 100%;
+      width: 100vw;
       padding: 15px;
+      opacity: .6;
+
     }
   }
 
@@ -68,9 +70,8 @@ export default {
 
     @include respond-to(handheld) {
       box-shadow: none;
-      position: absolute;
-      bottom: 15px;
-      margin-right: 15px;
+      position: relative;
+      bottom: 0px;
     }
 
     .intro__photo {

@@ -40,18 +40,19 @@ export default {
   .home {
     display: grid;
     grid-template-columns: 0 1fr; /* sidebar closed on load */
+    grid-template-areas: "sidebar map";
     width: 100vw;
     height: calc(100vh - 42px); /* full height - header */
     overflow: hidden;
-    background-color: lightblue; /* you see this as map tiles load */
+    @include respond-to(handheld) {
+      grid-template-areas: "map sidebar";
+    }
   }
 
   .home.sidebar_active {
     grid-template-columns: 420px 1fr;
-  }
-
-  .sidebar-wrapper {
-    /* not in use  */
+    @include respond-to(handheld) {
+    }
   }
 
 </style>

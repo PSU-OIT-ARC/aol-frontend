@@ -58,6 +58,10 @@ export default {
     background-color: #fff;
     opacity: .9;
     animation: ease-in-on-load 200ms forwards;
+    @include respond-to(handheld) {
+      top: 200px;
+      width: 100vw;
+    }
   }
 
   .sidebar__nav {

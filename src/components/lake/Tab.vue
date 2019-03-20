@@ -1,7 +1,7 @@
 <template>
   <div class='tab'>
     <router-link
-      v-bind:class="[active ? 'active' : '', section.name, 'tab-icon']"
+      v-bind:class="[active ? 'active' : '', 'tab-icon--'+section.name, 'tab-icon']"
       :to="{
         name: 'lake',
         params: {'slug': lake.slug},
@@ -41,15 +41,15 @@ export default {
     }
   }
 
-  .plants {
+  .tab-icon--plants {
     background-image: url(~@/assets/icon_search.svg);
   }
 
-  .mussels {
+  .tab-icon--mussels {
     background-image: url(~@/assets/icon_search.svg);
   }
 
-  .atlas_text {
+  .tab-icon--atlas_text {
     background-image: url(~@/assets/icon_search.svg);
   }
 
