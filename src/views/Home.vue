@@ -9,7 +9,7 @@
 
 <script>
 // @ is an alias to /src
-import AolOLMap from '@/components/AolOLMap';
+import AolOLMap from '@/components/map/AolOLMap';
 import SideBar from '@/components/SideBar';
 import { mapGetters } from 'vuex';
 
