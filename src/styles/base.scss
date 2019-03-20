@@ -55,6 +55,11 @@ ul, li {
   }
 }
 
+.hide_results {
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 
 /* OpenLayers overrides */

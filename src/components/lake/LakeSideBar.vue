@@ -37,6 +37,7 @@ export default {
     ...mapActions(['setCurrentLake', 'fitBounds']),
     close () {
       this.setCurrentLake();
+      this.$router.push({name: 'home'});
       this.fitBounds({geom: this.lake.geom, buffer: 300});
     }
   },
@@ -56,7 +57,7 @@ export default {
     width: 420px;
     z-index: 1001;
     background-color: #fff;
-    opacity: .9;
+    //opacity: .9;
     animation: ease-in-on-load 200ms forwards;
     @include respond-to(handheld) {
       top: 200px;

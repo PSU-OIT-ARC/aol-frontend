@@ -1,5 +1,5 @@
 <template>
-  <div id="search-wrapper">
+  <div id="search-wrapper" v-bind:class="[{ hide_results: hide_results}]">
     <search-bar></search-bar>
 
     <search-results v-if="results!=''" :results="results" :query="query"></search-results>
@@ -35,7 +35,13 @@ export default {
     ...mapGetters({
       results: 'searchResults',
       query: 'searchQuery'
-    })
+    }),
+    hide_results() {
+      if (this.$route.query['lake']) {
+        return true
+      }
+      return false;
+    }
   },
 }
 </script>
@@ -55,7 +61,7 @@ export default {
       left: 0px;
       width: 100vw;
       padding: 15px;
-      opacity: .6;
+      //opacity: .6;
 
     }
   }
