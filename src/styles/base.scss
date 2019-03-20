@@ -1,16 +1,65 @@
 body {
-  font-family: "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
-  background-color: lightgray;
+  font-family: "Lato-Regular", serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
 
-body, .about-wrapper {
-  animation: ease-in-on-load 500ms forwards;
+.about-wrapper {
+  animation: ease-in-on-load 200ms forwards;
   animation-fill-mode: both;
 }
+
+h1 {
+  font-family: "Gentium", sans-serif;
+}
+
+h3 {
+  font-family: "Lato-Regular", serif;
+  font-size: 1.5em;
+  font-weight: normal;
+  margin: 5px 0px;
+}
+
+ul, li {
+  list-style: none;
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+/* component overrides */
+.lake-sidebar .lake-card {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 350px;
+  margin: 15px;
+  box-shadow: 1px 1px 3px #777;
+  animation: drop-in 200ms forwards;
+  animation-fill-mode: both;
+  backface-visibility: hidden;
+  background-color: #fff;
+
+
+  @include respond-to(handheld) {
+    grid-template-columns: 110px 1fr;
+    width: calc(100vw - (30px + 40px));
+    padding: 0px 0px; //more specific reqired
+  }
+
+  h3 {
+    font-size: 1.3em;
+  }
+}
+
+.hide_results {
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 
 /* OpenLayers overrides */

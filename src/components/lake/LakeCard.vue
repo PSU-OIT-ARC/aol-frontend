@@ -1,23 +1,24 @@
 <template>
+  <router-link :to="href"
+   @click.native="activateLake(lake)">
+
   <div class="lake-card">
     <div class="photo">
-      <img src="/"></img>
+      <img src="@/assets/generic_thumb.png" />
     </div>
     <div class="info">
-      <div class="title">
-        <router-link :to="href"
-         @click.native="activateLake(lake)">
-          {{ lake.name }}
-        </router-link>
-      </div>
+      <h3>{{ lake.name }}</h3>
       <div class="data-icons">
         <div class="icon mussels"></div>
         <div class="icon plants"></div>
         <div class="icon documents"></div>
         <div class="icon other"></div>
       </div>
+      <p>093234582348</p>
     </div>
+
   </div>
+</router-link>
 </template>
 
 
@@ -47,37 +48,41 @@ export default {
 </script>
 
 <style scoped>
+
+a:link, a:visited {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+
+a:hover, a:focus {
+  background-color: #E7E7E7;
+}
+
 .lake-card {
   display: grid;
-  grid-template-columns: 20% auto;
-  border: 2px solid #808080;
-  padding: 20px 10px;
+  grid-template-columns: 110px 1fr;
+  padding: 10px 20px;
 }
 
-.title {
-  font-size: 1.33em;
+h3 {
+  margin: 0px;
+  font-size: 17px;
   padding-bottom: 5px;
+  font-family: "Lato-Bold", sans-serif;
 }
 
-.photo {
-  background: WhiteSmoke;
-  margin: 5px;
-  text-align: center;
-}
-
-img {
-  padding: 30%;
-}
-
-.info {
-  padding-bottom: 25px;
+p {
+  font-size: 1em;
+  font-weight: 400;
+  margin-top: 5px;
 }
 
 .icon {
   display: inline-block;
   width: 15px;
   height: 15px;
-  margin: 3px;
+  margin-right: 3px;
   background: #333;
 }
 

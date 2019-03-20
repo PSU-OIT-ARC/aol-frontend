@@ -1,9 +1,13 @@
 <template>
   <div id="search-bar">
     <input
-      placeholder="Search for lakes" type="text"
-      v-model="query" @input="search(query)"/>
-      <div id="clear" @click="clear">X</div>
+      placeholder="Search for Oregon lakes" type="text"
+      v-model="query" @input="search(query)" autofocus="true" />
+
+      <div class="search-clear" @click="clear">
+        <img src="~@/assets/icon_search.svg" height="20" />
+      </div>
+
   </div>
 </template>
 
@@ -35,23 +39,28 @@ export default {
 
 <style scoped lang="scss">
   #search-bar {
-    display: grid;
-    grid-template-columns: 1fr 40px;
+    display: flex;
 
     input {
-      padding: 10px;
-      min-width: 15vw;
+      font-family: "Lato-Bold", sans-serif;
+      padding: 10px 35px 6px 10px;
+      width: 100%;
+      border: 0px solid black;
+
+      /*background-image: url('~@/assets/icon_search.svg');
+      background-repeat: no-repeat;
+      background-position: 97% 9px;
+      background-size: 20px auto;*/
+
     }
     z-index: 1000;
     position: relative;
   }
-  #clear {
-    display: inline;
+  .search-clear {
+    position: absolute;
+    top: 6px;
+    right: 12px;
     color: #333;
-    padding: 9px 12px 12px;
-    background: white;
-    border: solid 1px #ccc;
-    border-left: none;
     cursor: pointer;
   }
 

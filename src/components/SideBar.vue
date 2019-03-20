@@ -1,5 +1,5 @@
 <template>
-  <div class='sidebar'>
+  <div class="sidebar">
     <search-pane></search-pane>
     <lake-side-bar
         v-if="getCurrentLake" :lake="getCurrentLake">
@@ -29,7 +29,14 @@ export default {
 
 <style scoped lang='scss'>
   .sidebar {
-    overflow-y: scroll;
+    position: relative;
+    grid-area: sidebar;
+
+    @include respond-to(handheld) {
+      position: absolute;
+    }
+
+    /* not in use  */
   }
 
 </style>
