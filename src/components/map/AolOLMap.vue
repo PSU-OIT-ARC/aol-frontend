@@ -1,13 +1,16 @@
 <template>
   <div class='map-container'>
     <vl-map id="map" class="map" ref="map"
-      @click="checkLakeBounds($event.pixel)"
-      :load-tiles-while-animating="false"
-      :load-tiles-while-interacting="false">
+      @mounted="initMap"
+      @dblclick="zoomToCluster($event)"
+      @click="checkMarkerOrLakeBounds($event)"
+      :load-tiles-while-animating="true"
+      :load-tiles-while-interacting="true">
 
       <vl-view
         :zoom.sync="zoom" :center.sync="center"
-        :minZoom="7" :maxZoom="14">
+        :minZoom="6" :maxZoom="15"
+        @update:zoom="calculateClusterDistance">
       </vl-view>
 
       <vl-layer-tile v-for="layer in baseLayers"
@@ -21,96 +24,62 @@
       <vl-layer-vector-tile  v-for="layer in featureLayers"
         :key="layer.id" :id="layer.id" :ref="layer.id"
         :visible="layer.visible" :declutter="true"
-        @mounted="applyEsriStyles">
+        @mounted="applyEsriStyles" :extent="layer.extent">
         <vl-source-vector-tile
           :url="layer.url">
         </vl-source-vector-tile>
       </vl-layer-vector-tile>
 
-      <vl-layer-vector id='boundaries' ref="lake_layer">
+      <!-- unknown if we will draw these vectors at all -->
+      <!--vl-layer-vector id='boundaries' ref="lake_layer">
         <vl-source-vector :features="lake_polygons" >
           <vl-style-box>
             <vl-style-stroke :color="polygon.stroke" :width="polygon.width"/>
             <vl-style-fill :color="polygon.fill"/>
           </vl-style-box>
         </vl-source-vector>
-      </vl-layer-vector>
+      </vl-layer-vector-->
 
-      <vl-layer-vector id='markers' ref="lake_markers" >
-        <vl-source-vector :features="lake_markers" ref="lake_marker_source">
-          <vl-style-box>
-          <vl-style-circle :radius="marker.radius">
-            <vl-style-stroke :color="marker.color" :width="polygon.width"/>
-            <vl-style-fill :color="marker.fillColor"/>
-          </vl-style-circle>
-          </vl-style-box>
-        </vl-source-vector>
+      <vl-layer-vector
+        id='lake_markers' ref="lake_markers" :zIndex="10"
+        :updateWhileAnimating="true"
+        :updateWhileInteracting="true"
+        @mounted="mountClusterSource">
       </vl-layer-vector>
 
     </vl-map>
 
-          <div class="filter-layer-controls-container">
-            <filter-control
-              @filter-change="selectLakesFromFilters">
-            </filter-control>
-            <layer-switcher
-              @feature-layer-change="selectFeatureLayer">
-            </layer-switcher>
-          </div>
+    <div class="filter-layer-controls-container">
+      <filter-control
+        @filter-change="selectLakesFromFilters">
+      </filter-control>
+      <layer-switcher
+        @feature-layer-change="selectFeatureLayer">
+      </layer-switcher>
+    </div>
+
   </div>
 </template>
 
 <script>
-
 import { mapGetters, mapActions } from 'vuex';
-import {applyStyle} from 'ol-mapbox-style';
-import * as proj from 'ol/proj';
+import { applyStyle } from 'ol-mapbox-style';
+
+import config from '@/components/map/config';
 import LayerSwitcher from '@/components/map/LayerSwitcher';
 import FilterControl from '@/components/map/FilterControl';
+
+import * as proj from 'ol/proj';
+import * as olExtent from  'ol/extent';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import Cluster from 'ol/source/Cluster';
 
 export default {
   name: 'aol-ol-map',
   data () {
     return {
-      zoom: 8,
-      baseLayers: [
-        {
-          id: "gray",
-          visible: true,
-          url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-          extent: undefined
-        },
-        {
-          id: "nlcd",
-          visible: true,
-          url: "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/NLCD/MapServer/tile/{z}/{y}/{x}?token=lyAcy1fbdMLMiQ8CRRt9OQqHFmalTF-xMLIz8FX3akLtKMDjC3ONYBN1JsjXcHhFjhNXWkqvn0XsASglYuphIoxwQ3oLyyOifRTHYjOhlxk03YvsMXxAXURvIyN0HOClu2MXAG7dZMeS228JZ-7yi2C-i9skllR54hF_x-HwhKqOmIo2yz05voMpD8U2Tcx4ybfRIzOkGmG-GgGPqmGpEV-GMbPi1H5xeRQV9wu4DuKeAwu5Wv58EGIpmF-dcnSgf-Mj7UjeX4wRvsdqjm3UZEBp0OaL4XlVPmA7GvccQLA",
-          extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997],
-        }
-      ],
-      featureLayers: [
-        {
-          id: 'publand',
-          visible: false,
-          url: "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/Vector_Publands/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=WlTafmvrujX0RXuKfJg3EP-pTf3RVpG-cy_sRsrA1u1l3807JLmogJVzQMvuS0Gw5F3iqyxZ1nYwG-sg6CSZYfsfCHEVjxs8ghQqHIgaw3Qjv_T93x-O0Y4thLto5iacqfN-TfLWYBlBnwXr60RGjan7-Jm3nhcwAlh69L8DDNJlLJU-_WkbVjUtjlE13O1QOHuTfZVizdmBkUjDTfx4q0xPkzNoJZUcpPr0-vhTH0GznGQH64ytxag82P89G0tfbyaVu7gwkUZSqVA7V9TaPMQSCSR-YrDXqyMwjxAD7zg",
-        },
-        {
-          id: 'nopubland',
-          visible: true,
-          url: "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/Vector_NoPub/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=WlTafmvrujX0RXuKfJg3EP-pTf3RVpG-cy_sRsrA1u1l3807JLmogJVzQMvuS0Gw5F3iqyxZ1nYwG-sg6CSZYfsfCHEVjxs8ghQqHIgaw3Qjv_T93x-O0Y4thLto5iacqfN-TfLWYBlBnwXr60RGjan7-Jm3nhcwAlh69L8DDNJlLJU-_WkbVjUtjlE13O1QOHuTfZVizdmBkUjDTfx4q0xPkzNoJZUcpPr0-vhTH0GznGQH64ytxag82P89G0tfbyaVu7gwkUZSqVA7V9TaPMQSCSR-YrDXqyMwjxAD7zg",
-        }
-      ],
-      marker: {
-        radius: 3,
-        color: 'blue',
-        fill: true,
-        fillColor: 'blue',
-        fillOpacity: 1
-      },
-      polygon: {
-        stroke: "yellow",
-        fill: "rgba(0,0,0,0.1)",
-        width: 1
-      },
+      ...config,
       selectedAttributes: [],
     }
   },
@@ -119,18 +88,21 @@ export default {
     FilterControl
   },
   computed: {
-    ...mapGetters(
-        {lakes: 'getLakes', getLakeBySlug: 'getLakeBySlug'}, 'getCurrentLake'),
+    ...mapGetters({
+        lakes: 'getLakes',
+        getLakeBySlug: 'getLakeBySlug'
+      },
+      'getCurrentLake'
+    ),
     center: {
       get () {
-        return proj.fromLonLat([-121.011856, 43.902925], 'EPSG:3857')
+        return proj.fromLonLat(config.map_center, 'EPSG:3857')
       },
       set (newValue) {
         return newValue;
       }
     },
-    // this feature creation is unnecessary if we use GeoJSON
-    lake_polygons () {
+    lake_polygons () { // currently not using
       return  this.lakes.map((lake) => {
         return {
             type: 'Feature',
@@ -148,26 +120,44 @@ export default {
       });
     },
     lake_markers () {
-      // maybe move this to vuex or something?
-      let hasFilterAttributes = (lake) => {
-        if (!this.selectedAttributes.length) {
-          return true
-        }
-        let attr =  this.selectedAttributes.every(
-          (attribute) => {
-            return lake[attribute] == true
+      // only read from GeoJSON once
+      if (!this.lakes_with_geom) {
+        this.lakes_with_geom = this.getLakeMarkers();
+      }
+      return this.lakes_with_geom;
+    },
+    // end computed
+  },
+  methods: {
+    ...mapActions([
+      'fetchLakes', 'setCurrentLake', 'fitBounds',
+      'searchLakes', 'setMapObject'
+    ]),
+    getLakeMarkers () {
+      if(!this.lakes.length) return;
+      // Add a bunch of dummy points to test clustering
+      let others = [];
+      for (let i = 0; i < 5000; i++) {
+        let other = Object.assign({}, this.lakes[i%3]);
+        let center = this.lakes[i%3].center.map((c) => {
+          return c + 1.1 * (0.4-Math.random())
         });
-        return attr;
+        other.center = center;
+        other.has_plants = Math.random() > 0.3 ? true : false;
+        others.push(other);
       };
-
-      return this.lakes.filter((lake) => {
-        return hasFilterAttributes(lake);
-      }).map((lake) => {
+      let lakes = this.lakes.concat(others)
+      let getId = function () {
+        return this.id
+      };
+      lakes = lakes.map((lake) => {
         return {
             type: 'Feature',
             properties: {
               name: lake.slug,
               id: lake.reachcode,
+              has_plants: Math.random() > 0.5 ? true : false,
+              has_docs:  Math.random() > 0.4 ? true : false,
             },
             geometry: {
               type: 'Point',
@@ -176,13 +166,11 @@ export default {
             }
           }
       });
-    }
-  },
-  methods: {
-    ...mapActions([
-      'fetchLakes', 'setCurrentLake', 'fitBounds',
-      'searchLakes', 'setMapObject'
-    ]),
+      let geoJSONObj = {};
+      geoJSONObj.type = 'FeatureCollection'
+      geoJSONObj.features = lakes;
+      return new GeoJSON().readFeatures(geoJSONObj)
+    },
     showSideBar (lake) {
       this.$router.push({name: 'home', query: {'lake': lake.slug}})
       this.setCurrentLake(lake);
@@ -197,19 +185,70 @@ export default {
         this.fitBounds({geom: lake.geom});
       }
     },
-    checkLakeBounds (pixel) {
+    checkMarkerOrLakeBounds (e) {
+      // TODO: this could get moved to a generic util
+      let pixel = e.pixel;
       console.log(this.map.$map.getCoordinateFromPixel(pixel));
-      // see hitTolerance
+      // see hitTolerance for more fuzzing
       this.map.forEachFeatureAtPixel(pixel, (feature, layer) => {
-          let lake = this.getLakeBySlug(feature.getProperties().name);
+          if (feature.get('features') && feature.get('features').length > 1) {
+              return // this is a cluster
+          }
+          let selected = feature.getProperties().features[0].getProperties();
+          let lake = this.getLakeBySlug(selected.name);
           this.showSideBar(lake);
         },
         {
           layerFilter: (layer_candidate) => {
-            return layer_candidate.getProperties().id  != 'publand';
+            return layer_candidate.get('id') == 'lake_markers'
         }
       });
     },
+    selectLakesFromFilters (filters) {
+      let hasFilterAttributes = (lake) => {
+        if (!this.selectedAttributes.length) {
+          return true
+        }
+        let lake_object = lake.getProperties()
+
+        let attr =  this.selectedAttributes.every(
+          (attribute) => {
+            return lake_object[attribute] == true
+        });
+        return attr;
+      };
+      this.selectedAttributes = filters;
+      this.lake_marker_source.clear();
+      let filtered_lakes = this.lake_markers.filter((lake) => {
+        return hasFilterAttributes(lake);
+      });
+      this.lake_marker_source.addFeatures(filtered_lakes)
+    },
+    // TODO: this could get moved to a generic util
+    zoomToCluster (e) {
+      let cluster_feature = this.map.forEachFeatureAtPixel(
+        e.pixel, (feature, layer) => {
+          return feature;
+      });
+      if (cluster_feature) {
+        let features = cluster_feature.get('features');
+        if (features && features.length > 1) {
+          let extent = [];
+          features.forEach((f) => {
+            extent.push(f.getGeometry().getExtent());
+          });
+          let bounds = olExtent.boundingExtent(extent)
+          this.map.$map.getView().fit(bounds);
+          this.map.$map.getView().setCenter(e.coordinate)
+        }
+      }
+    },
+    // TODO: this could get moved to a generic util
+    calculateClusterDistance () {
+      let distance = this.zoom > this.cluster_max_zoom ? 0 : this.cluster_distance;
+      this.cluster_source.setDistance(distance);
+    },
+    // TODO: this could get moved to a generic util
     selectFeatureLayer (selected_layer) {
       let layers = this.map.$map.getLayers().getArray();
       let feature_layers = layers.filter((layer)=>{
@@ -224,44 +263,78 @@ export default {
         }
       });
     },
-    selectLakesFromFilters (filters) {
-      this.selectedAttributes = filters;
-      // HACK: why isn't this reactive?
-      this.$refs.lake_marker_source.refresh();
-      this.$refs.lake_marker_source.addFeatures(this.lake_markers)
-    },
+    // TODO: this could get moved to a generic util
     applyEsriStyles () {
-      let base_style_url = 'https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY/arcgis/rest/services/Vector_Publands/VectorTileServer/resources';
+      let vectorTileLayers = [
+        'Vector_Publands',
+        'Vector_NoPub'
+      ];
 
       let sprite_path = 'sprites/sprite';
       let style_path = "styles/root.json";
-      let token = 'X_yghsylypn97rtHbkDQs2jSvCCfJFjy9c21yubfP5lsiH_i09SBK0N3sjots2YJAyLgyHqhYp1OVPd1X30Bu0PRVPEapAF37bl88xVHK9Yya8Vw_10h0AGKVpXpdZwpSBLj3A5zu6ZGfoB6vJyE13zSCqOPxVYzBIpSoc9HHQiUNwlhAs0swj6FlB4oh-uMHe-1F2ELK-ifG-V0veMnwhuNPn-YNA5W-uOkbjH7SffbwT_rEq1xTqvcBrwP2cpxJtSIWkPfYgIZnP8tdkngqqt-ueTydQcnSctPfD1lLV8.';
+      let token = config.token;
 
-      let style_url = `${base_style_url}/${style_path}?f=json&token=${token}`;
-      let sprite_url = `${base_style_url}/${sprite_path}?f=json&token=${token}`;
-      fetch(style_url).then((response)=>{
-        return response.json()
-      }).then((style) => {
-        // HACK: zoom seems to be off-by-one?
-        style.layers.map((layer) => {
-          layer.minzoom -= 0.6;
-          layer.maxzoom += 0.6;
+      for (let i=0; i<vectorTileLayers.length; i++) {
+        config.ArcGisOnlineTilesUrl
+        let base_style_url = `${config.ArcGisOnlineTilesUrl}/${vectorTileLayers[i]}/VectorTileServer/resources`;
+        let style_url = `${base_style_url}/${style_path}?f=json&token=${token}`;
+        let sprite_url = `${base_style_url}/${sprite_path}?f=json&token=${token}`;
+        fetch(style_url).then((response)=>{
+          return response.json()
+        }).then((style) => {
+          // HACK: zoom seems to be off from styles min/maxzoom?
+          style.layers.map((layer) => {
+            layer.minzoom -= 0.6;
+            layer.maxzoom += 0.6;
+          });
+          let layers = this.$refs.map.$map.getLayers().getArray();
+          let feature_layers = layers.filter((layer)=>{
+            return this.featureLayers.find(l => l.id == layer.getProperties().id);
+          });
+          feature_layers.map((layer) => {
+            applyStyle(layer, style, 'esri', sprite_url);
+          });
         });
-        let layers = this.$refs.map.$map.getLayers().getArray();
-        let feature_layers = layers.filter((layer)=>{
-          return this.featureLayers.find(l => l.id == layer.getProperties().id);
-        });
-        feature_layers.map((layer) => {
-          applyStyle(layer, style, 'esri', sprite_url);
-        });
+      };
+    },
+    mountClusterSource (component) {
+      // setting cluster source and stylefunction directly in
+      // OpenLayers improves performance over Vuelayers component
+      let source = new VectorSource({
+        features: this.lake_markers
       });
-    }
-  },
-  mounted () {
-    this.$refs.map.$createPromise.then(() => {
+      this.lake_marker_source = source;
+
+      let cluster_source = new Cluster({
+        distance: this.cluster_distance,
+        source: source,
+      });
+      this.cluster_source = cluster_source;
+      component.$layer.setSource(cluster_source);
+      // TODO; move to util
+      let mapToRange = (value, in_min, in_max, out_min, out_max) => {
+        return (value - in_min) * (out_max - out_min) /
+               (in_max - in_min) + out_min;
+      }
+
+      let clusterStyleFunc = (feature, resolution) => {
+          let style = config.pointStyle;
+          let size = feature.get('features').length
+          if (size > 1) {
+            style = config.clusterStyle;
+            let text = size == 1 ? '' : size.toString();
+            style.text_.text_ = text;
+            let radius = mapToRange(size, 2, 2000, 10, 34);
+            style.image_.setRadius(radius);
+          }
+          return style
+      };
+      component.$layer.setStyle(clusterStyleFunc)
+    },
+    initMap () {
       this.map = this.$refs.map;
       this.setMapObject(this.map);
-      // Fetching LAKES
+
       if(!this.lakes.length) {
         this.fetchLakes().then(()=> {
           this.selectLakeFromUrl();
@@ -271,16 +344,13 @@ export default {
         console.log('I already have the lakes. I will not fetch them again');
         this.selectLakeFromUrl();
       }
-    });
+    }
+    // end methods
   },
-
 }
 </script>
 
 <style lang="scss" scoped>
-
-  .map-container {
-  }
 
   .map {
     overflow: hidden;
@@ -305,7 +375,5 @@ export default {
     display: grid;
     grid-template-columns: auto auto;
   }
-
-
 
 </style>
