@@ -53,6 +53,7 @@ a:link, a:visited {
   display: block;
   text-decoration: none;
   color: black;
+  background-color: white;
 }
 
 a:hover, a:focus {

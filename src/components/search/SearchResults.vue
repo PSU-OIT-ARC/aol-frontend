@@ -33,10 +33,12 @@ export default {
 
 <style scoped lang="scss">
   #search-results-wrapper {
-    background-color: white;
-    margin-top: 20px;
+    background-color: transparent;
+    margin-top: -30px;
     color: #333;
     padding: 10px 0px;
+    animation: drop-in 200ms forwards;
+    min-height: 50vh;
   }
 
   .no-results {

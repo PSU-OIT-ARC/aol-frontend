@@ -1,5 +1,5 @@
 <template>
-  <div id="search-wrapper" v-bind:class="[{ hide_results: hide_results}]">
+  <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
     <search-bar></search-bar>
 
     <search-results v-if="results!=''" :results="results" :query="query"></search-results>
@@ -13,10 +13,6 @@
         <p><a href="/about">Read More ...</a></p>
       </div>
     </div>
-
-
-
-
   </div>
 </template>
 
@@ -55,7 +51,7 @@ export default {
     padding: 15px;
     overflow-y: scroll;
     box-sizing: border-box;
-    animation: ease-in-on-load 200ms forwards;
+    animation: fade-in 200ms forwards;
 
     @include respond-to(handheld) {
       left: 0px;

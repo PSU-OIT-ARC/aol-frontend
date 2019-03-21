@@ -57,8 +57,7 @@ export default {
     width: 420px;
     z-index: 1001;
     background-color: #fff;
-    //opacity: .9;
-    animation: ease-in-on-load 200ms forwards;
+
     @include respond-to(handheld) {
       top: 200px;
       width: 100vw;
