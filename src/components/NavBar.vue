@@ -1,11 +1,7 @@
 <template>
   <div id='nav'>
 
-    <h1><router-link
-      @click.native="setCurrentLake()"
-      to="/">
-      Atlas
-    </router-link></h1>
+    <h1><a href="/">Atlas</a></h1>
 
     <div class="nav-links">
       <router-link to="/aquatic-invasives">Aquatic Invasives</router-link>

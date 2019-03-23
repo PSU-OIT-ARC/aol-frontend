@@ -4,13 +4,16 @@
 
     <search-results v-if="results!=''" :results="results" :query="query"></search-results>
 
-    <div v-else class="site-intro">
-      <div class="intro__photo">
-      </div>
-      <div class="intro__copy">
-        <h3>Atlas of Oregon Lakes</h3>
-        <p>Oregon has a rich diversity of lakes and reservoirs ranging from some of the clearest lakes in the world, to extremely productive fisheries, to lakes in trouble from pollution. Lakes and reservoirs are very important to the citizens of Oregon as they provide drinking water, flood control, irrigation, power generation, and recreational opportunities such as swimming, boating, fishing, and relaxation.</p>
-        <p><a href="/about">Read More ...</a></p>
+    <div v-else>
+      <div v-if="close_intro == false" class="site-intro">
+        <div class="close-intro" @click="close_intro = true">╳</div>
+        <div class="intro__photo">
+        </div>
+        <div class="intro__copy">
+          <h3>Atlas of Oregon Lakes</h3>
+          <p>Oregon has a rich diversity of lakes and reservoirs ranging from some of the clearest lakes in the world, to extremely productive fisheries, to lakes in trouble from pollution. Lakes and reservoirs are very important to the citizens of Oregon as they provide drinking water, flood control, irrigation, power generation, and recreational opportunities such as swimming, boating, fishing, and relaxation.</p>
+          <p><a href="/about">Read More ...</a></p>
+        </div>
       </div>
     </div>
   </div>
@@ -26,6 +29,11 @@ export default {
   components: {
     SearchBar,
     SearchResults
+  },
+  data() {
+    return {
+      close_intro: false
+    }
   },
   computed: {
     ...mapGetters({
@@ -46,46 +54,52 @@ export default {
   #search-wrapper {
     position: absolute;
     z-index: 1001;
-    width: 400px;
     left: 0px;
     padding: 15px;
-    overflow-y: scroll;
+    overflow: hidden;
     box-sizing: border-box;
     animation: fade-in 200ms forwards;
+    height: calc(100vh - 42px);
+    width: $sidebar_width;
 
     @include respond-to(handheld) {
       left: 0px;
-      width: 100vw;
       padding: 15px;
-      //opacity: .6;
-
+      width: 100vw;
     }
   }
 
   .site-intro {
     display:grid;
     grid-template-rows: 140px auto;
+    position: absolute;
+    bottom: 0px;
     background-color: white;
     min-height: 300px;
     margin-top: 20px;
     box-shadow: 2px 2px 3px #ccc;
-
-    @include respond-to(handheld) {
-      box-shadow: none;
-      position: relative;
-      bottom: 0px;
-    }
+    width: calc(100vw - 30px);
 
     .intro__photo {
       height: 140px;
       background-image: url('~@/assets/generic_thumb_large.png');
       background-repeat: no-repeat;
       background-size: cover;
+      background-position: center center;
     }
 
     .intro__copy {
       padding: 20px;
     }
+  }
+
+  .close-intro {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 1.3em;
+    cursor: pointer;
   }
 
 

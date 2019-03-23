@@ -46,6 +46,7 @@ export default {
       padding: 10px 35px 6px 10px;
       width: 100%;
       border: 0px solid black;
+      border: 1px solid #aaa;
 
       /*background-image: url('~@/assets/icon_search.svg');
       background-repeat: no-repeat;

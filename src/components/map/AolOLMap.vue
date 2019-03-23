@@ -49,7 +49,7 @@
 
     </vl-map>
 
-          <div class="filter-layer-controls-container">
+          <div class="map-controls-wrapper">
             <filter-control
               @filter-change="selectLakesFromFilters">
             </filter-control>
@@ -277,35 +277,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-  .map-container {
-  }
-
-  .map {
-    overflow: hidden;
-    position: relative;
-    height: 100%;
-    max-height: 100vh;
-    grid-area: sidebar;
-    @include respond-to(handheld) {
-      width: 100vw;
-    }
-  }
-
-  .filter-layer-controls-container {
-    width: 600px;
-    height: 40px;
-    position: absolute;
-    bottom: 40px;
-    right: 20px;
-    background: white;
-    z-index: 1001;
-    padding: 5px 20px;
-    display: grid;
-    grid-template-columns: auto auto;
-  }
-
-
+<style scoped lang="scss">
 
 </style>

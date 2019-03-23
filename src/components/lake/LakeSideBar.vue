@@ -1,21 +1,27 @@
 <template>
   <div class="lake-sidebar" v-if="lake">
 
-    <div class="sidebar__nav">
-      <div class="close-sidebar" @click="close">╳</div>
+    <div class="sidebar--top">
+      <div class="sidebar__nav">
+        <p><a href="#" @click="close">&larr; Back to Search</a></p>
+        <div class="close-sidebar" @click="close">╳</div>
+      </div>
       <lake-card :lake='lake' :to_detail="true"></lake-card>
     </div>
 
 
     <div class="lake-summary">
-      <div>
+
+      <data-tabs :lake='lake' :with_sections='false'></data-tabs>
+
+      <div class="summary-chart">
         <label>Area </label>
         <div>{{ lake.area_sq_km }}sq. km.</div>
       </div>
 
+
       <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
 
-      <data-tabs :lake='lake' :with_sections='false'></data-tabs>
 
     </div>
 
@@ -54,7 +60,7 @@ export default {
     display: grid;
     position: absolute;
     grid-template-rows: 160px 1fr;
-    width: 420px;
+    width: $sidebar_width;
     z-index: 1001;
     background-color: #fff;
 
@@ -64,18 +70,29 @@ export default {
     }
   }
 
-  .sidebar__nav {
+  .sidebar--top {
     position: relative;
     background-color: #838383;
   }
 
+  .sidebar__nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0px 15px;
+
+    a {
+      color: white;
+    }
+  }
+
+
+
   .close-sidebar {
-    position: absolute;
-    right: 0px;
-    padding: 10px;
     cursor: pointer;
     font-size: 1.5em;
     color: white;
+    text-align: right;
+    margin-top: 8px;
   }
 
   p {
@@ -85,10 +102,15 @@ export default {
 
   .lake-summary {
     display: grid;
+    grid-template-rows: auto auto auto;
     align-content: start;
     overflow-y: scroll;
     padding: 45px 15px 0px 15px;
     height: calc(100vh - (45px + 40px + 160px));//45px padding + 40px header + 160px graybar
+  }
+
+  .summary-chart {
+    margin-top: 30px;
   }
 
 

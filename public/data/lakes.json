@@ -12,7 +12,7 @@
     "aol_page" : 52,
     "body" : "(From Atlas of Oregon Lakes, Johnson et al. 1985). Upper Klamath Lake, with a surface area of 61,543 acres (over 70,000 acres including Agency Lake), is the largest freshwater lake in Oregon and one of the largest in the United States. It is a natural water body lying in the structural valley known as the Klamath Graben. Including Agency Lake and its connecting channel, it is about 25 miles long and ranges in width from 2.5 to 12.5 miles. It lies east of the Cascade Mountains at an elevation of 4139 feet. The water level is regulated by a low dam constructed in 1917 by the Bureau of",
     "fishing_zone" : 12,
-    "county_set" : ["Deschutes"],
+    "county_set" : "Deschutes",
     "plants" : [
       {"name": "Elodea canadensis (common elodea, Canadian waterweed)"},
       {"name": "Lemna sp. (duckweed)"}
@@ -35,7 +35,7 @@
   },
   {
     "reachcode": 1774376595,
-    "name": "Clear Creek Reservoir",
+    "name": "Clear Creek Reservoir To The Max",
     "slug": "clear_creek",
     "shape_length": 399.44,
     "shape_area" : 22.22,
@@ -46,7 +46,7 @@
     "aol_page" : 29,
     "body" : "Check back for more information about Clear Creek Reservoir.  If you would like to contribute information about this lake, contact  oregonlakesatlas@pdx.edu.",
     "fishing_zone" : 31,
-    "county_set" : ["Multnomah"],
+    "county_set" : "Multnomah",
     "plants" : [],
     "has_mussels" : true,
     "has_plants" : false,
@@ -82,7 +82,7 @@
     "aol_page" : 22,
     "body" : "Clear Lake, so named due to its distinctive shape, is one of the coolest lakes in Oregon",
     "fishing_zone" : 32,
-    "county_set" : ["Multnomah"],
+    "county_set" : "Multnomah",
     "plants" : [],
     "has_mussels" : true,
     "has_plants" : false,
