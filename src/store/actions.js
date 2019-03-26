@@ -1,11 +1,10 @@
 import * as proj from 'ol/proj';
 import * as olExtent from  'ol/extent';
+import config from '@/components/map/config';
 
 // this should be moved to a central place
 const LOADING = 'loading';
 const BASE_URL = '//localhost:8080';
-const MAP_CENTER = [-121.011856, 43.902925];
-const BOUNDS_PADDING = 120;
 
 const actions = {
 
@@ -31,7 +30,6 @@ const actions = {
     },
 
     fitBounds (context, options) {
-
         let geom = options['geom'];
         let buffer = options['buffer'];
 
@@ -40,7 +38,7 @@ const actions = {
             map.getView().setZoom(8)
             setTimeout(() => {
                 map.getView().setCenter(
-                    proj.fromLonLat(MAP_CENTER, 'EPSG:3857')
+                    proj.fromLonLat(config.map_center, 'EPSG:3857')
                 )
             }, 0);
             return;
@@ -51,7 +49,7 @@ const actions = {
             return proj.fromLonLat([coord[1], coord[0]], 'EPSG:3857');
         });
         let bounds = olExtent.boundingExtent(transformed_geom)
-        let bounds_buffer = buffer !== undefined ? buffer : BOUNDS_PADDING;
+        let bounds_buffer = buffer !== undefined ? buffer : config.bounds_padding;
         let padding = Array(4).fill(bounds_buffer);
         let lake_bounds= olExtent.buffer(bounds, bounds_buffer)
         //console.log('viewport: '+ map.getViewport().height)
