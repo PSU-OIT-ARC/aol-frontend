@@ -34,7 +34,7 @@ const config = {
       {
         id: "nlcd",
         visible: true,
-        url: `${ArcGisOnlineTilesUrl}/NLCD/MapServer/tile/{z}/{y}/{x}?token=${token}`,
+        url: `${ArcGisOnlineTilesUrl}/Hillshade_NLCD/MapServer/tile/{z}/{y}/{x}?token=${token}`,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997],
       }
     ],
