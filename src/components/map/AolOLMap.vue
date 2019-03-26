@@ -3,7 +3,7 @@
     <vl-map id="map" class="map" ref="map"
       @mounted="initMap"
       @dblclick="zoomToCluster($event)"
-      @click="checkMarkerOrLakeBounds($event)"
+      @click="checkMarkerOrBounds($event)"
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true">
 
@@ -75,6 +75,8 @@ import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import Cluster from 'ol/source/Cluster';
 
+const USE_CLUSTERS = false;
+
 export default {
   name: 'aol-ol-map',
   data () {
@@ -135,18 +137,21 @@ export default {
     ]),
     getLakeMarkers () {
       if(!this.lakes.length) return;
-      // Add a bunch of dummy points to test clustering
-      let others = [];
-      for (let i = 0; i < 5000; i++) {
-        let other = Object.assign({}, this.lakes[i%3]);
-        let center = this.lakes[i%3].center.map((c) => {
-          return c + 1.1 * (0.4-Math.random())
-        });
-        other.center = center;
-        other.has_plants = Math.random() > 0.3 ? true : false;
-        others.push(other);
-      };
-      let lakes = this.lakes.concat(others)
+      let lakes = this.lakes;
+      if (USE_CLUSTERS) {
+        // Add a bunch of dummy points to test clustering
+        let others = [];
+        for (let i = 0; i < 5000; i++) {
+          let other = Object.assign({}, this.lakes[i%3]);
+          let center = this.lakes[i%3].center.map((c) => {
+            return c + 1.1 * (0.4-Math.random())
+          });
+          other.center = center;
+          other.has_plants = Math.random() > 0.3 ? true : false;
+          others.push(other);
+        };
+        lakes = this.lakes.concat(others)
+      }
       let getId = function () {
         return this.id
       };
@@ -185,7 +190,7 @@ export default {
         this.fitBounds({geom: lake.geom});
       }
     },
-    checkMarkerOrLakeBounds (e) {
+    checkMarkerOrBounds (e) {
       // TODO: this could get moved to a generic util
       let pixel = e.pixel;
       console.log(this.map.$map.getCoordinateFromPixel(pixel));
@@ -194,7 +199,13 @@ export default {
           if (feature.get('features') && feature.get('features').length > 1) {
               return // this is a cluster
           }
-          let selected = feature.getProperties().features[0].getProperties();
+          let selected;
+          if (USE_CLUSTERS) {
+            selected = feature.getProperties().features[0].getProperties();
+          }
+          else {
+            selected = feature.getProperties()
+          }
           let lake = this.getLakeBySlug(selected.name);
           this.showSideBar(lake);
         },
@@ -245,8 +256,10 @@ export default {
     },
     // TODO: this could get moved to a generic util
     calculateClusterDistance () {
-      let distance = this.zoom > this.cluster_max_zoom ? 0 : this.cluster_distance;
-      this.cluster_source.setDistance(distance);
+      if (USE_CLUSTERS) {
+        let distance = this.zoom > this.cluster_max_zoom ? 0 : this.cluster_distance;
+        this.cluster_source.setDistance(distance);
+      }
     },
     // TODO: this could get moved to a generic util
     selectFeatureLayer (selected_layer) {
@@ -305,31 +318,37 @@ export default {
       });
       this.lake_marker_source = source;
 
-      let cluster_source = new Cluster({
-        distance: this.cluster_distance,
-        source: source,
-      });
-      this.cluster_source = cluster_source;
-      component.$layer.setSource(cluster_source);
-      // TODO; move to util
-      let mapToRange = (value, in_min, in_max, out_min, out_max) => {
-        return (value - in_min) * (out_max - out_min) /
-               (in_max - in_min) + out_min;
-      }
+      if (USE_CLUSTERS) {
+        let cluster_source = new Cluster({
+          distance: this.cluster_distance,
+          source: source,
+        });
+        this.cluster_source = cluster_source;
+        component.$layer.setSource(cluster_source);
+        // TODO; move to util
+        let mapToRange = (value, in_min, in_max, out_min, out_max) => {
+          return (value - in_min) * (out_max - out_min) /
+                 (in_max - in_min) + out_min;
+        }
 
-      let clusterStyleFunc = (feature, resolution) => {
-          let style = config.pointStyle;
-          let size = feature.get('features').length
-          if (size > 1) {
-            style = config.clusterStyle;
-            let text = size == 1 ? '' : size.toString();
-            style.text_.text_ = text;
-            let radius = mapToRange(size, 2, 2000, 10, 34);
-            style.image_.setRadius(radius);
-          }
-          return style
-      };
-      component.$layer.setStyle(clusterStyleFunc)
+        let clusterStyleFunc = (feature, resolution) => {
+            let style = config.pointStyle;
+            let size = feature.get('features').length
+            if (size > 1) {
+              style = config.clusterStyle;
+              let text = size == 1 ? '' : size.toString();
+              style.text_.text_ = text;
+              let radius = mapToRange(size, 2, 2000, 10, 34);
+              style.image_.setRadius(radius);
+            }
+            return style
+        };
+        component.$layer.setStyle(clusterStyleFunc)
+      }
+      else {
+        component.$layer.setSource(source);
+        component.$layer.setStyle(config.pointStyle)
+      }
     },
     initMap () {
       this.map = this.$refs.map;

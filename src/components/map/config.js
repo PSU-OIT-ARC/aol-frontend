@@ -17,9 +17,9 @@ const ArcGisOnlineTilesUrl = `${ArcGisOnlineTilesBaseUrl}/${rest_path}`;
 
 const config = {
     token: token,
-    map_center: [-121.011856, 43.902925],
+    map_center: [-121.511856, 44.002925],
     bounds_padding: 120,
-    zoom: 8,
+    zoom: 7.45,
     cluster_distance: 150,
     cluster_max_zoom: 10,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
