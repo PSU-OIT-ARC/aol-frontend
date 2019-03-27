@@ -20,6 +20,16 @@ const getLayerUrl = function () {
         `VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`;
 };
 
+const getStyleUrl = function () {
+    return `${ArcGisOnlineTilesUrl}/${this.AGOLName}/` +
+        `VectorTileServer/resources/styles/root.json?f=json&token=${token}`;
+};
+
+const getSpriteUrl = function () {
+    return `${ArcGisOnlineTilesUrl}/${this.AGOLName}/` +
+        `VectorTileServer/resources/sprites/sprite?f=json&token=${token}`;
+};
+
 const config = {
     token: token,
     map_center: [-122.841856, 44.002925],
@@ -49,6 +59,8 @@ const config = {
         visible: false,
         AGOLName: 'Vector_Publands',
         getUrl: getLayerUrl,
+        getStyleUrl: getStyleUrl,
+        getSpriteUrl: getSpriteUrl,
         zIndex: 6,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
@@ -57,6 +69,8 @@ const config = {
         visible: true,
         AGOLName: 'Vector_NoPub',
         getUrl: getLayerUrl,
+        getStyleUrl: getStyleUrl,
+        getSpriteUrl: getSpriteUrl,
         zIndex: 7,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
@@ -66,6 +80,8 @@ const config = {
         zIndex: 8,
         AGOLName: 'Vector_Bathy',
         getUrl: getLayerUrl,
+        getStyleUrl: getStyleUrl,
+        getSpriteUrl: getSpriteUrl,
         extent: undefined//[-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       }
     ],

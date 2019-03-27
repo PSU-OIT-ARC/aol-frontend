@@ -237,41 +237,30 @@ export default {
       }
     },
     applyEsriStyles (component) {
-      // this mapping could probably be an attribute on layer Object
-      let vectorTileLayers = {
-         'publand': 'Vector_Publands',
-         'nopubland': 'Vector_NoPub',
-         'bathymetry' : 'Vector_Bathy'
-       };
-      let layer = component.$olObject;
-      let layer_id = component.$olObject.getProperties().id;
-
-      let sprite_path = 'sprites/sprite';
-      let style_path = "styles/root.json";
-
-      let token = config.token;
-      let base_style_url = `${config.ArcGisOnlineTilesUrl}/${vectorTileLayers[layer_id]}/VectorTileServer/resources`;
-      let style_url = `${base_style_url}/${style_path}?f=json&token=${token}`;
-      let sprite_url = `${base_style_url}/${sprite_path}?f=json&token=${token}`;
+      let layer = this.featureLayers.find(
+        l => l.id == component.$layer.getProperties().id);
+      let style_url = layer.getStyleUrl();
+      let sprite_url = layer.getSpriteUrl();
 
       fetch(style_url).then((response)=>{
         return response.json()
       }).then((style) => {
-        if (layer_id != 'bathymetry') {
+        if (layer.id != 'bathymetry') {
           // HACK: zoom seems to be off from styles min/maxzoom?
           // issue with ol-mapboxstyle and/or OL zoom (integer vs float)
           style.layers.map((layer) => {
             layer.minzoom -= 0.6;
             layer.maxzoom += 0.6;
           });
-          applyStyle(layer, style, 'esri', sprite_url);
+          applyStyle(component.$layer, style, 'esri', sprite_url);
         }
         else {
-          /*
-         HACK: ol-mapboxstyle doesn't like it if the sprite url returns an empty object so set sprite to null so it doesn't bother looking for sprites
-          */
+        /*
+        HACK: ol-mapboxstyle throws an error if sprite url returns an
+        empty object; set sprite to null so it doesn't look for sprites
+        */
           style.sprite = null;
-          applyStyle(layer, style, 'esri', sprite_url);
+          applyStyle(component.$layer, style, 'esri', sprite_url);
         }
       });
     },
