@@ -42,8 +42,9 @@ export default {
   #search-results-wrapper li {
     animation: drop-in 200ms forwards;
   }
-  #search-results-wrapper li:nth-child(2n) {animation-delay: 100ms;}
-
+  #search-results-wrapper li:nth-child(2n) {
+    animation-delay: 100ms;
+  }
 
   .no-results {
     padding: 20px;

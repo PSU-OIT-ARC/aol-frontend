@@ -73,12 +73,16 @@ export default {
     display:grid;
     grid-template-rows: 140px auto;
     position: absolute;
-    bottom: 0px;
     background-color: white;
     min-height: 300px;
     margin-top: 20px;
     box-shadow: 2px 2px 3px #ccc;
-    width: calc(100vw - 30px);
+    width: 390px;
+
+    @include respond-to(handheld) {
+      width: calc(100vw - 30px);
+      bottom: 15px;
+    }
 
     .intro__photo {
       height: 140px;
