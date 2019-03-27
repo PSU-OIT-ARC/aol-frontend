@@ -15,9 +15,11 @@
         <div class="content-header">
           <div class='back'>
             <router-link :to="{ name: 'home', query: back }">
-              Go back
+              &larr; Back to Map
             </router-link>
           </div>
+
+          <div class="close-sidebar" @click="close">╳</div>
 
           <lake-card class="card" :lake="lake"></lake-card>
 
@@ -26,7 +28,7 @@
 
         <div class="content-body">
 
-          <div class='body-main'>
+          <div class="body-main">
             <data-tabs :lake='lake' :with_sections='true'></data-tabs>
           </div>
 
@@ -38,13 +40,11 @@
               </p>
             </div>
 
-            <p>
-              Documents
-              <ul>
-                <li><a href="#">Basin Statistics (pdf)</a></li>
-                <li><a href="#">Atlas of Oregon Lakes Original book page (pdf)</a></li>
-              </ul>
-            </p>
+            <h3>Documents</h3>
+            <ul>
+              <li><a href="#">Basin Statistics (pdf)</a></li>
+              <li><a href="#">Atlas of Oregon Lakes Original book page (pdf)</a></li>
+            </ul>
 
           </div>
 
@@ -113,28 +113,43 @@ export default {
     background-color: green;
   }
 
+  .lake-detail {
+    display: grid;
+    grid-template-columns: 1fr minmax(900px, 1200px) 1fr;
+    background: whitesmoke;
+  }
+
   .detail-shaded-head {
     background-color: #838383;
   }
 
-  .lake-detail {
-    display: grid;
-    grid-template-columns: 1fr minmax(1000px, 1200px) 1fr;
-    background: whitesmoke;
+  .close-sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: white;
+    text-align: right;
+    margin-top: 5px;
   }
 
   .content-wrapper {
     position: relative;
-    top: -120px;
+    top: -180px;
   }
 
   .content-header {
-    background-color: green;
+    .back {
+      margin: 10px 0;
+    }
+    .back a {color:white;}
   }
 
   .content-body {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2.2fr .8fr;
+    margin-top: 40px;
   }
 
   .body-main {
@@ -142,21 +157,24 @@ export default {
   }
 
   .body-sidebar {
-    background-color: yellow;
+    padding: 0px 0px 0px 15px;
   }
 
-  .back {
-    margin: 10px 0;
+  h3 {
+    font-family: "Lato-Bold", sans-serif;
+    font-size: 1.1em;
+    font-weight: 700;
   }
 
   .map-image--wrapper {
     img {
+      width: 100%;
+      height: auto;
     }
   }
 
   .caption {
     text-align: center;
-
     a {
       padding: 5px;
     }

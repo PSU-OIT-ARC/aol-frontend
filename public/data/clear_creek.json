@@ -11,7 +11,7 @@
   "aol_page" : 29,
   "body" : "Check back for more information about Clear Creek Reservoir.  If you would like to contribute information about this lake, contact  oregonlakesatlas@pdx.edu.",
   "fishing_zone" : 31,
-  "county_set" : ["Multnomah"],
+  "county_set" : "Multnomah",
   "plants" : [],
   "has_mussels" : true,
   "has_plants" : false,

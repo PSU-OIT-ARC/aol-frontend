@@ -3,7 +3,7 @@
    @click.native="activateLake(lake)">
 
   <div class="lake-card">
-    <div class="photo" :style="{'background-image': 'url(' + require('@/assets/generic_thumb_square.png') + ')'}">
+    <div class="photo" :style="{'background-image': 'url(' + require('@/assets/generic_thumb_detail.png') + ')'}">
     </div>
     <div class="info">
       <h3>{{ lake.name }} <i>({{lake.county_set}})</i></h3>
@@ -69,8 +69,8 @@ a:hover, a:focus {
 
 .lake-card .photo {
   background-repeat: no-repeat;
-  background-size: contain;
-  background-position: top center;
+  background-size: cover;
+  background-position: center center;
 }
 
 .lake-card .info i {

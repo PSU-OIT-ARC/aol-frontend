@@ -11,7 +11,7 @@
   "aol_page" : 22,
   "body" : "Clear Lake, so named due to its distinctive shape, is one of the coolest lakes in Oregon",
   "fishing_zone" : 32,
-  "county_set" : ["Multnomah"],
+  "county_set" : "Multnomah",
   "plants" : [],
   "has_mussels" : true,
   "has_plants" : false,

@@ -45,13 +45,10 @@ ul, li {
   grid-template-columns: 140px 1fr !important;
 
   .info {
-    padding: 10px 20px 10px 0px;
+    padding: 10px 20px;
   }
 
   .photo {
-    background-repeat: no-repeat;
-    background-position: center center !important;
-    background-size: cover !important;
   }
 
   .data-icons {display:none;}
@@ -66,6 +63,43 @@ ul, li {
   }
 }
 
+
+.content-header .lake-card {
+  box-shadow: 1px 1px 3px #777;
+  animation: drop-in 200ms forwards;
+  animation-fill-mode: both;
+  backface-visibility: hidden;
+  background-color: #fff;
+  padding: 0px !important;
+  grid-template-columns: 370px 1fr !important;
+
+  .info {
+    padding: 50px 20px;
+
+  }
+
+  .photo {
+  }
+
+  .data-icons {display:none;}
+
+  @include respond-to(handheld) {
+    grid-template-columns: 110px 1fr !important;
+    width: calc(100vw - 30px);
+  }
+
+  h3 {
+    font-size: 1.6em;
+  }
+}
+
+
+
+
+
+
+
+/* Utility classes */
 .hide_results {
   display: none;
   pointer-events: none;
