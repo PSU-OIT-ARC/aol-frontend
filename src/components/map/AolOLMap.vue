@@ -26,7 +26,7 @@
         :visible="layer.visible" :declutter="true" :zIndex="layer.zIndex"
         @mounted="applyEsriStyles" :extent="layer.extent">
         <vl-source-vector-tile
-          :url="layer.url">
+          :url="layer.getUrl()">
         </vl-source-vector-tile>
       </vl-layer-vector-tile>
 

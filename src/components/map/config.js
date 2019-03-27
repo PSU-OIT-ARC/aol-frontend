@@ -15,6 +15,11 @@ const rest_path = "arcgis/rest/services";
 const ArcGisOnlineServicesUrl = `${ArcGisOnlineServicesBaseUrl}/${rest_path}`;
 const ArcGisOnlineTilesUrl = `${ArcGisOnlineTilesBaseUrl}/${rest_path}`;
 
+const getLayerUrl = function () {
+    return `${ArcGisOnlineTilesUrl}/${this.AGOLName}/`+
+        `VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`;
+};
+
 const config = {
     token: token,
     map_center: [-122.841856, 44.002925],
@@ -42,14 +47,16 @@ const config = {
       {
         id: 'publand',
         visible: false,
-        url: `${ArcGisOnlineTilesUrl}/Vector_Publands/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`,
+        AGOLName: 'Vector_Publands',
+        getUrl: getLayerUrl,
         zIndex: 6,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
       {
         id: 'nopubland',
         visible: true,
-        url: `${ArcGisOnlineTilesUrl}/Vector_NoPub/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`,
+        AGOLName: 'Vector_NoPub',
+        getUrl: getLayerUrl,
         zIndex: 7,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
@@ -57,7 +64,8 @@ const config = {
         id: 'bathymetry',
         visible: true,
         zIndex: 8,
-        url: `${ArcGisOnlineTilesUrl}/Vector_Bathy/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`,
+        AGOLName: 'Vector_Bathy',
+        getUrl: getLayerUrl,
         extent: undefined//[-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       }
     ],
