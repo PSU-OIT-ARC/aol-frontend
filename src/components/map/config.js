@@ -1,12 +1,12 @@
 import { createStyle } from 'vuelayers/lib/ol-ext';
 
 
-// need to handshake instaed
-const token = `vOu43bHX8xtRlR84akQGzfjQSfgDw-Qc4KLPbgxLkwqqAawM7S\
-p5Z0LzNnLmAgXPhS8jwZ4UpOlZElJNBRyeroumakaval58kJ63Igw-0yDsOcZhkFA\
-OVeWWulPqTSWWX6AEItVxzdcgnb6uliYfE28xvflwybAouf-8V7mXZOpOcL77K-6E\
-4J9BkYSQ6-O7KWJ6Fd07RvPP48IPOOE6m_kZbFY00VWVj6zspvcZMsuSktp0XZ3Is\
-jPn1qChZa2fxdsiuOlVi_3iy8QgT5dICFdAQ_m8-qoTHY_rVX6ICFQ`;
+// need to handshake instead
+const token = `TzYZhy_QyEHxjyNzYEcWOrNFq6MnEAuWQZy9QXAIX5Eq-BGAMPGHrtkRIMxUWVwZ\
+VocGX4Z6YxFYMG1dweLi9-GD2vmM_eigxx3w_th4j6wW_wKz_YTivzxr4GJUZIyll2\
+z9klp1ivyKax3CkobISZLXYnOjYwNnMpUzYFD_XgJ00K5M3xvtXfNk7_KwIgBUDD2E\
+jYy9cLG1Lf0CcZ9r_WjDhE5Cch3nrT7LQmqAMsILKlA-txKddGs6DZTpL8xRMVIV_n\
+NXrBUMH3h7OK14L-cGFP4ntKBVPwJqL08HtrM`;
 
 const ArcGisOnlineServicesBaseUrl = "https://services.arcgisonline.com";
 const ArcGisOnlineTilesBaseUrl = "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY";
@@ -17,9 +17,9 @@ const ArcGisOnlineTilesUrl = `${ArcGisOnlineTilesBaseUrl}/${rest_path}`;
 
 const config = {
     token: token,
-    map_center: [-121.511856, 44.002925],
+    map_center: [-122.841856, 44.002925],
     bounds_padding: 120,
-    zoom: 7.45,
+    zoom: 8.5,
     cluster_distance: 150,
     cluster_max_zoom: 10,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
@@ -43,13 +43,22 @@ const config = {
         id: 'publand',
         visible: false,
         url: `${ArcGisOnlineTilesUrl}/Vector_Publands/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`,
+        zIndex: 6,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
       {
         id: 'nopubland',
         visible: true,
         url: `${ArcGisOnlineTilesUrl}/Vector_NoPub/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`,
+        zIndex: 7,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
+      },
+      {
+        id: 'bathymetry',
+        visible: true,
+        zIndex: 8,
+        url: `${ArcGisOnlineTilesUrl}/Vector_Bathy/VectorTileServer/tile/{z}/{y}/{x}.pbf?token=${token}`,
+        extent: undefined//[-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       }
     ],
     clusterStyle: createStyle({

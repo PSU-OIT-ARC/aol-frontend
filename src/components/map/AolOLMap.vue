@@ -23,7 +23,7 @@
 
       <vl-layer-vector-tile  v-for="layer in featureLayers"
         :key="layer.id" :id="layer.id" :ref="layer.id"
-        :visible="layer.visible" :declutter="true"
+        :visible="layer.visible" :declutter="true" :zIndex="layer.zIndex"
         @mounted="applyEsriStyles" :extent="layer.extent">
         <vl-source-vector-tile
           :url="layer.url">
@@ -64,6 +64,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { applyStyle } from 'ol-mapbox-style';
+import stylefunction from 'ol-mapbox-style/stylefunction';
 
 import config from '@/components/map/config';
 import LayerSwitcher from '@/components/map/LayerSwitcher';
@@ -75,7 +76,7 @@ import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import Cluster from 'ol/source/Cluster';
 
-const USE_CLUSTERS = false;
+const USE_CLUSTERS = true;
 
 export default {
   name: 'aol-ol-map',
@@ -266,8 +267,12 @@ export default {
       let layers = this.map.$map.getLayers().getArray();
       let feature_layers = layers.filter((layer)=>{
         return this.featureLayers.find(l => l.id == layer.getProperties().id);
+      }).filter((layer) => {
+        return layer.getProperties().id != 'bathymetry'; //bathymetry stays on?
       });
       feature_layers.map((layer) => {
+        layer.setVisible(true);
+
         if (layer.getProperties()['id'] != selected_layer) {
           layer.setVisible(false);
         }
@@ -277,38 +282,40 @@ export default {
       });
     },
     // TODO: this could get moved to a generic util
-    applyEsriStyles () {
-      let vectorTileLayers = [
-        'Vector_Publands',
-        'Vector_NoPub'
-      ];
+    applyEsriStyles (component) {
+      // this mapping could probably be an attribute on layer Object
+      let vectorTileLayers = {
+         'publand': 'Vector_Publands',
+         'nopubland': 'Vector_NoPub',
+         'bathymetry' : 'Vector_Bathy'
+       };
+      let layer_id = component.$olObject.getProperties().id;
+      let layer = component.$olObject;
 
       let sprite_path = 'sprites/sprite';
       let style_path = "styles/root.json";
-      let token = config.token;
 
-      for (let i=0; i<vectorTileLayers.length; i++) {
-        config.ArcGisOnlineTilesUrl
-        let base_style_url = `${config.ArcGisOnlineTilesUrl}/${vectorTileLayers[i]}/VectorTileServer/resources`;
-        let style_url = `${base_style_url}/${style_path}?f=json&token=${token}`;
-        let sprite_url = `${base_style_url}/${sprite_path}?f=json&token=${token}`;
-        fetch(style_url).then((response)=>{
-          return response.json()
-        }).then((style) => {
+      let token = config.token;
+      let base_style_url = `${config.ArcGisOnlineTilesUrl}/${vectorTileLayers[layer_id]}/VectorTileServer/resources`;
+      let style_url = `${base_style_url}/${style_path}?f=json&token=${token}`;
+      let sprite_url = `${base_style_url}/${sprite_path}?f=json&token=${token}`;
+
+      fetch(style_url).then((response)=>{
+        return response.json()
+      }).then((style) => {
+        if (layer_id != 'bathymetry') {
           // HACK: zoom seems to be off from styles min/maxzoom?
+          // issue with ol-mapboxstyle and/or OL zoom (integer vs float)
           style.layers.map((layer) => {
             layer.minzoom -= 0.6;
             layer.maxzoom += 0.6;
           });
-          let layers = this.$refs.map.$map.getLayers().getArray();
-          let feature_layers = layers.filter((layer)=>{
-            return this.featureLayers.find(l => l.id == layer.getProperties().id);
-          });
-          feature_layers.map((layer) => {
-            applyStyle(layer, style, 'esri', sprite_url);
-          });
-        });
-      };
+        }
+        // HACK: ol-mapboxstyle doesn't like it if the sprite url returns an empty object
+        // so set sprite to null so it doesn't bother looking for sprites
+        style.sprite = null;
+        applyStyle(layer, style, 'esri', sprite_url);
+      });
     },
     mountClusterSource (component) {
       // setting cluster source and stylefunction directly in
