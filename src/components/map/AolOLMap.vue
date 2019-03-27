@@ -3,7 +3,7 @@
     <vl-map id="map" class="map" ref="map"
       @mounted="initMap"
       @dblclick="zoomToCluster($event)"
-      @click="checkMarkerOrBounds($event)"
+      @click="selectLakeFromClick($event)"
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true">
 
@@ -64,14 +64,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { applyStyle } from 'ol-mapbox-style';
-import stylefunction from 'ol-mapbox-style/stylefunction';
 
 import config from '@/components/map/config';
+import utils from '@/components/map/utils';
 import LayerSwitcher from '@/components/map/LayerSwitcher';
 import FilterControl from '@/components/map/FilterControl';
 
 import * as proj from 'ol/proj';
-import * as olExtent from  'ol/extent';
 import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import Cluster from 'ol/source/Cluster';
@@ -105,7 +104,8 @@ export default {
         return newValue;
       }
     },
-    lake_polygons () { // currently not using
+    /* currently not using
+    lake_polygons () {
       return  this.lakes.map((lake) => {
         return {
             type: 'Feature',
@@ -122,6 +122,7 @@ export default {
           }
       });
     },
+    */
     lake_markers () {
       // only read from GeoJSON once
       if (!this.lakes_with_geom) {
@@ -129,13 +130,36 @@ export default {
       }
       return this.lakes_with_geom;
     },
-    // end computed
+  // end computed
   },
   methods: {
     ...mapActions([
       'fetchLakes', 'setCurrentLake', 'fitBounds',
       'searchLakes', 'setMapObject'
     ]),
+    zoomToCluster: utils.zoomToCluster,
+    showSideBar (lake) {
+      this.$router.push({name: 'home', query: {'lake': lake.slug}})
+      this.setCurrentLake(lake);
+      this.searchLakes(null); // reset search
+      this.fitBounds({geom: lake.geom});
+    },
+    selectLakeFromUrl () {
+      let slug = this.$route.query['lake'];
+      if (slug) {
+        let lake = this.getLakeBySlug(slug);
+        this.setCurrentLake(lake);
+        this.fitBounds({geom: lake.geom});
+      }
+    },
+    selectFeatureLayer (selected_layer) {
+      let layers = this.map.$map.getLayers().getArray();
+      let feature_layers = layers.filter((layer) => {
+          let id = layer.getProperties().id;
+          return id == 'nopubland' || id == 'publand';
+      });
+      utils.selectFeatureLayer(selected_layer, feature_layers);
+    },
     getLakeMarkers () {
       if(!this.lakes.length) return;
       let lakes = this.lakes;
@@ -177,44 +201,15 @@ export default {
       geoJSONObj.features = lakes;
       return new GeoJSON().readFeatures(geoJSONObj)
     },
-    showSideBar (lake) {
-      this.$router.push({name: 'home', query: {'lake': lake.slug}})
-      this.setCurrentLake(lake);
-      this.searchLakes(null); // reset search
-      this.fitBounds({geom: lake.geom});
-    },
-    selectLakeFromUrl () {
-      let slug = this.$route.query['lake'];
-      if (slug) {
-        let lake = this.getLakeBySlug(slug);
-        this.setCurrentLake(lake);
-        this.fitBounds({geom: lake.geom});
+    selectLakeFromClick (e) {
+      console.log(e.map.getCoordinateFromPixel(e.pixel)); // DEBUG
+      let feature = utils.checkMarkerOrBounds(
+          e, ['lake_markers'], USE_CLUSTERS
+      );
+      if (feature) {
+        let lake = this.getLakeBySlug(feature.getProperties().name);
+        this.showSideBar(lake);
       }
-    },
-    checkMarkerOrBounds (e) {
-      // TODO: this could get moved to a generic util
-      let pixel = e.pixel;
-      console.log(this.map.$map.getCoordinateFromPixel(pixel));
-      // see hitTolerance for more fuzzing
-      this.map.forEachFeatureAtPixel(pixel, (feature, layer) => {
-          if (feature.get('features') && feature.get('features').length > 1) {
-              return // this is a cluster
-          }
-          let selected;
-          if (USE_CLUSTERS) {
-            selected = feature.getProperties().features[0].getProperties();
-          }
-          else {
-            selected = feature.getProperties()
-          }
-          let lake = this.getLakeBySlug(selected.name);
-          this.showSideBar(lake);
-        },
-        {
-          layerFilter: (layer_candidate) => {
-            return layer_candidate.get('id') == 'lake_markers'
-        }
-      });
     },
     selectLakesFromFilters (filters) {
       let hasFilterAttributes = (lake) => {
@@ -222,7 +217,6 @@ export default {
           return true
         }
         let lake_object = lake.getProperties()
-
         let attr =  this.selectedAttributes.every(
           (attribute) => {
             return lake_object[attribute] == true
@@ -236,52 +230,12 @@ export default {
       });
       this.lake_marker_source.addFeatures(filtered_lakes)
     },
-    // TODO: this could get moved to a generic util
-    zoomToCluster (e) {
-      let cluster_feature = this.map.forEachFeatureAtPixel(
-        e.pixel, (feature, layer) => {
-          return feature;
-      });
-      if (cluster_feature) {
-        let features = cluster_feature.get('features');
-        if (features && features.length > 1) {
-          let extent = [];
-          features.forEach((f) => {
-            extent.push(f.getGeometry().getExtent());
-          });
-          let bounds = olExtent.boundingExtent(extent)
-          this.map.$map.getView().fit(bounds);
-          this.map.$map.getView().setCenter(e.coordinate)
-        }
-      }
-    },
-    // TODO: this could get moved to a generic util
-    calculateClusterDistance () {
+    calculateClusterDistance (zoom) {
       if (USE_CLUSTERS) {
-        let distance = this.zoom > this.cluster_max_zoom ? 0 : this.cluster_distance;
+        let distance = zoom > config.cluster_max_zoom ? 0 : config.cluster_distance;
         this.cluster_source.setDistance(distance);
       }
     },
-    // TODO: this could get moved to a generic util
-    selectFeatureLayer (selected_layer) {
-      let layers = this.map.$map.getLayers().getArray();
-      let feature_layers = layers.filter((layer)=>{
-        return this.featureLayers.find(l => l.id == layer.getProperties().id);
-      }).filter((layer) => {
-        return layer.getProperties().id != 'bathymetry'; //bathymetry stays on?
-      });
-      feature_layers.map((layer) => {
-        layer.setVisible(true);
-
-        if (layer.getProperties()['id'] != selected_layer) {
-          layer.setVisible(false);
-        }
-        else if (layer.getProperties()['id'] == selected_layer) {
-          layer.setVisible(true);
-        }
-      });
-    },
-    // TODO: this could get moved to a generic util
     applyEsriStyles (component) {
       // this mapping could probably be an attribute on layer Object
       let vectorTileLayers = {
@@ -289,8 +243,8 @@ export default {
          'nopubland': 'Vector_NoPub',
          'bathymetry' : 'Vector_Bathy'
        };
-      let layer_id = component.$olObject.getProperties().id;
       let layer = component.$olObject;
+      let layer_id = component.$olObject.getProperties().id;
 
       let sprite_path = 'sprites/sprite';
       let style_path = "styles/root.json";
@@ -310,11 +264,15 @@ export default {
             layer.minzoom -= 0.6;
             layer.maxzoom += 0.6;
           });
+          applyStyle(layer, style, 'esri', sprite_url);
         }
-        // HACK: ol-mapboxstyle doesn't like it if the sprite url returns an empty object
-        // so set sprite to null so it doesn't bother looking for sprites
-        style.sprite = null;
-        applyStyle(layer, style, 'esri', sprite_url);
+        else {
+          /*
+         HACK: ol-mapboxstyle doesn't like it if the sprite url returns an empty object so set sprite to null so it doesn't bother looking for sprites
+          */
+          style.sprite = null;
+          applyStyle(layer, style, 'esri', sprite_url);
+        }
       });
     },
     mountClusterSource (component) {
@@ -332,11 +290,6 @@ export default {
         });
         this.cluster_source = cluster_source;
         component.$layer.setSource(cluster_source);
-        // TODO; move to util
-        let mapToRange = (value, in_min, in_max, out_min, out_max) => {
-          return (value - in_min) * (out_max - out_min) /
-                 (in_max - in_min) + out_min;
-        }
 
         let clusterStyleFunc = (feature, resolution) => {
             let style = config.pointStyle;
@@ -345,7 +298,7 @@ export default {
               style = config.clusterStyle;
               let text = size == 1 ? '' : size.toString();
               style.text_.text_ = text;
-              let radius = mapToRange(size, 2, 2000, 10, 34);
+              let radius = utils.mapToRange(size, 2, 2000, 10, 34);
               style.image_.setRadius(radius);
             }
             return style
