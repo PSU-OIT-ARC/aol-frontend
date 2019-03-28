@@ -78,7 +78,7 @@ const config = {
         id: 'bathymetry',
         visible: true,
         zIndex: 8,
-        AGOLName: 'Vector_Bathy',
+        AGOLName: 'Vector_Bath_Test_2',
         getUrl: getLayerUrl,
         getStyleUrl: getStyleUrl,
         getSpriteUrl: getSpriteUrl,
