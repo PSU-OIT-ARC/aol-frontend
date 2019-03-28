@@ -1,13 +1,13 @@
 <template>
   <div class='data-sections'>
 
-    <div class='tabs'>
+    <ul class='tabs'>
       <tab
         v-for="section in sections" :key="section.name"
         :section="section" :lake="lake"
         :active="currentSectionTitle === section.title">
       </tab>
-    </div>
+    </ul>
 
     <keep-alive v-if='with_sections'>
       <component
@@ -62,21 +62,5 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-
-  .data-sections {
-    margin-top: 20px;
-  }
-
-  .tabs {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: 50% 50%;
-    grid-gap: 20px;
-    width: 90%;
-  }
-
-  .data-section {
-    margin-top: 30px;
-  }
 
 </style>

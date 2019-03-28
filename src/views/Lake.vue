@@ -86,7 +86,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchLake', 'fetchLakes', 'searchLakes'])
+    ...mapActions(['fetchLake', 'fetchLakes', 'searchLakes']),
+    close () {
+      this.$router.push({name: 'home'});
+    }
   },
   created () {
     // clear out any search SearchResults
@@ -148,16 +151,12 @@ export default {
 
   .content-body {
     display: grid;
-    grid-template-columns: 2.2fr .8fr;
+    grid-template-columns: 2.1fr .9fr;
     margin-top: 40px;
   }
 
-  .body-main {
-    background-color: white;
-  }
-
   .body-sidebar {
-    padding: 0px 0px 0px 15px;
+    padding: 0px 0px 0px 50px;
   }
 
   h3 {

@@ -105,8 +105,9 @@ export default {
     grid-template-rows: auto auto auto;
     align-content: start;
     overflow-y: scroll;
-    padding: 45px 15px 0px 15px;
+    padding: 65px 15px 0px 15px;
     height: calc(100vh - (45px + 40px + 160px));//45px padding + 40px header + 160px graybar
+
   }
 
   .summary-chart {
