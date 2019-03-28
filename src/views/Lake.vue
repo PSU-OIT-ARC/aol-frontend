@@ -41,10 +41,25 @@
             </div>
 
             <h3>Documents</h3>
-            <ul>
+            <ul class="documents-wrapper">
               <li><a href="#">Basin Statistics (pdf)</a></li>
               <li><a href="#">Atlas of Oregon Lakes Original book page (pdf)</a></li>
             </ul>
+
+
+            <div class="photos-wrapper">
+              <h3>Photos</h3>
+
+              <div class="photos">
+                <img src="~@/assets/generic_thumb_square.png" class="lake-photo"/>
+                <img src="~@/assets/generic_thumb_square.png" class="lake-photo"/>
+                <img src="~@/assets/generic_thumb_square.png" class="lake-photo"/>
+                <img src="~@/assets/generic_thumb_square.png" class="lake-photo"/>
+                <img src="~@/assets/generic_thumb_square.png" class="lake-photo"/>
+                <img src="~@/assets/generic_thumb_square.png" class="lake-photo"/>
+              </div>
+
+            </div>
 
           </div>
 
@@ -113,13 +128,19 @@ export default {
     display: grid;
     grid-template-rows: 200px 1fr;
     grid-template-columns: 1fr;
-    background-color: green;
+
+    @include respond-to(handheld) {
+      grid-template-rows: 150px 1fr;
+    }
   }
 
   .lake-detail {
     display: grid;
     grid-template-columns: 1fr minmax(900px, 1200px) 1fr;
     background: whitesmoke;
+    @include respond-to(handheld) {
+      width: 100vw;
+    }
   }
 
   .detail-shaded-head {
@@ -128,35 +149,56 @@ export default {
 
   .close-sidebar {
     position: absolute;
-    top: 0;
+    top: 5px;
     right: 0;
     cursor: pointer;
     font-size: 1.5em;
     color: white;
     text-align: right;
-    margin-top: 5px;
+    @include respond-to(handheld) {
+      padding: 0px 15px;
+    }
   }
 
   .content-wrapper {
     position: relative;
     top: -180px;
+    @include respond-to(handheld) {
+      top: -140px;
+    }
+    @include respond-to(handheld) {
+      width: 100vw;
+    }
   }
 
   .content-header {
+    @include respond-to(handheld) {
+      padding: 0px 15px;
+    }
     .back {
       margin: 10px 0;
     }
-    .back a {color:white;}
+    .back a {
+      color:white;
+    }
   }
 
   .content-body {
     display: grid;
     grid-template-columns: 2.1fr .9fr;
     margin-top: 40px;
+    @include respond-to(handheld) {
+      margin-top: 20px;
+      grid-template-columns: none;
+      grid-template-rows: auto auto;
+    }
   }
 
   .body-sidebar {
     padding: 0px 0px 0px 50px;
+    @include respond-to(handheld) {
+      padding: 0px 15px;
+    }
   }
 
   h3 {
@@ -178,6 +220,33 @@ export default {
       padding: 5px;
     }
   }
+
+  ul.documents-wrapper {
+    padding: 15px;
+    background-color: white;
+    box-shadow: 2px 2px 4px #aaa;
+
+    li {
+      list-style-type: circle;
+      margin: 0px 0px 8px 15px;
+    }
+  }
+
+  .photos-wrapper {
+    margin-top: 40px;
+  }
+
+  .photos {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  img.lake-photo {
+    display: block;
+    width: 100%;
+  }
+
 
 
 </style>

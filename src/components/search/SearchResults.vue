@@ -35,8 +35,10 @@ export default {
   #search-results-wrapper {
     color: #333;
     padding: 10px 0px;
-    min-height: 50vh;
+    min-height: auto;
     overflow: hidden;
+    background-color: white;
+    margin-top: 15px;
   }
 
   #search-results-wrapper li {

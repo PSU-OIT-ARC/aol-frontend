@@ -10,7 +10,7 @@
   export default {
     props: ['lake'],
     name: 'atlas_text',
-    title: 'AOL text',
+    title: 'Summary',
   }
 </script>
 

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <table class="table">
+
+    <h3>Plants</h3>
+
+    <table class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
           <th>Date</th>

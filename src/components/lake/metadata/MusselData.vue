@@ -1,6 +1,6 @@
 <template>
   <div class=''>
-    <table class="table">
+    <table class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
           <th>Date</th>

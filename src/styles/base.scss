@@ -48,9 +48,6 @@ ul, li {
     padding: 10px 20px;
   }
 
-  .photo {
-  }
-
   .data-icons {display:none;}
 
   @include respond-to(handheld) {
@@ -65,31 +62,34 @@ ul, li {
 
 
 .content-header .lake-card {
+  grid-template-columns: 370px 1fr !important;
+  padding: 0px !important;
   box-shadow: 1px 1px 3px #777;
   animation: drop-in 200ms forwards;
   animation-fill-mode: both;
   backface-visibility: hidden;
-  background-color: #fff;
-  padding: 0px !important;
-  grid-template-columns: 370px 1fr !important;
-
-  .info {
-    padding: 50px 20px;
-
-  }
-
-  .photo {
-  }
-
-  .data-icons {display:none;}
 
   @include respond-to(handheld) {
     grid-template-columns: 110px 1fr !important;
     width: calc(100vw - 30px);
   }
+  
+  .info {
+    padding: 50px 20px !important;
+    @include respond-to(handheld) {
+      padding: 15px 15px 0px 15px;
+    }
+    min-height: 110px;
+  }
+
+  .data-icons {display:none;}
 
   h3 {
     font-size: 1.6em;
+    @include respond-to(handheld) {
+      font-size: 1.1em;
+      max-width: 80%;
+    }
   }
 }
 
@@ -102,6 +102,11 @@ ul, li {
   grid-template-columns: 50% 50%;
   grid-gap: 20px;
   width: 90%;
+  @include respond-to(handheld) {
+    width: calc(100vw - 15px);
+    overflow-y: scroll;
+    margin-left: 15px !important;
+  }
 }
 
 .body-main .tabs {
@@ -161,11 +166,18 @@ ul, li {
 }
 
 .body-main .tabs {
+  position: relative;
+  z-index: 2;
+  top: 1px;
+
   li {
-    margin-right: 5px;
+    margin-right: 7px;
     max-width: 180px;
     width: auto;
     padding-left: 0px;
+    border-left: 1px solid #EAEAEA;
+    border-top: 1px solid #EAEAEA;
+    border-right: 1px solid #EAEAEA;
   }
 
   a:link, a:visited {
@@ -193,15 +205,50 @@ ul, li {
   }
 }
 
+.tabs li:last-of-type {
+  display:none;
+}
+
 .data-section {
   background-color: white;
-  padding: 10px;
+  padding: 15px;
+  border: 1px solid #EAEAEA;
+
+  h3 {
+    font-size: 1.3em;
+    margin: 10px 0px 20px 0px;
+  }
 }
 
 
 
 
+/* TABLES */
 
+.table {
+  display: table;
+  width: 100%;
+
+  tr td {
+    padding: 5px 0px;
+  }
+
+  tbody tr:nth-child(odd) {
+     background-color: #f3f3f3;
+  }
+
+  thead {
+    text-align: left;
+    margin-top: 15px;
+    font-family: "Lato-Bold", sans-serif;
+
+    th {
+      padding: 8px 0px;
+    }
+  }
+
+
+}
 
 
 
@@ -306,5 +353,4 @@ ul, li {
   @include respond-to(handheld) {
     display: none;
   }
-
 }

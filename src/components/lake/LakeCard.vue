@@ -52,7 +52,6 @@ a:link, a:visited {
   display: block;
   text-decoration: none;
   color: black;
-  background-color: white;
 }
 
 a:hover, a:focus {
@@ -63,7 +62,6 @@ a:hover, a:focus {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 110px 1fr;
-  grid-column-gap: 15px;
   padding: 10px 20px;
 }
 
@@ -73,10 +71,14 @@ a:hover, a:focus {
   background-position: center center;
 }
 
-.lake-card .info i {
-  font-style: italic;
-  font-weight: 400;
-  font-family: "Lato-Regular", serif;
+.lake-card .info {
+  background-color: white;
+  padding: 10px 15px;
+  i {
+    font-style: italic;
+    font-weight: 400;
+    font-family: "Lato-Regular", sans-serif;
+  }
 }
 
 h3 {
