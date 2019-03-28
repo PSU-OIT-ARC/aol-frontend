@@ -249,8 +249,8 @@ export default {
           // HACK: zoom seems to be off from styles min/maxzoom?
           // issue with ol-mapboxstyle and/or OL zoom (integer vs float)
           style.layers.map((layer) => {
-            layer.minzoom -= 0.6;
-            layer.maxzoom += 0.6;
+            layer.minzoom = Math.floor(layer.minzoom);
+            layer.maxzoom = Math.ceil(layer.maxzoom);
           });
           applyStyle(component.$layer, style, 'esri', sprite_url);
         }
