@@ -1,6 +1,5 @@
 <template>
-  <router-link :to="href"
-   @click.native="activateLake(lake)">
+  <router-link :to="href" @click.native="activateLake(lake)">
 
   <div class="lake-card">
     <div class="photo" :style="{'background-image': 'url(' + require('@/assets/generic_thumb_detail.png') + ')'}">
@@ -48,6 +47,8 @@ export default {
 
 <style scoped>
 
+/* Styles in lakecard.scss */
+
 a:link, a:visited {
   display: block;
   text-decoration: none;
@@ -57,51 +58,5 @@ a:link, a:visited {
 a:hover, a:focus {
   background-color: #E7E7E7;
 }
-
-.lake-card {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 110px 1fr;
-  padding: 10px 20px;
-}
-
-.lake-card .photo {
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-}
-
-.lake-card .info {
-  background-color: white;
-  padding: 10px 15px;
-  i {
-    font-style: italic;
-    font-weight: 400;
-    font-family: "Lato-Regular", sans-serif;
-  }
-}
-
-h3 {
-  margin: 0px;
-  font-size: 1em;
-  line-height: 1.3em;
-  padding-bottom: 5px;
-  font-family: "Lato-Bold", sans-serif;
-}
-
-p {
-  font-size: 1em;
-  font-weight: 400;
-  margin-top: 5px;
-}
-
-.icon {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  margin-right: 3px;
-  background: #333;
-}
-
 
 </style>

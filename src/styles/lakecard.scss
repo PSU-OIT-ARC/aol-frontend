@@ -1,0 +1,113 @@
+/* Lake Card Component */
+
+
+/* Search results card */
+.lake-card {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  padding: 10px 20px;
+
+  .photo {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .info {
+    background-color: white;
+    padding: 10px 15px;
+    i {
+      font-style: italic;
+      font-weight: 400;
+      font-family: "Lato-Regular", sans-serif;
+    }
+  }
+
+  h3 {
+    margin: 0px;
+    font-size: 1em;
+    line-height: 1.3em;
+    font-family: "Lato-Bold", sans-serif;
+  }
+
+  p {
+    font-size: .8em;
+    font-weight: 400;
+    margin-top: 0px;
+  }
+
+  .data-icons { margin: 10px 0px 6px 0px; }
+
+  .icon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    background: #333;
+  }
+}
+
+/* Sidebar card */
+
+.sidebar--top .lake-card {
+  grid-template-columns: 140px 1fr;
+
+  position: absolute;
+  bottom: -30px;
+  width: 390px;
+  margin: 0px 15px;
+  padding: 0px;
+  box-shadow: 1px 1px 3px #777;
+
+  animation: drop-in 200ms forwards;
+  animation-fill-mode: both;
+  backface-visibility: hidden;
+
+  .data-icons { display:none; }
+
+  @include respond-to(handheld) {
+    grid-template-columns: 110px 1fr;
+    width: calc(100vw - 30px);
+  }
+
+  h3 {
+    font-size: 1.2em;
+  }
+}
+
+
+/* Lake detail card */
+
+.content-header .lake-card {
+  grid-template-columns: 370px 1fr;
+
+  padding: 0px;
+  box-shadow: 1px 1px 3px #777;
+
+  animation: drop-in 200ms forwards;
+  animation-fill-mode: both;
+  backface-visibility: hidden;
+
+  @include respond-to(handheld) {
+    grid-template-columns: 110px 1fr;
+    width: calc(100vw - 30px);
+  }
+
+  .info {
+    padding: 50px 20px;
+    min-height: 110px;
+    @include respond-to(handheld) {
+      padding: 15px 15px 0px 15px;
+    }
+  }
+
+  .data-icons {display:none;}
+
+  h3 {
+    font-size: 1.6em;
+    @include respond-to(handheld) {
+      font-size: 1.1em;
+      max-width: 80%;
+    }
+  }
+}

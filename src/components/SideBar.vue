@@ -29,4 +29,13 @@ export default {
 
 <style scoped lang='scss'>
 
+.sidebar {
+  position: relative;
+  grid-area: sidebar;
+
+  @include respond-to(handheld) {
+    position: absolute;
+  }
+}
+
 </style>

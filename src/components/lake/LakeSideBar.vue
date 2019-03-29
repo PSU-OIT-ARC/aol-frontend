@@ -85,8 +85,6 @@ export default {
     }
   }
 
-
-
   .close-sidebar {
     cursor: pointer;
     font-size: 1.5em;

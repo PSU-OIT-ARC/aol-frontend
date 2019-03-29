@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.about-wrapper {
+body {
   animation: fade-in 200ms forwards;
   animation-fill-mode: both;
 }
@@ -29,97 +29,7 @@ ul, li {
   padding: 0px;
 }
 
-
-/* component overrides */
-.sidebar--top .lake-card {
-  position: absolute;
-  bottom: -30px;
-  width: 390px;
-  margin: 0px 15px;
-  box-shadow: 1px 1px 3px #777;
-  animation: drop-in 200ms forwards;
-  animation-fill-mode: both;
-  backface-visibility: hidden;
-  background-color: #fff;
-  padding: 0px !important;
-  grid-template-columns: 140px 1fr !important;
-
-  .info {
-    padding: 10px 20px;
-  }
-
-  .data-icons {display:none;}
-
-  @include respond-to(handheld) {
-    grid-template-columns: 110px 1fr !important;
-    width: calc(100vw - 30px);
-  }
-
-  h3 {
-    font-size: 1.2em;
-  }
-}
-
-
-.content-header .lake-card {
-  grid-template-columns: 370px 1fr !important;
-  padding: 0px !important;
-  box-shadow: 1px 1px 3px #777;
-  animation: drop-in 200ms forwards;
-  animation-fill-mode: both;
-  backface-visibility: hidden;
-
-  @include respond-to(handheld) {
-    grid-template-columns: 110px 1fr !important;
-    width: calc(100vw - 30px);
-  }
-  
-  .info {
-    padding: 50px 20px !important;
-    @include respond-to(handheld) {
-      padding: 15px 15px 0px 15px;
-    }
-    min-height: 110px;
-  }
-
-  .data-icons {display:none;}
-
-  h3 {
-    font-size: 1.6em;
-    @include respond-to(handheld) {
-      font-size: 1.1em;
-      max-width: 80%;
-    }
-  }
-}
-
-
-/* Data tab overrides */
-
-.tabs {
-  display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: 50% 50%;
-  grid-gap: 20px;
-  width: 90%;
-  @include respond-to(handheld) {
-    width: calc(100vw - 15px);
-    overflow-y: scroll;
-    margin-left: 15px !important;
-  }
-}
-
-.body-main .tabs {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: flex-start;
-  margin-top: 0px;
-  grid-gap: 0px;
-  margin-left: 0px;
-  padding-left: 0px;
-}
+/* ICONS */
 
 .tab-icon--plants {
   background-image: url(~@/assets/icon_search.svg);
@@ -132,95 +42,6 @@ ul, li {
 .tab-icon--atlas_text {
   background-image: url(~@/assets/icon_search.svg);
 }
-
-.tab-icon {
-  background-repeat: no-repeat;
-  background-position: 20px center;
-  background-size: 13% auto;
-}
-
-.body-main .tab-icon {
-  background-repeat: no-repeat;
-  background-position: center 10px;
-  background-size: 23px auto;
-}
-
-.lake-summary {
-  a:link, a:visited {
-    font-family: "Lato-Regular", sans-serif;
-    background-color: #ECECEC;
-    padding: 10px 20px 10px 50px;
-    display: block;
-    text-decoration: none;
-    color: #000;
-
-    &:hover, &:focus {
-      background-color: #D8D8D8;
-    }
-
-    &.active {
-      font-family: "Lato-Bold", sans-serif;
-      font-weight: 700;
-    }
-  }
-}
-
-.body-main .tabs {
-  position: relative;
-  z-index: 2;
-  top: 1px;
-
-  li {
-    margin-right: 7px;
-    max-width: 180px;
-    width: auto;
-    padding-left: 0px;
-    border-left: 1px solid #EAEAEA;
-    border-top: 1px solid #EAEAEA;
-    border-right: 1px solid #EAEAEA;
-  }
-
-  a:link, a:visited {
-    display:block;
-    font-family: "Lato-Regular", sans-serif;
-    background-color: #ECECEC;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #000;
-    padding: 40px 20px 5px 20px;
-    text-align: center;
-    height: 20px;
-    font-size: .8em;
-
-
-    &:hover, &:focus {
-      background-color: #D8D8D8;
-    }
-
-    &.active {
-      font-family: "Lato-Bold", sans-serif;
-      font-weight: 700;
-      background-color: white;
-    }
-  }
-}
-
-.tabs li:last-of-type {
-  display:none;
-}
-
-.data-section {
-  background-color: white;
-  padding: 15px;
-  border: 1px solid #EAEAEA;
-
-  h3 {
-    font-size: 1.3em;
-    margin: 10px 0px 20px 0px;
-  }
-}
-
-
 
 
 /* TABLES */
@@ -246,11 +67,7 @@ ul, li {
       padding: 8px 0px;
     }
   }
-
-
 }
-
-
 
 
 /* Utility classes */
@@ -288,41 +105,6 @@ ul, li {
     }
   }
 }
-
-/* SIDEBAR */
-.sidebar {
-  position: relative;
-  grid-area: sidebar;
-
-  @include respond-to(handheld) {
-    position: absolute;
-  }
-
-  /* not in use  */
-}
-
-
-
-/* Home */
-
-.home {
-  display: grid;
-  grid-template-columns: 0 1fr; /* sidebar closed on load */
-  grid-template-areas: "sidebar map";
-  width: 100vw;
-  height: calc(100vh - 42px); /* full height - header */
-  overflow: hidden;
-  @include respond-to(handheld) {
-    grid-template-areas: "map sidebar";
-  }
-}
-
-.home.sidebar_active {
-  grid-template-columns: $sidebar_width 1fr;
-  @include respond-to(handheld) {
-  }
-}
-
 
 
 /* MAP COMPONENT */
