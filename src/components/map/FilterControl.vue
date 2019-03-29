@@ -1,9 +1,9 @@
 <template>
   <div class='filter-control--container'>
     <div class='filter' v-for="filter in filters">
-      <input type='checkbox'
-        :value='filter.name' :id="filter.name" :key='filter.name'
-        v-model='selectedFilters' @change="emitFilterChange"/>
+
+      <input type='radio' :value='filter.name' :id="filter.name" :key='filter.name' v-model='selectedFilters' @change="emitFilterChange"/>
+
       <label :for='filter.name'>{{ filter.label }}</label>
     </div>
   </div>

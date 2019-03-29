@@ -77,7 +77,7 @@ export default {
     grid-template-rows: 140px auto;
 
     position: absolute;
-    z-index: 9998; /* 1 lower than LakeSidebar.vue */
+    z-index: 100; /* 1 lower than LakeSidebar.vue */
     left: 15px;
 
     background-color: white;
