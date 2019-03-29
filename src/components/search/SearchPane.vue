@@ -1,10 +1,11 @@
 <template>
-  <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
-    <search-bar></search-bar>
+  <div>
+    <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
+      <search-bar></search-bar>
+      <search-results v-if="results!=''" :results="results" :query="query"></search-results>
+    </div>
 
-    <search-results v-if="results!=''" :results="results" :query="query"></search-results>
-
-    <div v-else>
+    <div v-if="results==''">
       <div v-if="close_intro == false" class="site-intro">
         <div class="close-intro" @click="close_intro = true">╳</div>
         <div class="intro__photo">
@@ -16,6 +17,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -59,29 +61,34 @@ export default {
     overflow: hidden;
     box-sizing: border-box;
     animation: fade-in 200ms forwards;
-    height: calc(100vh - 42px);
+    height: auto;
     width: $sidebar_width;
 
     @include respond-to(handheld) {
       left: 0px;
       padding: 15px;
-      width: 100vw;
+      width: calc(100vw - 50px);
+      height: auto;
     }
   }
 
   .site-intro {
     display:grid;
     grid-template-rows: 140px auto;
+
     position: absolute;
+    z-index: 9998; /* 1 lower than LakeSidebar.vue */
+    left: 15px;
+
     background-color: white;
     min-height: 300px;
-    margin-top: 20px;
+    margin-top: 65px;
     box-shadow: 2px 2px 3px #ccc;
     width: 390px;
 
     @include respond-to(handheld) {
-      width: calc(100vw - 30px);
-      bottom: 15px;
+      width: calc(100vw - (30px + 50px)); //30 internal padding, 50 map controls offset
+      top: 0vh;
     }
 
     .intro__photo {

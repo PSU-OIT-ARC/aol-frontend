@@ -16,7 +16,6 @@ h1 {
 }
 
 h3 {
-  font-family: "Lato-Regular", serif;
   font-size: 1.5em;
   font-weight: normal;
   margin: 5px 0px;
@@ -28,6 +27,11 @@ ul, li {
   margin: 0px;
   padding: 0px;
 }
+
+a:link, a:visited {
+  color: #222;
+}
+
 
 /* ICONS */
 
@@ -79,27 +83,28 @@ ul, li {
 
 
 /* OpenLayers overrides */
+.home.sidebar_active .ol-zoom.ol-control {
+  @include respond-to(handheld) {
+    display: none; /* TEMPORARY -- Needs a way to detect when sidebar is present */
+  }
+}
+
+
 .ol-zoom.ol-control {
   position: absolute;
   top: 15px;
   right: 15px;
-  border-bottom: 1px solid #aaa;
-
-  @include respond-to(handheld) {
-    display: none;
-  }
-
 
   button {
     display: block;
     padding: 0px 8px;
-    appearance: none;
+    margin-bottom: 10px;
     font-size: 30px;
-    -webkit-appearnace: none;
-    -moz-appearance: none;
     background-color: white;
     border: 1px solid #aaa;
-    border-bottom: 0px solid black;
+
+    appearance: none;
+
     &:hover {
       background-color: #ccc;
     }
@@ -109,28 +114,31 @@ ul, li {
 
 /* MAP COMPONENT */
 
+/* DO Sidebar, Map and Home need to live together for grid-area swap? */
 .map {
-  overflow: hidden;
-  position: relative;
-  height: 100%;
-  max-height: 100vh;
+  display: grid;
   grid-area: map;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
   @include respond-to(handheld) {
     width: 100vw;
   }
 }
 
 .map-controls-wrapper {
-  width: 600px;
-  height: 40px;
+  display: grid;
+  grid-template-columns: auto auto;
+
   position: absolute;
   bottom: 40px;
   right: 20px;
-  background: white;
   z-index: 1001;
+
+  width: 600px;
+  height: 40px;
+  background: white;
   padding: 5px 20px;
-  display: grid;
-  grid-template-columns: auto auto;
 
   @include respond-to(handheld) {
     display: none;

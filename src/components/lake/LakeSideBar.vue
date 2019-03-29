@@ -61,7 +61,7 @@ export default {
     position: absolute;
     grid-template-rows: 160px 1fr;
     width: $sidebar_width;
-    z-index: 1001;
+    z-index: 9999;
     background-color: #fff;
 
     @include respond-to(handheld) {

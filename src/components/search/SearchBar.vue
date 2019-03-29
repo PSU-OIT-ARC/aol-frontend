@@ -40,6 +40,8 @@ export default {
 <style scoped lang="scss">
   #search-bar {
     display: flex;
+    position: relative;
+    z-index: 1000;
 
     input {
       font-family: "Lato-Bold", sans-serif;
@@ -47,22 +49,20 @@ export default {
       width: 100%;
       border: 0px solid black;
       border: 1px solid #aaa;
-
-      /*background-image: url('~@/assets/icon_search.svg');
-      background-repeat: no-repeat;
-      background-position: 97% 9px;
-      background-size: 20px auto;*/
-
     }
-    z-index: 1000;
-    position: relative;
   }
+
   .search-clear {
     position: absolute;
     top: 6px;
     right: 12px;
     color: #333;
     cursor: pointer;
+
+    &:hover {
+      opacity: .7;
+    }
+
   }
 
 </style>

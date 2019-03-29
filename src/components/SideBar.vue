@@ -30,7 +30,7 @@ export default {
 <style scoped lang='scss'>
 
 .sidebar {
-  position: relative;
+  display: grid;
   grid-area: sidebar;
 
   @include respond-to(handheld) {
