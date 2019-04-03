@@ -49,50 +49,41 @@
 
     </vl-map>
 
-          <div class="map-controls-wrapper">
+    <div class="map-controls-wrapper">
 
-            <div class="map-controls--secondary">
+      <div class="map-controls--secondary">
+        <layer-switcher
+          @feature-layer-change="selectFeatureLayer">
+        </layer-switcher>
 
-              <layer-switcher
-                @feature-layer-change="selectFeatureLayer">
-              </layer-switcher>
-
-              <filter-control
-                @filter-change="selectLakesFromFilters">
-              </filter-control>
-
-            </div>
+        <filter-control
+          @filter-change="selectLakesFromFilters">
+        </filter-control>
+      </div>
 
 
-            <div class="map-buttons--secondary">
+      <div class="map-buttons--secondary">
 
-              <div class="map-button map-button--layers">
-                <svg width="20px" height="22px" viewBox="0 0 20 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <path d="M9.98888889,18.3777778 L1.8,12.0111111 L0,13.4111111 L10,21.1888889 L20,13.4111111 L18.1888889,12 L9.98888889,18.3777778 L9.98888889,18.3777778 Z M10,15.5555556 L18.1777778,9.18888889 L20,7.77777778 L10,0 L0,7.77777778 L1.81111111,9.18888889 L10,15.5555556 L10,15.5555556 Z" id="Shape" fill="#555555"></path>
-                  </g>
-                </svg>
-              </div>
+        <div class="map-button map-button--layers">
+          <svg width="20px" height="22px" viewBox="0 0 20 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <path d="M9.98888889,18.3777778 L1.8,12.0111111 L0,13.4111111 L10,21.1888889 L20,13.4111111 L18.1888889,12 L9.98888889,18.3777778 L9.98888889,18.3777778 Z M10,15.5555556 L18.1777778,9.18888889 L20,7.77777778 L10,0 L0,7.77777778 L1.81111111,9.18888889 L10,15.5555556 L10,15.5555556 Z" id="Shape" fill="#555555"></path>
+            </g>
+          </svg>
+        </div>
 
-              <div class="map-button map-button--legend">
-                <svg width="3px" height="16px" viewBox="0 0 3 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <g id="Group-2" fill="#2B2B2B" fill-rule="nonzero">
-                          <rect id="Rectangle-2" x="0" y="6" width="3" height="10"></rect>
-                          <circle id="Oval-2" cx="1.5" cy="1.5" r="1.5"></circle>
-                      </g>
-                  </g>
-                </svg>
-              </div>
-
-
-
-
-
-            </div>
-
-
-          </div>
+        <div class="map-button map-button--legend">
+          <svg width="3px" height="16px" viewBox="0 0 3 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Group-2" fill="#2B2B2B" fill-rule="nonzero">
+                    <rect id="Rectangle-2" x="0" y="6" width="3" height="10"></rect>
+                    <circle id="Oval-2" cx="1.5" cy="1.5" r="1.5"></circle>
+                </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

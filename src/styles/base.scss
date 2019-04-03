@@ -83,7 +83,9 @@ a:link, a:visited {
 
 
 /* OpenLayers overrides */
-.home.sidebar_active .ol-zoom.ol-control {
+.home.sidebar_active .ol-zoom.ol-control,
+.home.sidebar_active .map-controls-wrapper,
+.home.sidebar_active .site-intro {
   @include respond-to(handheld) {
     display: none; /* TEMPORARY -- Needs a way to detect when sidebar is present */
   }
@@ -130,6 +132,7 @@ a:link, a:visited {
 .map-controls-wrapper {
   display: grid;
   grid-template-columns: 1fr;
+  display: none;
 
   position: absolute;
   top: 57px;
@@ -141,7 +144,7 @@ a:link, a:visited {
   padding: 5px 20px;
 
   @include respond-to(handheld) {
-    
+
   }
 
   .map-controls--secondary {
