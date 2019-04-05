@@ -55,7 +55,7 @@ export default {
 <style scoped lang="scss">
   #search-wrapper {
     position: absolute;
-    z-index: 1001;
+    z-index: 3002;
     left: 0px;
     padding: 15px;
     overflow: hidden;
@@ -67,7 +67,7 @@ export default {
     @include respond-to(handheld) {
       left: 0px;
       padding: 15px;
-      width: calc(100vw - 50px);
+      width: calc(100vw);
       height: auto;
     }
   }
@@ -77,7 +77,7 @@ export default {
     grid-template-rows: 140px auto;
 
     position: absolute;
-    z-index: 100; /* 1 lower than LakeSidebar.vue */
+    z-index: 3001;
     left: 15px;
 
     background-color: white;
@@ -87,7 +87,7 @@ export default {
     width: 390px;
 
     @include respond-to(handheld) {
-      width: calc(100vw - (30px + 50px)); //30 internal padding, 50 map controls offset
+      width: calc(100vw - 30px); //30 internal padding
       top: 0vh;
     }
 
@@ -109,7 +109,7 @@ export default {
     top: 10px;
     right: 10px;
     color: white;
-    font-size: 1.3em;
+    font-size: 1em;
     cursor: pointer;
   }
 

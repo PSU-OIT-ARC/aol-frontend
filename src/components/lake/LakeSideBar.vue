@@ -87,7 +87,7 @@ export default {
 
   .close-sidebar {
     cursor: pointer;
-    font-size: 1.5em;
+    font-size: 1em;
     color: white;
     text-align: right;
     margin-top: 8px;
