@@ -81,8 +81,7 @@ a:link, a:visited {
 }
 
 
-
-/* OpenLayers overrides */
+/* if the sidebar is active, hide these layers */
 .home.sidebar_active .ol-zoom.ol-control,
 .home.sidebar_active .map-controls-wrapper,
 .home.sidebar_active .site-intro {
@@ -273,7 +272,7 @@ a:link, a:visited {
   overflow-y: scroll;
   border: 1px solid #ccc;
   background-color: white;
-  padding: 15px;
+  padding: 15px 0px 20px 15px;
   animation: slide-in 200ms forwards;
 
   @include respond-to(handheld) {

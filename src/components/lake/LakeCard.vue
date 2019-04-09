@@ -13,6 +13,25 @@
         <div class="icon other"></div>
       </div>
       <p>093234582348</p>
+
+      <div class="fast-stats">
+        <table cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Shoreline</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10166.4 acres</td>
+              <td>53.2 mi</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
     </div>
 
   </div>
