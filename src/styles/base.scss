@@ -137,7 +137,8 @@ a:link, a:visited {
   }
 }
 
-.map-controls-wrapper {
+.map-buttons-wrapper {
+  /*contains the buttons AND the button stage */
   display: grid;
   grid-template-columns: 1fr;
 
@@ -152,66 +153,35 @@ a:link, a:visited {
 
   @include respond-to(handheld) {
     width: 100vw;
-    top: 92px; /* BUTTON-SHIFT */
+    top: 92px; /* BUTTON-SHIFT below full-width search */
     right: 0px;
-  }
-
-  .map-controls--secondary {
-    position: absolute;
-    top: 0px;
-    right: 50px;
-    z-index: 1100;
-    width: 300px;
-    height: auto;
-    border: 1px solid #ccc;
-    padding-bottom: 20px;
-    background-color: #fff;
-
-    @include respond-to(handheld) {
-      top: -50px; /* BUTTON-SHIFT */
-      width: 100vw;
-      right: 0px;
-    }
   }
 }
 
-.map-legend-wrapper {
+.sidebar_active .map-buttons-wrapper {
+  @include respond-to(handheld) {
+    display: none;
+  }
+}
+
+
+
+.map-filter-wrapper {
   position: absolute;
   top: 57px;
   right: 65px;
-  z-index: 1000;
-  height: auto;
+  z-index: 3003;
   width: 300px;
-  right: 65px;
-  max-height: 75vh;
-  overflow-y: scroll;
+  height: auto;
   border: 1px solid #ccc;
-  background-color: white;
-  padding: 15px;
-
-
+  padding-bottom: 20px;
+  background-color: #fff;
+  animation: slide-in 200ms forwards;
 
   @include respond-to(handheld) {
-    width: calc(100vw - 30px);
-    z-index: 1100;
+    top: 42px; /* BUTTON-SHIFT */
+    width: 100vw;
     right: 0px;
-    top: 43px;
-  }
-}
-
-.close-filters {
-  display: none;
-  cursor: pointer;
-
-  &:hover, &:focus {
-    color: black;
-  }
-
-  @include respond-to(handheld) {
-    display: block;
-    position: absolute;
-    top: 20px;
-    right: 20px;
   }
 }
 
@@ -231,11 +201,7 @@ a:link, a:visited {
   }
 
   h4 {
-    display: none;
     margin: 5px 5px 10px 5px;
-    @include respond-to(handheld) {
-      display: block;
-    }
   }
 
 
@@ -295,10 +261,49 @@ a:link, a:visited {
   }
 }
 
-.map-buttons--secondary {
+.map-legend-wrapper {
+  position: absolute;
+  top: 57px;
+  right: 65px;
+  z-index: 3003;
+  height: auto;
+  width: 300px;
+  right: 65px;
+  max-height: 75vh;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  background-color: white;
+  padding: 15px;
+  animation: slide-in 200ms forwards;
+
+  @include respond-to(handheld) {
+    width: calc(100vw - 30px);
+    right: 0px;
+    top: 43px;
+  }
+
+h4 {
+  margin: 8px 0px 15px 0px;
+}
+
+}
+
+.close-filters {
+  cursor: pointer;
+
+  &:hover, &:focus {
+    color: black;
+  }
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+}
+
+.map-buttons {
   position: absolute;
   z-index: 1008;
-  top: 82px;
+  top: 83px;
   right: -15px;
   width: 51px;
   height: auto;
