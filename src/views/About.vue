@@ -51,21 +51,24 @@
             <p>The online Atlas of Oregon Lakes was developed by... <a href="/contributors">Read more</a></p>
 
             <h3>Contact</h3>
-
             <p>The Center for Lakes and Reservoirs at Portland State University invites viewers... <a href="/contact">Read more</a></p>
-
-
 
           </div>
 
           <div class="body-sidebar">
 
-              <p>The Center for Lakes and Reservoirs at Portland State University invites viewers of this website to submit information for possible correction of errors in the data reported or interpretations of data on this website. Other information about the conditions in Oregon lakes, such as observing invasive plant or animal life, would be welcomed.</p>
+              <div class="sidebar__shade">
+
+                <h3>Contact </h3>
+                <p>The Center for Lakes and Reservoirs at Portland State University invites viewers of this website to submit information for possible correction of errors in the data reported or interpretations of data on this website. Other information about the conditions in Oregon lakes, such as observing invasive plant or animal life, would be welcomed.</p>
 
               <p>For further information or to provide feedback, please contact OregonLakesAtlas@pdx.edu.</p>
 
+              <hr />
 
               <p>If you would like your photos of Oregon lakes featured in the online atlas, click here for submission criteria.</p>
+
+            </div>
 
           </div>
 
@@ -172,8 +175,10 @@
 }
 
 .body-main {
-  @include respond-to(handheld) {
-    padding: 0px 15px;
+  padding: 0px 15px;
+
+  p {
+    margin-top: 10px;
   }
 }
 
@@ -182,6 +187,11 @@
   @include respond-to(handheld) {
     padding: 0px 15px;
   }
+}
+
+.sidebar__shade {
+  padding: 15px;
+  background-color: #F3F3F3;
 }
 
 h4 {
@@ -196,9 +206,18 @@ h4 {
   }
 }
 
+h3 {
+  font-family: "Lato-Bold", sans-serif;
+  font-weight: 700;
+  font-size: 1.2em;
+  margin-top: 30px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
 h2 {
   font-size: 2em;
-  margin-top: 10px;
+  margin-top: 5px;
   @include respond-to(handheld) {
     font-size: 1.1em;
     line-height: 1.3em;
@@ -208,7 +227,7 @@ h2 {
 
 footer {
   padding: 15px;
-  background-color: #eee;
+  background-color: #F3F3F3;
   margin-top: 40px;
 }
 
