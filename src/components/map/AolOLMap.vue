@@ -1,54 +1,7 @@
 <template>
   <div class='map-container'>
-    <vl-map id="map" class="map" ref="map"
-      @mounted="initMap"
-      @dblclick="zoomToCluster($event)"
-      @click="selectLakeFromClick($event)"
-      :load-tiles-while-animating="true"
-      :load-tiles-while-interacting="true">
 
-      <vl-view
-        :zoom.sync="zoom" :center.sync="center"
-        :minZoom="6" :maxZoom="15"
-        @update:zoom="calculateClusterDistance">
-      </vl-view>
-
-      <vl-layer-tile v-for="layer in baseLayers"
-        :key="layer.id" :id="layer.id"
-        :visible="layer.visible" :extent="layer.extent">
-        <vl-source-xyz
-          :url="layer.url">
-        </vl-source-xyz>
-      </vl-layer-tile>
-
-      <vl-layer-vector-tile  v-for="layer in featureLayers"
-        :key="layer.id" :id="layer.id" :ref="layer.id"
-        :visible="layer.visible" :declutter="true" :zIndex="layer.zIndex"
-        @mounted="applyEsriStyles" :extent="layer.extent">
-        <vl-source-vector-tile
-          :url="layer.getUrl()">
-        </vl-source-vector-tile>
-      </vl-layer-vector-tile>
-
-      <!-- unknown if we will draw these vectors at all -->
-      <!--vl-layer-vector id='boundaries' ref="lake_layer">
-        <vl-source-vector :features="lake_polygons" >
-          <vl-style-box>
-            <vl-style-stroke :color="polygon.stroke" :width="polygon.width"/>
-            <vl-style-fill :color="polygon.fill"/>
-          </vl-style-box>
-        </vl-source-vector>
-      </vl-layer-vector-->
-
-      <vl-layer-vector
-        id='lake_markers' ref="lake_markers" :zIndex="10"
-        :updateWhileAnimating="true"
-        :updateWhileInteracting="true"
-        @mounted="mountClusterSource">
-      </vl-layer-vector>
-
-    </vl-map>
-
+    <div id="map" class="map"></div>
 
     <div v-if="show_legend == true" class="map-legend-wrapper">
       <h4>Map Legend</h4>
@@ -57,7 +10,6 @@
     </div>
 
     <div class="map-buttons-wrapper">
-
       <div class="map-buttons">
         <a role="button" href="#"
         v-bind:class="['map-button map-button--layers', { selected: show_filters}]" @click="show_filters = !show_filters; show_legend = false">
@@ -84,8 +36,6 @@ v-bind:class="['map-button map-button--legend', { selected: show_legend}]" @clic
     </div>
 
 
-
-
     <div class="map-filter-wrapper" v-if="show_filters == true">
       <layer-switcher
         @feature-layer-change="selectFeatureLayer" @show_filters="toggleFilters">
@@ -97,23 +47,19 @@ v-bind:class="['map-button map-button--legend', { selected: show_legend}]" @clic
     </div>
 
 
-
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { applyStyle } from 'ol-mapbox-style';
+
+import Map from "esri/Map";
+import MapView from "esri/views/MapView";
 
 import config from '@/components/map/config';
 import utils from '@/components/map/utils';
 import LayerSwitcher from '@/components/map/LayerSwitcher';
 import FilterControl from '@/components/map/FilterControl';
-
-import * as proj from 'ol/proj';
-import VectorSource from 'ol/source/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
-import Cluster from 'ol/source/Cluster';
 
 const USE_CLUSTERS = true;
 
@@ -138,14 +84,7 @@ export default {
       },
       'getCurrentLake'
     ),
-    center: {
-      get () {
-        return proj.fromLonLat(config.map_center, 'EPSG:3857')
-      },
-      set (newValue) {
-        return newValue;
-      }
-    },
+
     /* currently not using
     lake_polygons () {
       return  this.lakes.map((lake) => {
@@ -164,7 +103,6 @@ export default {
           }
       });
     },
-    */
     lake_markers () {
       // only read from GeoJSON once
       if (!this.lakes_with_geom) {
@@ -172,9 +110,11 @@ export default {
       }
       return this.lakes_with_geom;
     },
+    */
   // end computed
   },
   methods: {
+
     ...mapActions([
       'fetchLakes', 'setCurrentLake', 'fitBounds',
       'searchLakes', 'setMapObject'
@@ -301,6 +241,7 @@ export default {
         HACK: ol-mapboxstyle throws an error if sprite url returns an
         empty object; set sprite to null so it doesn't look for sprites
         */
+
           style.sprite = null;
           applyStyle(component.$layer, style, 'esri', sprite_url);
         }
@@ -342,6 +283,7 @@ export default {
       }
     },
     initMap () {
+      /*
       this.map = this.$refs.map;
       this.setMapObject(this.map);
 
@@ -354,13 +296,27 @@ export default {
         console.log('I already have the lakes. I will not fetch them again');
         this.selectLakeFromUrl();
       }
+<<<<<<< HEAD
     },
     toggleFilters (toggle_filters) {
       this.show_filters = toggle_filters;
       show_legend = false;
+=======
+      }*/
     }
     // end methods
   },
+  mounted () {
+    let myMap = new Map({
+        basemap: 'streets'
+      });
+    let view = new MapView({
+        map: myMap,
+        container: "map",
+        zoom: config.zoom,
+        center: config.map_center
+      });
+  }
 }
 </script>
 

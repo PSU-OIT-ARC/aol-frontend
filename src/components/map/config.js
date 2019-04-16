@@ -1,5 +1,3 @@
-import { createStyle } from 'vuelayers/lib/ol-ext';
-
 
 // need to handshake instead
 const token = `TzYZhy_QyEHxjyNzYEcWOrNFq6MnEAuWQZy9QXAIX5Eq-BGAMPGHrtkRIMxUWVwZ\
@@ -34,7 +32,7 @@ const config = {
     token: token,
     map_center: [-122.841856, 44.002925],
     bounds_padding: 120,
-    zoom: 8.5,
+    zoom: 7,
     cluster_distance: 150,
     cluster_max_zoom: 10,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
@@ -85,6 +83,7 @@ const config = {
         extent: undefined//[-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       }
     ],
+    /*
     clusterStyle: createStyle({
         imageRadius: 10,
         strokeColor: '#fff',
@@ -97,6 +96,7 @@ const config = {
         strokeColor: '#fff',
         fillColor: 'royalblue',
     }),
+    */
     marker: {
         radius: 3,
         color: 'royalblue',

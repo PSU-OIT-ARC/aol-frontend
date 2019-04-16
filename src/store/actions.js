@@ -1,5 +1,3 @@
-import * as proj from 'ol/proj';
-import * as olExtent from  'ol/extent';
 import config from '@/components/map/config';
 
 // this should be moved to a central place
@@ -30,6 +28,8 @@ const actions = {
     },
 
     fitBounds (context, options) {
+        console.log("I am fitting to bounds")
+        /*
         let geom = options['geom'];
         let buffer = options['buffer'];
 
@@ -58,6 +58,7 @@ const actions = {
             // possibly just keep zoom the same?
             map.getView().fit(lake_bounds, {padding: padding});
         }, 0);
+        */
     },
 
     fetchLakes (context) {

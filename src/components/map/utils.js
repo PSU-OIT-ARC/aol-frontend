@@ -1,4 +1,3 @@
-import * as olExtent from  'ol/extent';
 
 const utils = {
     checkMarkerOrBounds: (e, layers=[], clusters_enabled=false) => {
@@ -24,6 +23,8 @@ const utils = {
       return selected;
     },
     zoomToCluster: (e) => {
+        console.log("I am zooming to the cluster's features' extent")
+        /*
         let cluster_feature = e.map.forEachFeatureAtPixel(
             e.pixel, (feature, layer) => {
                 return feature;
@@ -40,6 +41,7 @@ const utils = {
             e.map.getView().setCenter(e.coordinate)
         }
       }
+      */
     },
     selectFeatureLayer: (selected_layer, layers=[]) => {
         layers.map((layer) => {
