@@ -10,6 +10,10 @@ const actions = {
         context.commit('setMap', map);
     },
 
+    setMapNode (context, node) {
+        context.commit('setMapNode', node);
+    },
+
     searchLakes (context, query) {
         let search = {};
         search.query = query;

@@ -16,6 +16,10 @@ const mutations = {
     setMap (state, map) {
         state.map_object = map;
     },
+
+    setMapNode (state, node) {
+        state.map_node = node;
+    },
 }
 
 export default mutations;

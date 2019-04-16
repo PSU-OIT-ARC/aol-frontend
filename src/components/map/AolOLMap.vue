@@ -53,8 +53,12 @@ v-bind:class="['map-button map-button--legend', { selected: show_legend}]" @clic
 <script>
 import { mapGetters, mapActions } from 'vuex';
 
+import '@/esri_dojo_workers';
 import Map from "esri/Map";
 import MapView from "esri/views/MapView";
+import VectorTileLayer from "esri/layers/VectorTileLayer";
+import TileLayer from "esri/layers/TileLayer";
+import IdentityManager from "esri/identity/IdentityManager";
 
 import config from '@/components/map/config';
 import utils from '@/components/map/utils';
@@ -117,7 +121,7 @@ export default {
 
     ...mapActions([
       'fetchLakes', 'setCurrentLake', 'fitBounds',
-      'searchLakes', 'setMapObject'
+      'searchLakes', 'setMapObject', 'setMapNode'
     ]),
     zoomToCluster: utils.zoomToCluster,
     showSideBar (lake) {
@@ -282,10 +286,17 @@ export default {
         component.$layer.setStyle(config.pointStyle)
       }
     },
+    toggleFilters (toggle_filters) {
+      this.show_filters = toggle_filters;
+      show_legend = false;
+    =======
+    },
     initMap () {
-      /*
-      this.map = this.$refs.map;
-      this.setMapObject(this.map);
+      // TODO: get token from backend
+      IdentityManager.registerToken({
+        'server': config.ArcGisOnlineTilesUrl,
+        'token': config.token
+      });
 
       if(!this.lakes.length) {
         this.fetchLakes().then(()=> {
@@ -296,27 +307,55 @@ export default {
         console.log('I already have the lakes. I will not fetch them again');
         this.selectLakeFromUrl();
       }
-<<<<<<< HEAD
-    },
-    toggleFilters (toggle_filters) {
-      this.show_filters = toggle_filters;
-      show_legend = false;
-=======
-      }*/
+
+      let map = new Map({
+          basemap: 'gray'
+      });
+      let view = new MapView({
+          map: map,
+          container: "map",
+          zoom: config.zoom,
+          center: config.map_center
+      });
+      let nlcd = config.baseLayers[1];
+      let nlcd_layer = new TileLayer({
+          url: nlcd.url
+      });
+      map.add(nlcd_layer);
+
+      config.featureLayers.forEach((layer) => {
+        let vector_tile_layer = new VectorTileLayer({
+          url: layer.getLayerUrl(),
+          id: layer.id,
+          visible: layer.visible
+        })
+        map.add(vector_tile_layer);
+      });
+      this.setMapObject(map);
+      this.setMapNode(this.$refs.map)
     }
     // end methods
   },
   mounted () {
-    let myMap = new Map({
-        basemap: 'streets'
+    // avoid re-rendering map when using client-side routing.
+    if (this.$store.state.map_node == null) {
+      this.initMap();
+    }
+    else {
+      this.$refs.map.appendChild(this.$store.state.map_node)
+    }
+
+    if(!this.lakes.length) {
+      this.fetchLakes().then(()=> {
+        this.selectLakeFromUrl();
       });
-    let view = new MapView({
-        map: myMap,
-        container: "map",
-        zoom: config.zoom,
-        center: config.map_center
-      });
+    }
+    else {
+      console.log('I already have the lakes. I will not fetch them again');
+      this.selectLakeFromUrl();
+    }
   }
+  // end mounted
 }
 </script>
 

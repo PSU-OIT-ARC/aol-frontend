@@ -6,7 +6,8 @@ const state = {
         results: [],
         query: null
     },
-    map_object: null
+    map_object: null,
+    map_node: null
 }
 
 export default state;
