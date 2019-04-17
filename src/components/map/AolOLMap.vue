@@ -59,6 +59,7 @@ import MapView from "esri/views/MapView";
 import VectorTileLayer from "esri/layers/VectorTileLayer";
 import TileLayer from "esri/layers/TileLayer";
 import IdentityManager from "esri/identity/IdentityManager";
+import FeatureLayer from "esri/layers/FeatureLayer";
 
 import config from '@/components/map/config';
 import utils from '@/components/map/utils';
@@ -107,14 +108,15 @@ export default {
           }
       });
     },
-    lake_markers () {
+  */
+    /*lake_markers () {
       // only read from GeoJSON once
       if (!this.lakes_with_geom) {
         this.lakes_with_geom = this.getLakeMarkers();
       }
       return this.lakes_with_geom;
-    },
-    */
+    },*/
+
   // end computed
   },
   methods: {
@@ -152,40 +154,55 @@ export default {
       if (USE_CLUSTERS) {
         // Add a bunch of dummy points to test clustering
         let others = [];
-        for (let i = 0; i < 5000; i++) {
+        for (let i = 0; i < 200; i++) {
           let other = Object.assign({}, this.lakes[i%3]);
           let center = this.lakes[i%3].center.map((c) => {
             return c + 1.1 * (0.4-Math.random())
           });
+          other.reachcode = 123456789 + (i * 4)
           other.center = center;
           other.has_plants = Math.random() > 0.3 ? true : false;
           others.push(other);
         };
-        lakes = this.lakes.concat(others)
+        lakes = lakes.concat(others)
       }
-      let getId = function () {
-        return this.id
-      };
       lakes = lakes.map((lake) => {
         return {
-            type: 'Feature',
-            properties: {
+            attributes: {
               name: lake.slug,
               id: lake.reachcode,
               has_plants: Math.random() > 0.5 ? true : false,
               has_docs:  Math.random() > 0.4 ? true : false,
             },
             geometry: {
-              type: 'Point',
-              coordinates: proj.fromLonLat(
-                [lake.center[1], lake.center[0]], 'EPSG:3857')
+              type: "point",
+              x: lake.center[1],
+              y: lake.center[0]
             }
           }
       });
-      let geoJSONObj = {};
-      geoJSONObj.type = 'FeatureCollection'
-      geoJSONObj.features = lakes;
-      return new GeoJSON().readFeatures(geoJSONObj)
+      let layer = new FeatureLayer({
+          source: lakes,
+          objectIdField: "id",
+          featureReduction: {
+                  type: "cluster"
+                },
+      });
+      this.map.add(layer)
+      // NOTE: To execute a query against all the features in a Feature Service
+      // rather than only those in the client, you must use the
+      // FeatureLayer.queryFeatures() method.
+      /*
+      layer.queryFeatures().then(function(results){
+        console.log('layer.queryFeatures' + results.features);
+      });
+      this.view.whenLayerView(layer).then(function(layerView) {
+        var query = layer.createQuery();
+        layerView.queryFeatures(query).then((r)=>{
+          console.log(r)
+        });
+      });
+      */
     },
     selectLakeFromClick (e) {
       console.log(e.map.getCoordinateFromPixel(e.pixel)); // DEBUG
@@ -221,35 +238,6 @@ export default {
         let distance = zoom > config.cluster_max_zoom ? 0 : config.cluster_distance;
         this.cluster_source.setDistance(distance);
       }
-    },
-    applyEsriStyles (component) {
-      let layer = this.featureLayers.find(
-        l => l.id == component.$layer.getProperties().id);
-      let style_url = layer.getStyleUrl();
-      let sprite_url = layer.getSpriteUrl();
-
-      fetch(style_url).then((response)=>{
-        return response.json()
-      }).then((style) => {
-        if (layer.id != 'bathymetry') {
-          // HACK: zoom seems to be off from styles min/maxzoom?
-          // issue with ol-mapboxstyle and/or OL zoom (integer vs float)
-          style.layers.map((layer) => {
-            layer.minzoom = Math.floor(layer.minzoom);
-            layer.maxzoom = Math.ceil(layer.maxzoom);
-          });
-          applyStyle(component.$layer, style, 'esri', sprite_url);
-        }
-        else {
-        /*
-        HACK: ol-mapboxstyle throws an error if sprite url returns an
-        empty object; set sprite to null so it doesn't look for sprites
-        */
-
-          style.sprite = null;
-          applyStyle(component.$layer, style, 'esri', sprite_url);
-        }
-      });
     },
     mountClusterSource (component) {
       // setting cluster source and stylefunction directly in
@@ -333,6 +321,8 @@ export default {
       });
       this.setMapObject(map);
       this.setMapNode(this.$refs.map)
+      this.map = map;
+      this.view = view;
     }
     // end methods
   },
@@ -348,6 +338,7 @@ export default {
     if(!this.lakes.length) {
       this.fetchLakes().then(()=> {
         this.selectLakeFromUrl();
+        this.getLakeMarkers();
       });
     }
     else {
