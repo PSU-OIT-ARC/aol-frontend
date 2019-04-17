@@ -17,6 +17,14 @@ const getters = {
         }
     },
 
+    getLakeByReachcode (state) {
+        return (reachcode) => {
+            return state.lakes.find((lake) => {
+                return parseInt(lake.reachcode) === reachcode;
+            });
+        }
+    },
+
     getLakes (state) {
       return state.lakes;
     },

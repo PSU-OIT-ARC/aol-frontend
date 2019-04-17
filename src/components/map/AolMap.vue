@@ -84,12 +84,8 @@ export default {
     FilterControl
   },
   computed: {
-    ...mapGetters({
-        lakes: 'getLakes',
-        getLakeBySlug: 'getLakeBySlug'
-      },
-      'getCurrentLake'
-    ),
+    ...mapGetters({ lakes: 'getLakes' }),
+    ...mapGetters(['getCurrentLake', 'getLakeBySlug', 'getLakeByReachcode']),
   },
   methods: {
     ...mapActions([
@@ -126,19 +122,36 @@ export default {
         }
       });
     },
-    selectLakeFromClick (e) {
-      console.log(e.map.getCoordinateFromPixel(e.pixel)); // DEBUG
-      let feature = utils.checkMarkerOrBounds(
-          e, ['lake_markers'], USE_CLUSTERS
-      );
-      if (feature) {
-        let lake = this.getLakeBySlug(feature.getProperties().name);
-        this.showSideBar(lake);
-      }
+    selectLakeFromClick (event) {
+      this.view.hitTest(event).then((response) => {
+
+        let features = response.results.filter((r) => {
+          if (r.graphic) {
+            return r.graphic.layer.id = 'lake_markers'
+          }
+          return false
+        })
+        if (features.length) {
+          let reachcode = features[0].graphic.attributes.id;
+          let lake = this.getLakeByReachcode(reachcode);
+          this.showSideBar(lake);
+        }
+      });
     },
     selectLakesFromFilters (filter) {
-      // this will need to change to using a query
-      // if using a feature layer service in the future
+      /* this will need to change to using a query
+      if using a feature layer service in the future
+      //
+      this.view.whenLayerView(layer).then(function(layerView) {
+        var query = layer.createQuery();
+        layerView.queryFeatures(query).then((r)=>{
+          console.log(r)
+        });
+      });
+      // NOTE: To execute a query against all the features in a Feature Service
+      // rather than only those in the client, you must use the
+      // FeatureLayer.queryFeatures() method.
+      */
       if(!filter) return;
       let filtered_lakes = this.lake_markers.filter((lake) => {
         return lake.attributes[filter] == true
@@ -233,24 +246,12 @@ export default {
       let layer = new FeatureLayer({
           source: lakes,
           objectIdField: "id",
+          id: 'lake_markers'
       });
       this.lake_markers = lakes;
       this.lake_markers_layer = layer;
       this.map.add(layer)
-      // NOTE: To execute a query against all the features in a Feature Service
-      // rather than only those in the client, you must use the
-      // FeatureLayer.queryFeatures() method.
-      /*
-      layer.queryFeatures().then(function(results){
-        console.log('layer.queryFeatures' + results.features);
-      });
-      this.view.whenLayerView(layer).then(function(layerView) {
-        var query = layer.createQuery();
-        layerView.queryFeatures(query).then((r)=>{
-          console.log(r)
-        });
-      });
-      */
+
     },
     initMap () {
       // TODO: get token from backend
@@ -279,6 +280,7 @@ export default {
           center: config.map_center
       });
       view.ui.components = [];
+
       let nlcd = config.baseLayers[1];
       let nlcd_layer = new TileLayer({
           url: nlcd.url
@@ -293,6 +295,29 @@ export default {
         })
         map.add(vector_tile_layer);
       });
+
+      view.when().then(()=> {
+        view.on('click', (event) => { this.selectLakeFromClick(event) })
+      });
+      //(event) => {
+        /*
+        view.hitTest(event).then((response) => {
+          let features = response.results.filter((r) => {
+            if (r.graphic) {
+              return r.graphic.layer.id = 'lake_markers'
+            }
+            return false
+          })
+          if (features.length) {
+            let id = features[0].graphic.attributes;
+          }
+        });
+        */
+
+
+
+
+      // set properties // this needs to not be cached
       this.setMapObject(map);
       this.setMapNode(this.$refs.map)
       this.map = map;
@@ -302,13 +327,13 @@ export default {
   },
   mounted () {
     // avoid re-rendering map when using client-side routing.
-    if (this.$store.state.map_node == null) {
+    //if (this.$store.state.map_node == null) {
       this.initMap();
-    }
-    else {
-      this.map = this.$store.state.map_object; // this is for hot reloads
-      this.$refs.map.appendChild(this.$store.state.map_node)
-    }
+    //}
+    //else {
+    //  this.map = this.$store.state.map_object; // this is for hot reloads
+      //this.$refs.map.appendChild(this.$store.state.map_node)
+    //}
 
     if(!this.lakes.length) {
       this.fetchLakes().then(()=> {
