@@ -60,6 +60,7 @@ import VectorTileLayer from "esri/layers/VectorTileLayer";
 import TileLayer from "esri/layers/TileLayer";
 import IdentityManager from "esri/identity/IdentityManager";
 import FeatureLayer from "esri/layers/FeatureLayer";
+import Graphic from "esri/Graphic";
 
 import config from '@/components/map/config';
 import utils from '@/components/map/utils';
@@ -89,38 +90,8 @@ export default {
       },
       'getCurrentLake'
     ),
-
-    /* currently not using
-    lake_polygons () {
-      return  this.lakes.map((lake) => {
-        return {
-            type: 'Feature',
-            properties: {
-              name: lake.slug,
-              id: lake.reachcode,
-            },
-            geometry: {
-              type: 'Polygon',
-              coordinates: [lake.geom.map((coord) => {
-                  return proj.fromLonLat([coord[1], coord[0]], 'EPSG:3857')
-              })]
-            }
-          }
-      });
-    },
-  */
-    /*lake_markers () {
-      // only read from GeoJSON once
-      if (!this.lakes_with_geom) {
-        this.lakes_with_geom = this.getLakeMarkers();
-      }
-      return this.lakes_with_geom;
-    },*/
-
-  // end computed
   },
   methods: {
-
     ...mapActions([
       'fetchLakes', 'setCurrentLake', 'fitBounds',
       'searchLakes', 'setMapObject', 'setMapNode'
@@ -155,59 +126,6 @@ export default {
         }
       });
     },
-    getLakeMarkers () {
-      if(!this.lakes.length) return;
-      let lakes = this.lakes;
-      if (USE_CLUSTERS) {
-        // Add a bunch of dummy points to test clustering
-        let others = [];
-        for (let i = 0; i < 200; i++) {
-          let other = Object.assign({}, this.lakes[i%3]);
-          let center = this.lakes[i%3].center.map((c) => {
-            return c + 1.1 * (0.4-Math.random())
-          });
-          other.reachcode = 123456789 + (i * 4)
-          other.center = center;
-          other.has_plants = Math.random() > 0.3 ? true : false;
-          others.push(other);
-        };
-        lakes = lakes.concat(others)
-      }
-      lakes = lakes.map((lake) => {
-        return {
-            attributes: {
-              name: lake.slug,
-              id: lake.reachcode,
-              has_plants: Math.random() > 0.5 ? true : false,
-              has_docs:  Math.random() > 0.4 ? true : false,
-            },
-            geometry: {
-              type: "point",
-              x: lake.center[1],
-              y: lake.center[0]
-            }
-          }
-      });
-      let layer = new FeatureLayer({
-          source: lakes,
-          objectIdField: "id",
-      });
-      this.map.add(layer)
-      // NOTE: To execute a query against all the features in a Feature Service
-      // rather than only those in the client, you must use the
-      // FeatureLayer.queryFeatures() method.
-      /*
-      layer.queryFeatures().then(function(results){
-        console.log('layer.queryFeatures' + results.features);
-      });
-      this.view.whenLayerView(layer).then(function(layerView) {
-        var query = layer.createQuery();
-        layerView.queryFeatures(query).then((r)=>{
-          console.log(r)
-        });
-      });
-      */
-    },
     selectLakeFromClick (e) {
       console.log(e.map.getCoordinateFromPixel(e.pixel)); // DEBUG
       let feature = utils.checkMarkerOrBounds(
@@ -218,24 +136,21 @@ export default {
         this.showSideBar(lake);
       }
     },
-    selectLakesFromFilters (filters) {
-      let hasFilterAttributes = (lake) => {
-        if (!this.selectedAttributes.length) {
-          return true
-        }
-        let lake_object = lake.getProperties()
-        let attr =  this.selectedAttributes.every(
-          (attribute) => {
-            return lake_object[attribute] == true
-        });
-        return attr;
-      };
-      this.selectedAttributes = filters;
-      this.lake_marker_source.clear();
+    selectLakesFromFilters (filter) {
+      // this will need to change to using a query
+      // if using a feature layer service in the future
+      if(!filter) return;
       let filtered_lakes = this.lake_markers.filter((lake) => {
-        return hasFilterAttributes(lake);
+        return lake.attributes[filter] == true
       });
-      this.lake_marker_source.addFeatures(filtered_lakes)
+      this.lake_markers_layer.applyEdits({
+        addFeatures: filtered_lakes,
+        deleteFeatures: this.lake_markers,
+      }).then((results) => {
+        console.log(results);
+      }).catch((error) => {
+          console.log('error: ' + error)
+      })
     },
     calculateClusterDistance (zoom) {
       if (USE_CLUSTERS) {
@@ -282,6 +197,61 @@ export default {
       this.show_filters = toggle_filters;
       show_legend = false;
     },
+    getLakeMarkers () {
+      if(!this.lakes.length) return;
+      let lakes = this.lakes;
+      if (USE_CLUSTERS) {
+        // Add a bunch of dummy points to test clustering
+        let others = [];
+        for (let i = 0; i < 20; i++) {
+          let other = Object.assign({}, this.lakes[i%3]);
+          let center = this.lakes[i%3].center.map((c) => {
+            return c + 1.1 * (0.4-Math.random())
+          });
+          other.reachcode = 123456789 + (i * 4)
+          other.center = center;
+          other.has_plants = Math.random() > 0.3 ? true : false;
+          others.push(other);
+        }
+        lakes = lakes.concat(others)
+      }
+      lakes = lakes.map((lake) => {
+        return {
+            attributes: {
+              name: lake.slug,
+              id: lake.reachcode,
+              has_plants: Math.random() > 0.5 ? true : false,
+              has_docs:  Math.random() > 0.4 ? true : false,
+            },
+            geometry: {
+              type: "point",
+              x: lake.center[1],
+              y: lake.center[0]
+            }
+          }
+      });
+      let layer = new FeatureLayer({
+          source: lakes,
+          objectIdField: "id",
+      });
+      this.lake_markers = lakes;
+      this.lake_markers_layer = layer;
+      this.map.add(layer)
+      // NOTE: To execute a query against all the features in a Feature Service
+      // rather than only those in the client, you must use the
+      // FeatureLayer.queryFeatures() method.
+      /*
+      layer.queryFeatures().then(function(results){
+        console.log('layer.queryFeatures' + results.features);
+      });
+      this.view.whenLayerView(layer).then(function(layerView) {
+        var query = layer.createQuery();
+        layerView.queryFeatures(query).then((r)=>{
+          console.log(r)
+        });
+      });
+      */
+    },
     initMap () {
       // TODO: get token from backend
       IdentityManager.registerToken({
@@ -308,6 +278,7 @@ export default {
           zoom: config.zoom,
           center: config.map_center
       });
+      view.ui.components = [];
       let nlcd = config.baseLayers[1];
       let nlcd_layer = new TileLayer({
           url: nlcd.url
@@ -348,6 +319,7 @@ export default {
     else {
       console.log('I already have the lakes. I will not fetch them again');
       this.selectLakeFromUrl();
+      this.getLakeMarkers();
     }
   }
   // end mounted
