@@ -122,9 +122,8 @@ export default {
         }
       });
     },
-    selectLakeFromClick (event) {
-      this.view.hitTest(event).then((response) => {
-
+    selectLakeFromClick (event, view) {
+      view.hitTest(event).then((response) => {
         let features = response.results.filter((r) => {
           if (r.graphic) {
             return r.graphic.layer.id = 'lake_markers'
@@ -132,7 +131,7 @@ export default {
           return false
         })
         if (features.length) {
-          let reachcode = features[0].graphic.attributes.id;
+          let reachcode = features[0].graphic.attributes.reachcode;
           let lake = this.getLakeByReachcode(reachcode);
           this.showSideBar(lake);
         }
@@ -141,7 +140,7 @@ export default {
     selectLakesFromFilters (filter) {
       /* this will need to change to using a query
       if using a feature layer service in the future
-      //
+      // like:
       this.view.whenLayerView(layer).then(function(layerView) {
         var query = layer.createQuery();
         layerView.queryFeatures(query).then((r)=>{
@@ -159,8 +158,6 @@ export default {
       this.lake_markers_layer.applyEdits({
         addFeatures: filtered_lakes,
         deleteFeatures: this.lake_markers,
-      }).then((results) => {
-        console.log(results);
       }).catch((error) => {
           console.log('error: ' + error)
       })
@@ -211,7 +208,24 @@ export default {
       show_legend = false;
     },
     getLakeMarkers () {
+
       if(!this.lakes.length) return;
+
+      const fields = [
+        {
+          name: "ObjectID",
+          alias: "id",
+          type: "oid"
+        }, {
+          name: "name",
+          alias: "name",
+          type: "string"
+        }, {
+          name: "reachcode",
+          alias: "reachcode",
+          type: "integer"
+      }];
+
       let lakes = this.lakes;
       if (USE_CLUSTERS) {
         // Add a bunch of dummy points to test clustering
@@ -233,6 +247,7 @@ export default {
             attributes: {
               name: lake.slug,
               id: lake.reachcode,
+              reachcode: lake.reachcode,
               has_plants: Math.random() > 0.5 ? true : false,
               has_docs:  Math.random() > 0.4 ? true : false,
             },
@@ -245,11 +260,11 @@ export default {
       });
       let layer = new FeatureLayer({
           source: lakes,
-          objectIdField: "id",
+          fields: fields,
           id: 'lake_markers'
       });
-      this.lake_markers = lakes;
       this.lake_markers_layer = layer;
+      this.lake_markers = lakes;
       this.map.add(layer)
 
     },
@@ -297,43 +312,26 @@ export default {
       });
 
       view.when().then(()=> {
-        view.on('click', (event) => { this.selectLakeFromClick(event) })
+        view.on('click', (event) => this.selectLakeFromClick(event, view))
       });
-      //(event) => {
-        /*
-        view.hitTest(event).then((response) => {
-          let features = response.results.filter((r) => {
-            if (r.graphic) {
-              return r.graphic.layer.id = 'lake_markers'
-            }
-            return false
-          })
-          if (features.length) {
-            let id = features[0].graphic.attributes;
-          }
-        });
-        */
 
-
-
-
-      // set properties // this needs to not be cached
+      // set properties
       this.setMapObject(map);
       this.setMapNode(this.$refs.map)
       this.map = map;
-      this.view = view;
+      return map;
     }
     // end methods
   },
   mounted () {
-    // avoid re-rendering map when using client-side routing.
-    //if (this.$store.state.map_node == null) {
+  // avoid re-rendering map when using client-side routing.
+    if (this.$store.state.map_node == null) {
       this.initMap();
-    //}
-    //else {
-    //  this.map = this.$store.state.map_object; // this is for hot reloads
-      //this.$refs.map.appendChild(this.$store.state.map_node)
-    //}
+    }
+    else {
+      this.$refs.map.appendChild(this.$store.state.map_node)
+      this.map = this.$store.state.map_object;
+    }
 
     if(!this.lakes.length) {
       this.fetchLakes().then(()=> {
@@ -346,6 +344,7 @@ export default {
       this.selectLakeFromUrl();
       this.getLakeMarkers();
     }
+
   }
   // end mounted
 }
