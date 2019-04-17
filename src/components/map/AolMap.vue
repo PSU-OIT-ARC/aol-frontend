@@ -69,7 +69,7 @@ import FilterControl from '@/components/map/FilterControl';
 const USE_CLUSTERS = true;
 
 export default {
-  name: 'aol-ol-map',
+  name: 'aol-map',
   data () {
     return {
       ...config,
