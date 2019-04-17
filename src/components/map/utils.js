@@ -43,16 +43,6 @@ const utils = {
       }
       */
     },
-    selectFeatureLayer: (selected_layer, layers=[]) => {
-        layers.map((layer) => {
-            if (layer.getProperties()['id'] != selected_layer) {
-              layer.setVisible(false);
-            }
-            else if (layer.getProperties()['id'] == selected_layer) {
-              layer.setVisible(true);
-            }
-        });
-    },
     mapToRange: (value, in_min, in_max, out_min, out_max) => {
         return (value - in_min) *
             (out_max - out_min) /

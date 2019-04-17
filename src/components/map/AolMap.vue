@@ -38,7 +38,7 @@ v-bind:class="['map-button map-button--legend', { selected: show_legend}]" @clic
 
     <div class="map-filter-wrapper" v-if="show_filters == true">
       <layer-switcher
-        @feature-layer-change="selectFeatureLayer" @show_filters="toggleFilters">
+        @feature-layer-change="selectVectorTileLayer" @show_filters="toggleFilters">
       </layer-switcher>
 
       <filter-control
@@ -140,13 +140,20 @@ export default {
         this.fitBounds({geom: lake.geom});
       }
     },
-    selectFeatureLayer (selected_layer) {
-      let layers = this.map.$map.getLayers().getArray();
-      let feature_layers = layers.filter((layer) => {
-          let id = layer.getProperties().id;
+    selectVectorTileLayer (selected_layer) {
+      let layers = this.map.allLayers;
+      let toggleable_layers = layers.filter((layer) => {
+          let id = layer.id;
           return id == 'nopubland' || id == 'publand';
       });
-      utils.selectFeatureLayer(selected_layer, feature_layers);
+      toggleable_layers.forEach((layer) => {
+        if (layer.id != selected_layer) {
+            layer.visible = false;
+        }
+        else if (layer.id == selected_layer) {
+          layer.visible = true;
+        }
+      });
     },
     getLakeMarkers () {
       if(!this.lakes.length) return;
@@ -184,9 +191,6 @@ export default {
       let layer = new FeatureLayer({
           source: lakes,
           objectIdField: "id",
-          featureReduction: {
-                  type: "cluster"
-                },
       });
       this.map.add(layer)
       // NOTE: To execute a query against all the features in a Feature Service
@@ -277,7 +281,6 @@ export default {
     toggleFilters (toggle_filters) {
       this.show_filters = toggle_filters;
       show_legend = false;
-    =======
     },
     initMap () {
       // TODO: get token from backend
@@ -332,6 +335,7 @@ export default {
       this.initMap();
     }
     else {
+      this.map = this.$store.state.map_object; // this is for hot reloads
       this.$refs.map.appendChild(this.$store.state.map_node)
     }
 

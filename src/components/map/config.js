@@ -53,7 +53,7 @@ const config = {
     featureLayers: [
       {
         id: 'publand',
-        visible: true,
+        visible: false,
         AGOLName: 'Vector_Publands',
         getLayerUrl: getLayerUrl,
         getStyleUrl: getStyleUrl,
@@ -63,7 +63,7 @@ const config = {
       },
       {
         id: 'nopubland',
-        visible: false,
+        visible: true,
         AGOLName: 'Vector_NoPub',
         getLayerUrl: getLayerUrl,
         getStyleUrl: getStyleUrl,
@@ -71,6 +71,7 @@ const config = {
         zIndex: 7,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
+      /*
       {
         id: 'bathymetry',
         visible: true,
@@ -81,6 +82,7 @@ const config = {
         getSpriteUrl: getSpriteUrl,
         extent: undefined//[-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       }
+    */
     ],
     /*
     clusterStyle: createStyle({
