@@ -152,7 +152,7 @@ export default {
     top: 5px;
     right: 0;
     cursor: pointer;
-    font-size: 1.5em;
+    font-size: 1em;
     color: white;
     text-align: right;
     @include respond-to(handheld) {

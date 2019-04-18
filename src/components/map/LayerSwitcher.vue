@@ -1,5 +1,8 @@
 <template>
   <div class='layer-switcher--container'>
+    <h4>Map Layers</h4>
+    <div class="close-filters" @click="emitFilterVisibility()">╳</div>
+
     <div class='layer base' v-for="layer in featureLayers">
       <input type='radio' :value='layer.name' :id="layer.name" :key='layer.name'
         v-model='selectedFeatureLayer' @change="emitFeatureLayerChange"/>
@@ -27,9 +30,12 @@ export default {
     }
   },
   methods: {
-      emitFeatureLayerChange () {
-        this.$emit('feature-layer-change', this.selectedFeatureLayer)
-      }
+    emitFeatureLayerChange () {
+      this.$emit('feature-layer-change', this.selectedFeatureLayer)
+    },
+    emitFilterVisibility () {
+      this.$emit('show_filters', false);
+    }
   }
 }
 </script>

@@ -14,10 +14,10 @@
 
       <data-tabs :lake='lake' :with_sections='false'></data-tabs>
 
-      <div class="summary-chart">
+      <!-- <div class="summary-chart">
         <label>Area </label>
         <div>{{ lake.area_sq_km }}sq. km.</div>
-      </div>
+      </div> -->
 
 
       <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
@@ -87,7 +87,7 @@ export default {
 
   .close-sidebar {
     cursor: pointer;
-    font-size: 1.5em;
+    font-size: 1em;
     color: white;
     text-align: right;
     margin-top: 8px;
