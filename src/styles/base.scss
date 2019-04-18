@@ -276,9 +276,9 @@ a:link, a:visited {
   animation: slide-in 200ms forwards;
 
   @include respond-to(handheld) {
-    width: calc(100vw - 30px);
+    width: calc(100vw - 15px);
     right: 0px;
-    top: 43px;
+    top: 42px;
   }
 
 h4 {
