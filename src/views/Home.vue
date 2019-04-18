@@ -48,11 +48,16 @@ export default {
   overflow: hidden;
   @include respond-to(handheld) {
     grid-template-areas: "map sidebar";
+
   }
 }
 
 .home.sidebar_active {
-  grid-template-columns: $sidebar_width 1fr;
+  //grid-template-columns: $sidebar_width 1fr;
+  @include respond-to(handheld) {
+    grid-template-rows: 200px 1fr; /* should use a variable/calc? */
+
+  }
 }
 
 </style>

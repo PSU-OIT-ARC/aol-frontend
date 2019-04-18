@@ -60,7 +60,6 @@ import VectorTileLayer from "esri/layers/VectorTileLayer";
 import TileLayer from "esri/layers/TileLayer";
 import IdentityManager from "esri/identity/IdentityManager";
 import FeatureLayer from "esri/layers/FeatureLayer";
-import Graphic from "esri/Graphic";
 
 import config from '@/components/map/config';
 import utils from '@/components/map/utils';
@@ -90,21 +89,20 @@ export default {
   methods: {
     ...mapActions([
       'fetchLakes', 'setCurrentLake', 'fitBounds',
-      'searchLakes', 'setMapObject', 'setMapNode'
+      'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
     ]),
     zoomToCluster: utils.zoomToCluster,
     showSideBar (lake) {
       this.$router.push({name: 'home', query: {'lake': lake.slug}})
       this.setCurrentLake(lake);
       this.searchLakes(null); // reset search
-      this.fitBounds({geom: lake.geom});
     },
     selectLakeFromUrl () {
       let slug = this.$route.query['lake'];
       if (slug) {
         let lake = this.getLakeBySlug(slug);
         this.setCurrentLake(lake);
-        this.fitBounds({geom: lake.geom});
+        this.fitBounds({lake: lake});
       }
     },
     selectVectorTileLayer (selected_layer) {
@@ -123,6 +121,7 @@ export default {
       });
     },
     selectLakeFromClick (event, view) {
+      console.log(event)
       view.hitTest(event).then((response) => {
         let features = response.results.filter((r) => {
           if (r.graphic) {
@@ -134,6 +133,7 @@ export default {
           let reachcode = features[0].graphic.attributes.reachcode;
           let lake = this.getLakeByReachcode(reachcode);
           this.showSideBar(lake);
+          this.fitBounds({geom: features[0].graphic.geometry})
         }
       });
     },
@@ -292,7 +292,7 @@ export default {
           map: map,
           container: "map",
           zoom: config.zoom,
-          center: config.map_center
+          center: config.map_center,
       });
       view.ui.components = [];
 
@@ -310,7 +310,6 @@ export default {
         })
         map.add(vector_tile_layer);
       });
-
       view.when().then(()=> {
         view.on('click', (event) => this.selectLakeFromClick(event, view))
       });
@@ -318,6 +317,7 @@ export default {
       // set properties
       this.setMapObject(map);
       this.setMapNode(this.$refs.map)
+      this.setMapView(view);
       this.map = map;
       return map;
     }
@@ -331,8 +331,8 @@ export default {
     else {
       this.$refs.map.appendChild(this.$store.state.map_node)
       this.map = this.$store.state.map_object;
+      this.view = this.$store.state.map_view;
     }
-
     if(!this.lakes.length) {
       this.fetchLakes().then(()=> {
         this.selectLakeFromUrl();

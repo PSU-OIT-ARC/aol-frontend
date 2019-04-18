@@ -91,36 +91,6 @@ a:link, a:visited {
 }
 
 
-.ol-zoom.ol-control {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-
-  @include respond-to(handheld) {
-    top: 65px; /* BUTTON-SHIFT */
-  }
-
-  button {
-    display: block;
-    padding: 0px 8px;
-    margin-bottom: 10px;
-    font-size: 30px;
-    background-color: white;
-    border: 1px solid #aaa;
-    cursor: pointer;
-
-    appearance: none;
-
-    &:hover {
-      background-color: #ccc;
-    }
-  }
-}
-
-.ol-rotate {
-  display: none; /* TODO: pass no rotation into map component */
-}
-
 
 /* MAP COMPONENT */
 
@@ -140,6 +110,7 @@ a:link, a:visited {
   /*contains the buttons AND the button stage */
   display: grid;
   grid-template-columns: 1fr;
+  /*display: none;*/
 
   position: absolute;
   top: 57px;

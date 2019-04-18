@@ -44,7 +44,7 @@ export default {
     close () {
       this.setCurrentLake();
       this.$router.push({name: 'home'});
-      this.fitBounds({geom: this.lake.geom, buffer: 300});
+      this.fitBounds({lake: this.lake, buffer: 300});
     }
   },
   components: {
