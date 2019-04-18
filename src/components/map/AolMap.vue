@@ -66,7 +66,6 @@ import utils from '@/components/map/utils';
 import LayerSwitcher from '@/components/map/LayerSwitcher';
 import FilterControl from '@/components/map/FilterControl';
 
-const USE_CLUSTERS = true;
 
 export default {
   name: 'aol-map',
@@ -91,7 +90,6 @@ export default {
       'fetchLakes', 'setCurrentLake', 'fitBounds',
       'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
     ]),
-    zoomToCluster: utils.zoomToCluster,
     showSideBar (lake) {
       this.$router.push({name: 'home', query: {'lake': lake.slug}})
       this.setCurrentLake(lake);
@@ -162,47 +160,6 @@ export default {
           console.log('error: ' + error)
       })
     },
-    calculateClusterDistance (zoom) {
-      if (USE_CLUSTERS) {
-        let distance = zoom > config.cluster_max_zoom ? 0 : config.cluster_distance;
-        this.cluster_source.setDistance(distance);
-      }
-    },
-    mountClusterSource (component) {
-      // setting cluster source and stylefunction directly in
-      // OpenLayers improves performance over Vuelayers component
-      let source = new VectorSource({
-        features: this.lake_markers
-      });
-      this.lake_marker_source = source;
-
-      if (USE_CLUSTERS) {
-        let cluster_source = new Cluster({
-          distance: this.cluster_distance,
-          source: source,
-        });
-        this.cluster_source = cluster_source;
-        component.$layer.setSource(cluster_source);
-
-        let clusterStyleFunc = (feature, resolution) => {
-            let style = config.pointStyle;
-            let size = feature.get('features').length
-            if (size > 1) {
-              style = config.clusterStyle;
-              let text = size == 1 ? '' : size.toString();
-              style.text_.text_ = text;
-              let radius = utils.mapToRange(size, 2, 2000, 10, 34);
-              style.image_.setRadius(radius);
-            }
-            return style
-        };
-        component.$layer.setStyle(clusterStyleFunc)
-      }
-      else {
-        component.$layer.setSource(source);
-        component.$layer.setStyle(config.pointStyle)
-      }
-    },
     toggleFilters (toggle_filters) {
       this.show_filters = toggle_filters;
       this.show_legend = false;
@@ -227,21 +184,20 @@ export default {
       }];
 
       let lakes = this.lakes;
-      if (USE_CLUSTERS) {
-        // Add a bunch of dummy points to test clustering
-        let others = [];
-        for (let i = 0; i < 20; i++) {
-          let other = Object.assign({}, this.lakes[i%3]);
-          let center = this.lakes[i%3].center.map((c) => {
-            return c + 1.1 * (0.4-Math.random())
-          });
-          other.reachcode = 123456789 + (i * 4)
-          other.center = center;
-          other.has_plants = Math.random() > 0.3 ? true : false;
-          others.push(other);
-        }
-        lakes = lakes.concat(others)
+      // Add a bunch of dummy points to test clustering
+      let others = [];
+      for (let i = 0; i < 20; i++) {
+        let other = Object.assign({}, this.lakes[i%3]);
+        let center = this.lakes[i%3].center.map((c) => {
+          return c + 1.1 * (0.4-Math.random())
+        });
+        other.reachcode = 123456789 + (i * 4)
+        other.center = center;
+        other.has_plants = Math.random() > 0.3 ? true : false;
+        others.push(other);
       }
+      lakes = lakes.concat(others);
+
       lakes = lakes.map((lake) => {
         return {
             attributes: {
