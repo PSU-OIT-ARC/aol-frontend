@@ -1,7 +1,7 @@
 <template>
   <div class='map-container'>
 
-    <div id="map" class="map"></div>
+    <div id="map" class="map" ref="map"></div>
 
     <div v-if="show_legend == true" class="map-legend-wrapper">
       <h4>Map Legend</h4>
@@ -270,7 +270,6 @@ export default {
         view.on('click', (event) => this.selectLakeFromClick(event, view))
       });
 
-      // set properties
       this.setMapObject(map);
       this.setMapNode(this.$refs.map)
       this.setMapView(view);
