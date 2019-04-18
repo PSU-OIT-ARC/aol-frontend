@@ -99,10 +99,10 @@ a:link, a:visited {
   display: grid;
   grid-area: map;
   position: relative;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   @include respond-to(handheld) {
-    width: 100vw;
+    width: 100vh;
   }
 }
 
@@ -128,13 +128,18 @@ a:link, a:visited {
   }
 }
 
+.sidebar_active .map {
+    @include respond-to(handheld) {
+        width: 100vw;
+        position: relative;
+    }
+}
+
 .sidebar_active .map-buttons-wrapper {
   @include respond-to(handheld) {
     display: none;
   }
 }
-
-
 
 .map-filter-wrapper {
   position: absolute;

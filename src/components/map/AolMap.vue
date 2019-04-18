@@ -205,7 +205,7 @@ export default {
     },
     toggleFilters (toggle_filters) {
       this.show_filters = toggle_filters;
-      show_legend = false;
+      this.show_legend = false;
     },
     getLakeMarkers () {
 
