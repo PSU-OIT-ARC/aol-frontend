@@ -61,7 +61,7 @@ const config = {
         zIndex: 6,
         //extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
-      
+
       {
         id: 'nopubland',
         visible: true,
@@ -72,7 +72,7 @@ const config = {
         zIndex: 7,
         extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       },
-      /*
+
       {
         id: 'bathymetry',
         visible: true,
@@ -83,7 +83,6 @@ const config = {
         getSpriteUrl: getSpriteUrl,
         extent: undefined//[-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997]
       }
-    */
     ],
     /*
     clusterStyle: createStyle({
