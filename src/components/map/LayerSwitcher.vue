@@ -5,7 +5,7 @@
 
     <div class='layer base' v-for="layer in featureLayers">
       <input type='radio' :value='layer.name' :id="layer.name" :key='layer.name'
-        v-model='selectedFeatureLayer' @change="emitFeatureLayerChange"/>
+        v-model='selectedFeatureLayer' @change="selectVectorTileLayer"/>
       <label :for='layer.name'>{{ layer.label }}</label>
     </div>
   </div>
@@ -30,8 +30,22 @@ export default {
     }
   },
   methods: {
-    emitFeatureLayerChange () {
-      this.$emit('feature-layer-change', this.selectedFeatureLayer)
+    selectVectorTileLayer () {
+      let selected_layer = this.selectedFeatureLayer;
+      let map = this.$store.state.map_object;
+      let layers = map.allLayers;
+      let toggleable_layers = layers.filter((layer) => {
+          let id = layer.id;
+          return id == 'nopubland' || id == 'publand';
+      });
+      toggleable_layers.forEach((layer) => {
+        if (layer.id != selected_layer) {
+            layer.visible = false;
+        }
+        else if (layer.id == selected_layer) {
+          layer.visible = true;
+        }
+      });
     },
     emitFilterVisibility () {
       this.$emit('show_filters', false);
