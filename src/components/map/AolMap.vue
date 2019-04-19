@@ -162,11 +162,12 @@ export default {
           });
           map.add(nlcd_layer);
 
-          config.featureLayers.forEach((layer) => {
+          config.vectorTileLayers.forEach((layer) => {
               let vector_tile_layer = new VectorTileLayer({
                   url: layer.getLayerUrl(),
                   id: layer.id,
-                  visible: layer.visible
+                  visible: layer.visible,
+                  minScale: layer.minScale
               })
               map.add(vector_tile_layer);
           });
