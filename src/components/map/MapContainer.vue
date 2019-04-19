@@ -11,6 +11,16 @@
 
     <div class="map-buttons-wrapper">
       <div class="map-buttons">
+
+        <a role="button" href="#" class="map-button map-button--zoom-in"
+           @click="zoomIn">
+          +
+        </a>
+        <a role="button" href="#" class="map-button map-button--zoom-out"
+           @click="zoomOut">
+          -
+        </a>
+
         <a role="button" href="#"
         v-bind:class="['map-button map-button--layers', { selected: show_filters}]" @click="show_filters = !show_filters; show_legend = false">
           <svg width="20px" height="22px" viewBox="0 0 20 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -46,14 +56,11 @@ v-bind:class="['map-button map-button--legend', { selected: show_legend}]" @clic
       </filter-control>
     </div>
 
-
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
 
-import config from '@/components/map/config';
 import AolMap from '@/components/map/AolMap';
 import LayerSwitcher from '@/components/map/LayerSwitcher';
 import FilterControl from '@/components/map/FilterControl';
@@ -63,7 +70,6 @@ export default {
   name: 'map-container',
   data () {
     return {
-      ...config,
       selectedAttributes: [],
       show_filters: false,
       show_legend: false
@@ -74,26 +80,10 @@ export default {
     FilterControl,
     AolMap
   },
-  computed: {
-    ...mapGetters({ lakes: 'getLakes' }),
-    ...mapGetters(['getCurrentLake', 'getLakeBySlug', 'getLakeByReachcode']),
-  },
   methods: {
-    ...mapActions([
-      'fetchLakes', 'setCurrentLake', 'fitBounds',
-      'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
-    ]),
     setLakeMarkersLayer (layer) {
       this.lake_markers = layer.markers;
       this.lake_markers_layer = layer.layer;
-    },
-    selectLakeFromUrl () {
-      let slug = this.$route.query['lake'];
-      if (slug) {
-        let lake = this.getLakeBySlug(slug);
-        this.setCurrentLake(lake);
-        this.fitBounds({lake: lake});
-      }
     },
     selectVectorTileLayer (selected_layer) {
       let map = this.$store.state.map_object;
@@ -110,6 +100,14 @@ export default {
           layer.visible = true;
         }
       });
+    },
+    zoomIn () {
+      const view = this.$store.state.map_view;
+      view.zoom += 1;
+    },
+    zoomOut () {
+      const view = this.$store.state.map_view;
+      view.zoom -= 1;
     },
     selectLakesFromFilters (filter) {
       /* this will need to change to using a query

@@ -278,7 +278,7 @@ h4 {
 .map-buttons {
   position: absolute;
   z-index: 1008;
-  top: 83px;
+  /* top: 83px; */
   right: -15px;
   width: 51px;
   height: auto;
@@ -303,6 +303,7 @@ a.map-button {
   border: 1px solid #aaa;
   text-align: center;
   cursor: pointer;
+  text-decoration: none;
 
   @include respond-to(handheld) {
     padding-bottom: 20px;
