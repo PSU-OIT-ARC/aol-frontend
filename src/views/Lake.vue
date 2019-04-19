@@ -1,8 +1,9 @@
 <template>
+<div class='outer-wrap'>
+  <aol-map class='behind'></aol-map>
   <div v-if='lake' class="lake-detail-wrapper">
 
-    <div class="detail-shaded-head">
-    </div>
+    <div class="detail-shaded-head"></div>
 
 
     <div class="lake-detail">
@@ -18,7 +19,7 @@
               &larr; Back to Map
             </router-link>
           </div>
-
+          <div id='map'></div>
           <div class="close-sidebar" @click="close">╳</div>
 
           <lake-card class="card" :lake="lake"></lake-card>
@@ -70,14 +71,16 @@
       <div class="gutter gutter--right"></div>
 
     </div> <!-- end lake-detail -->
-
   </div>
+</div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
+import AolMap from '@/components/map/AolMap';
 
 export default {
   name: 'lake',
@@ -86,7 +89,8 @@ export default {
   },
   components: {
     LakeCard,
-    DataTabs
+    DataTabs,
+    AolMap
   },
   computed: {
     ...mapGetters(['getCurrentLake']),
@@ -247,6 +251,11 @@ export default {
     width: 100%;
   }
 
-
+  .behind {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: -1;
+  }
 
 </style>
