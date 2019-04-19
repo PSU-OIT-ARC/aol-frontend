@@ -1,6 +1,4 @@
 const path = require('path');
-// eslint-disable-next-line
-const ArcGISPlugin = require("@arcgis/webpack-plugin");
 
 module.exports = {
     css: {
@@ -10,16 +8,6 @@ module.exports = {
             }
         }
     },
-    configureWebpack: {
-        plugins: [
-            new ArcGISPlugin()
-        ],
-        node: {
-            process: false,
-            global: false,
-            fs: "empty"
-        },
-    },
     chainWebpack: config => {
         config.module
             .rule('eslint')
@@ -28,6 +16,5 @@ module.exports = {
                 options.configFile = path.resolve(__dirname, ".eslintrc.js");
                 return options;
             });
-        //config.resolve.symlinks(false)
     },
 };
