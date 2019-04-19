@@ -62,21 +62,6 @@ export default {
 
       if(!this.lakes.length) return;
 
-      const fields = [
-        {
-          name: "ObjectID",
-          alias: "id",
-          type: "oid"
-        }, {
-          name: "name",
-          alias: "name",
-          type: "string"
-        }, {
-          name: "reachcode",
-          alias: "reachcode",
-          type: "integer"
-      }];
-
       let lakes = this.lakes;
       // Add a bunch of dummy points to test clustering
       let others = [];
@@ -110,7 +95,7 @@ export default {
       });
       let layer = new FeatureLayer({
           source: lakes,
-          fields: fields,
+          fields: config.lake_marker_fields,
           id: 'lake_markers'
       });
       this.lake_markers_layer = layer;

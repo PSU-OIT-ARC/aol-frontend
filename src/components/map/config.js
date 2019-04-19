@@ -18,6 +18,23 @@ const getLayerUrl = function () {
 
 const config = {
     token: token,
+    lake_marker_fields: [
+        {
+            name: "ObjectID",
+            alias: "id",
+            type: "oid"
+        },
+        {
+            name: "name",
+            alias: "name",
+            type: "string"
+        },
+        {
+            name: "reachcode",
+            alias: "reachcode",
+            type: "integer"
+        }
+    ],
     map_center: [-122.841856, 44.002925],
     zoom: 9,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
