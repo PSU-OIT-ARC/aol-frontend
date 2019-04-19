@@ -1,70 +1,12 @@
 <template>
-  <div class='map-container'>
-
-    <div id="map" class="map" ref="map"></div>
-
-    <div v-if="show_legend == true" class="map-legend-wrapper">
-      <h4>Map Legend</h4>
-      <div class="close-filters" @click="show_legend = false">╳</div>
-      <img src="~@/assets/temp_legend.png" />
-    </div>
-
-    <div class="map-buttons-wrapper">
-      <div class="map-buttons">
-        <a role="button" href="#"
-        v-bind:class="['map-button map-button--layers', { selected: show_filters}]" @click="show_filters = !show_filters; show_legend = false">
-          <svg width="20px" height="22px" viewBox="0 0 20 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <path d="M9.98888889,18.3777778 L1.8,12.0111111 L0,13.4111111 L10,21.1888889 L20,13.4111111 L18.1888889,12 L9.98888889,18.3777778 L9.98888889,18.3777778 Z M10,15.5555556 L18.1777778,9.18888889 L20,7.77777778 L10,0 L0,7.77777778 L1.81111111,9.18888889 L10,15.5555556 L10,15.5555556 Z" id="Shape" fill="#555555"></path>
-            </g>
-          </svg>
-        </a>
-
-        <a role="button" href="#" class="map-button map-button--legend"
-v-bind:class="['map-button map-button--legend', { selected: show_legend}]" @click="show_legend = !show_legend; show_filters = false">
-          <svg width="3px" height="16px" viewBox="0 0 3 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <g id="Group-2" fill="#2B2B2B" fill-rule="nonzero">
-                    <rect id="Rectangle-2" x="0" y="6" width="3" height="10"></rect>
-                    <circle id="Oval-2" cx="1.5" cy="1.5" r="1.5"></circle>
-                </g>
-            </g>
-          </svg>
-        </a>
-      </div>
-
-    </div>
-
-
-    <div class="map-filter-wrapper" v-if="show_filters == true">
-      <layer-switcher
-        @feature-layer-change="selectVectorTileLayer" @show_filters="toggleFilters">
-      </layer-switcher>
-
-      <filter-control
-        @filter-change="selectLakesFromFilters">
-      </filter-control>
-    </div>
-
-
-  </div>
+  <div id='map' class='map' ref='map'></div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 
-import '@/esri_dojo_workers';
-import Map from "esri/Map";
-import MapView from "esri/views/MapView";
-import VectorTileLayer from "esri/layers/VectorTileLayer";
-import TileLayer from "esri/layers/TileLayer";
-import IdentityManager from "esri/identity/IdentityManager";
-import FeatureLayer from "esri/layers/FeatureLayer";
-
+import { loadModules } from 'esri-loader';
 import config from '@/components/map/config';
-import utils from '@/components/map/utils';
-import LayerSwitcher from '@/components/map/LayerSwitcher';
-import FilterControl from '@/components/map/FilterControl';
 
 
 export default {
@@ -77,10 +19,6 @@ export default {
       show_legend: false
     }
   },
-  components: {
-    LayerSwitcher,
-    FilterControl
-  },
   computed: {
     ...mapGetters({ lakes: 'getLakes' }),
     ...mapGetters(['getCurrentLake', 'getLakeBySlug', 'getLakeByReachcode']),
@@ -90,11 +28,6 @@ export default {
       'fetchLakes', 'setCurrentLake', 'fitBounds',
       'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
     ]),
-    showSideBar (lake) {
-      this.$router.push({name: 'home', query: {'lake': lake.slug}})
-      this.setCurrentLake(lake);
-      this.searchLakes(null); // reset search
-    },
     selectLakeFromUrl () {
       let slug = this.$route.query['lake'];
       if (slug) {
@@ -103,68 +36,29 @@ export default {
         this.fitBounds({lake: lake});
       }
     },
-    selectVectorTileLayer (selected_layer) {
-      let layers = this.map.allLayers;
-      let toggleable_layers = layers.filter((layer) => {
-          let id = layer.id;
-          return id == 'nopubland' || id == 'publand';
-      });
-      toggleable_layers.forEach((layer) => {
-        if (layer.id != selected_layer) {
-            layer.visible = false;
-        }
-        else if (layer.id == selected_layer) {
-          layer.visible = true;
-        }
-      });
+    showSideBar (lake) {
+        this.$router.push({name: 'home', query: {'lake': lake.slug}})
+        this.setCurrentLake(lake);
+        this.searchLakes(null); // reset search
     },
     selectLakeFromClick (event, view) {
-      console.log(event)
-      view.hitTest(event).then((response) => {
-        let features = response.results.filter((r) => {
-          if (r.graphic) {
-            return r.graphic.layer.id = 'lake_markers'
-          }
-          return false
-        })
-        if (features.length) {
-          let reachcode = features[0].graphic.attributes.reachcode;
-          let lake = this.getLakeByReachcode(reachcode);
-          this.showSideBar(lake);
-          this.fitBounds({geom: features[0].graphic.geometry})
-        }
-      });
-    },
-    selectLakesFromFilters (filter) {
-      /* this will need to change to using a query
-      if using a feature layer service in the future
-      // like:
-      this.view.whenLayerView(layer).then(function(layerView) {
-        var query = layer.createQuery();
-        layerView.queryFeatures(query).then((r)=>{
-          console.log(r)
+        console.log(event)
+        view.hitTest(event).then((response) => {
+            let features = response.results.filter((r) => {
+              if (r.graphic) {
+                return r.graphic.layer.id = 'lake_markers'
+              }
+              return false
+            })
+            if (features.length) {
+              let reachcode = features[0].graphic.attributes.reachcode;
+              let lake = this.getLakeByReachcode(reachcode);
+              this.showSideBar(lake);
+              this.fitBounds({geom: features[0].graphic.geometry});
+            }
         });
-      });
-      // NOTE: To execute a query against all the features in a Feature Service
-      // rather than only those in the client, you must use the
-      // FeatureLayer.queryFeatures() method.
-      */
-      if(!filter) return;
-      let filtered_lakes = this.lake_markers.filter((lake) => {
-        return lake.attributes[filter] == true
-      });
-      this.lake_markers_layer.applyEdits({
-        addFeatures: filtered_lakes,
-        deleteFeatures: this.lake_markers,
-      }).catch((error) => {
-          console.log('error: ' + error)
-      })
     },
-    toggleFilters (toggle_filters) {
-      this.show_filters = toggle_filters;
-      this.show_legend = false;
-    },
-    getLakeMarkers () {
+    getLakeMarkers (FeatureLayer) {
 
       if(!this.lakes.length) return;
 
@@ -222,84 +116,89 @@ export default {
       this.lake_markers_layer = layer;
       this.lake_markers = lakes;
       this.map.add(layer)
-
-    },
-    initMap () {
-      // TODO: get token from backend
-      IdentityManager.registerToken({
-        'server': config.ArcGisOnlineTilesUrl,
-        'token': config.token
+      this.$emit('layer-ready', {
+        markers: lakes,
+        layer: layer
       });
+    },
+    // end methods
+  },
+  mounted () {
+    loadModules([
+      'esri/Map',
+      'esri/views/MapView',
+      'esri/layers/VectorTileLayer',
+      'esri/layers/TileLayer',
+      'esri/identity/IdentityManager',
+      'esri/layers/FeatureLayer'
+    ]).then(([
+        EsriMap, MapView,
+        VectorTileLayer, TileLayer,
+        IdentityManager, FeatureLayer
+    ]) => {
 
+      // avoid re-rendering map when using client-side routing.
+        if (this.$store.state.map_node == null) {
+          // TODO: get token from backend
+          IdentityManager.registerToken({
+              'server': config.ArcGisOnlineTilesUrl,
+              'token': config.token
+          });
+
+          let map = new EsriMap({
+              basemap: 'gray'
+          });
+          let view = new MapView({
+              map: map,
+              container: 'map',
+              zoom: config.zoom,
+              center: config.map_center,
+          });
+          view.ui.components = [];
+
+          let nlcd = config.baseLayers[1];
+          let nlcd_layer = new TileLayer({
+              url: nlcd.url
+          });
+          map.add(nlcd_layer);
+
+          config.featureLayers.forEach((layer) => {
+              let vector_tile_layer = new VectorTileLayer({
+                  url: layer.getLayerUrl(),
+                  id: layer.id,
+                  visible: layer.visible
+              })
+              map.add(vector_tile_layer);
+          });
+          view.when().then(()=> {
+              view.on('click', (event) => this.selectLakeFromClick(event, view))
+          });
+          this.setMapObject(map);
+          this.setMapNode(this.$refs.map);
+          this.setMapView(view);
+          this.map = map;
+        }
+      else {
+        this.$refs.map.appendChild(this.$store.state.map_node)
+        this.map = this.$store.state.map_object;
+      }
+
+      // get lakes from JSON
+      // Then generate markers layer
+      // this layer will be replaced with AGOL feature service
       if(!this.lakes.length) {
         this.fetchLakes().then(()=> {
           this.selectLakeFromUrl();
+          this.getLakeMarkers(FeatureLayer);
         });
       }
       else {
         console.log('I already have the lakes. I will not fetch them again');
         this.selectLakeFromUrl();
+        this.getLakeMarkers(FeatureLayer);
       }
 
-      let map = new Map({
-          basemap: 'gray'
-      });
-      let view = new MapView({
-          map: map,
-          container: "map",
-          zoom: config.zoom,
-          center: config.map_center,
-      });
-      view.ui.components = [];
-
-      let nlcd = config.baseLayers[1];
-      let nlcd_layer = new TileLayer({
-          url: nlcd.url
-      });
-      map.add(nlcd_layer);
-
-      config.featureLayers.forEach((layer) => {
-        let vector_tile_layer = new VectorTileLayer({
-          url: layer.getLayerUrl(),
-          id: layer.id,
-          visible: layer.visible
-        })
-        map.add(vector_tile_layer);
-      });
-      view.when().then(()=> {
-        view.on('click', (event) => this.selectLakeFromClick(event, view))
-      });
-
-      this.setMapObject(map);
-      this.setMapNode(this.$refs.map)
-      this.setMapView(view);
-      this.map = map;
-      return map;
-    }
-    // end methods
-  },
-  mounted () {
-  // avoid re-rendering map when using client-side routing.
-    if (this.$store.state.map_node == null) {
-      this.initMap();
-    }
-    else {
-      this.$refs.map.appendChild(this.$store.state.map_node)
-      this.map = this.$store.state.map_object;
-      this.view = this.$store.state.map_view;
-    }
-    if(!this.lakes.length) {
-      this.fetchLakes().then(()=> {
-        this.selectLakeFromUrl();
-        this.getLakeMarkers();
-      });
-    }
-    else {
-      console.log('I already have the lakes. I will not fetch them again');
-      this.selectLakeFromUrl();
-      this.getLakeMarkers();
-    }
-
+    });
   }
   // end mounted
 }

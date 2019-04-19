@@ -1,5 +1,4 @@
 import config from '@/components/map/config';
-import watchUtils from "esri/core/watchUtils";
 
 // this should be moved to a central place
 const LOADING = 'loading';
@@ -51,7 +50,6 @@ const actions = {
 
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
-
         view.when().then(()=> {
             if (geom == undefined) {
                 let lake_layer = map.findLayerById('lake_markers');
