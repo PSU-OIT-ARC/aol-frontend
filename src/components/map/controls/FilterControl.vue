@@ -53,12 +53,16 @@ export default {
       let filtered_lakes = this.lake_markers.filter((lake) => {
         return lake.attributes[filter] == true
       });
+      /*
       this.lake_markers_layer.applyEdits({
         addFeatures: filtered_lakes,
         deleteFeatures: this.lake_markers,
       }).catch((error) => {
           console.log('error: ' + error)
       })
+      */
+      // FlareClusterLayer is a GraphicsLayer not a FeatureLayer
+      this.lake_markers_layer.setData(filtered_lakes);
     },
   }
 }

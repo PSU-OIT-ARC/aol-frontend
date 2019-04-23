@@ -53,11 +53,19 @@ const actions = {
         view.when().then(()=> {
             if (geom == undefined) {
                 let lake_layer = map.findLayerById('lake_markers');
+                let lake_graphic = lake_layer.data.find((l) => {
+                    return l.reachcode == lake.reachcode
+                });
+                geom = lake_graphic.geometry;
+                view.goTo({center: [geom.x, geom.y], zoom: ZOOM_LEVEL})
+                /*
                 let query = lake_layer.createQuery();
                 query.where = `reachcode = ${lake.reachcode}`;
                 lake_layer.queryFeatures(query).then((response) => {
-                    if (response.features) {
-                        geom = response.features[0].geometry;
+                    console.log(response)
+                    if (response.results) {
+                        console.log(response.results)
+                        geom = response.resuts[0].graphic.geometry;
                         let extent = geom.extent;
                         if (extent != null) {
                             view.goTo(extent)
@@ -69,6 +77,7 @@ const actions = {
                 }).catch((e) => {
                     console.log("I am an error: " + e)
                 });
+                */
             }
             else if (geom != null) {
                 let extent = geom.extent;
