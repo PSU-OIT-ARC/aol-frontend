@@ -46,13 +46,14 @@ export default {
         view.hitTest(event).then((response) => {
             let features = response.results.filter((r) => {
               if (r.graphic) {
-                return r.graphic.layer.id = 'lake_markers'
+                return r.graphic.layer.id == 'lake_markers' && r.graphic.symbol.type == 'simple-marker'
               }
               return false
             })
+            console.log(features)
             if (features.length) {
-              let reachcode = features[0].graphic.attributes.reachcode;
-              let lake = this.getLakeByReachcode(reachcode);
+              let reachcode = features[0].graphic.attributes.attributes.REACHCODE;
+              let lake = this.getLakeByReachcode(parseInt(reachcode));
               this.showSideBar(lake);
               this.fitBounds({geom: features[0].graphic.geometry});
             }
@@ -115,8 +116,18 @@ export default {
       SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
       ClassBreaksRenderer, fcl)
       {
+
+        let query = this.lakesPointsFeatureLayer.createQuery()
+        query.maxRecordCountFactor = 4;
+        this.lakesPointsFeatureLayer.queryFeatures(query).then((results) => {
+
           const map = this.$store.state.map_object;
-          let data = this.lake_markers; //getLakeMarkers();
+          let data = results.features.map((f) => {
+            f.x = f.geometry.longitude;
+            f.y = f.geometry.latitude;
+            return f;
+          });//this.lake_markers; //getLakeMarkers();
+
           const maxSingleFlareCount = 8;
           let areaDisplayMode = "activated";
 
@@ -153,8 +164,12 @@ export default {
           }
 
           let clusterLayer = new fcl.FlareClusterLayer(options);
+          console.log(clusterLayer)
           map.add(clusterLayer);
           return clusterLayer;
+
+        }).catch((e)=> { console.log('error: ' + e)});
+
     }
     // end methods
   },
@@ -203,7 +218,10 @@ export default {
                 'server': config.ArcGisOnlineTilesUrl,
                 'token': config.token
             });
-
+            IdentityManager.registerToken({
+                'server': "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services/OR_Lake_Points_test/FeatureServer",
+                'token': config.access_token
+            });
             let map = new EsriMap({
                 basemap: 'gray'
             });
@@ -231,24 +249,32 @@ export default {
                 map.add(vector_tile_layer);
             });
 
-            view.when().then(()=> {
-                view.on('click', (event) => this.selectLakeFromClick(event, view));
-
-            });
             this.setMapObject(map);
             this.setMapNode(this.$refs.map);
             this.setMapView(view);
             this.map = map;
+            let lakesPointsFeatureLayer = new FeatureLayer({
+              url:
+                "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services/OR_Lake_Points_test/FeatureServer",
+              id: 'lake_markers'
+            });
+            this.lakesPointsFeatureLayer = lakesPointsFeatureLayer;
+            view.when().then(()=> {
+                view.on('click', (event) => this.selectLakeFromClick(event, view));
+
+            });
 
             this.lake_markers_layer = this.mountClusterLayer(
                 SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
                 ClassBreaksRenderer,
                 fcl
             );
+            /*
             this.$emit('layer-ready', {
               markers: this.lake_markers,
               layer: this.lake_markers_layer
             });
+          */
           }
 
           // avoid re-rendering map when using client-side routing.

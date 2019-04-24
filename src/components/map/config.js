@@ -1,7 +1,12 @@
 
-const token = `6CE9JiJwCSzUJpcVWLNTySpjuxBoopgKcQqLOJ04MmINJYtBH5Wd5XvMWLrtcwWS\
-1TCVw4R7ZX4s04aflAKhKo28tB-wT6PBIvZEVdehhRn_EC8QGNh1AXM4K2CowLgusSVAzNlo228OUIZ\
-Y1e5ZUsSMDlaZPUA5IgmK7cE1F93IHm4TQLrqlyHQiY8LX9KC6H6mQeci9hFnjvCnzfHYyw`;
+const access_token = `C93ORqYdWvUajz9fbAHAwq64ZzG6iWHI--VGjAhqVW4XVTjAgSpiBsAGE8grM28\
+OGDTM4Dd8eFBKMU-0dfylpNMhMjHH7wpM71PZG_wOWHYJkCyxyeyP7-DKvfMheQU0r3kSpxWRgff7c\
+lEvElhcew..`;
+
+const token = `4mUGdU3zEUR7YDjyuZ3qUnh0E3_yZvUpM6ddXR2XMaZAkWqRqzCEBd2JQKruCji\
+DPKL1kOD1G6PSdRH-layu2pNtzOIfnICjyBAveFeVpNXC0Kcy3rmwljg8qoCe8Gl5zG5G8ePFARtaG\
+HK9viB3O-ZzMRBWdqQbQfWwdXOIxcYCVoICmFx5d6n41otfU9p07ubJ6ZQWX47G_Md3rg2JnH-1pFg\
+BvizPM3_begJKYVFf1yTzuzLGsByqbUohQ6Uh`
 
 const ArcGisOnlineServicesBaseUrl = "https://services.arcgisonline.com";
 const ArcGisOnlineTilesBaseUrl = "https://tiles.arcgis.com/tiles/6Miy5NqQWjMYTGFY";
@@ -18,6 +23,7 @@ const getLayerUrl = function () {
 
 const config = {
     token: token,
+    access_token: access_token,
     lake_marker_fields: [
         {
             name: "ObjectID",
