@@ -33,21 +33,6 @@ a:link, a:visited {
 }
 
 
-/* ICONS */
-
-.tab-icon--plants {
-  background-image: url(~@/assets/icon_search.svg);
-}
-
-.tab-icon--mussels {
-  background-image: url(~@/assets/icon_search.svg);
-}
-
-.tab-icon--atlas_text {
-  background-image: url(~@/assets/icon_search.svg);
-}
-
-
 /* TABLES */
 
 .table {
@@ -113,7 +98,7 @@ a:link, a:visited {
   /*display: none;*/
 
   position: absolute;
-  top: 57px;
+  top: 47px;
   right: 15px;
   z-index: 3000;
 
@@ -278,15 +263,19 @@ h4 {
 .map-buttons {
   position: absolute;
   z-index: 1008;
-  /* top: 83px; */
+  top: 0px;
   right: -15px;
   width: 51px;
   height: auto;
 
   @include respond-to(handheld) {
     padding-bottom: 20px;
-    top: 100px;
+    top: 5px;
     right: 0px;
+  }
+
+  svg * {
+    fill: $primary_color;
   }
 }
 
@@ -295,7 +284,7 @@ a.map-button {
   left: 0px;
 
   display: block;
-  padding: 5px;
+  padding: 5px 5px 5px 5px;
   margin: 10px 0px;
 
   width: 24px;

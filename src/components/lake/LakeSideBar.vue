@@ -1,34 +1,35 @@
 <template>
   <div class="lake-sidebar" v-if="lake">
 
-    <div class="sidebar--top">
+    <div class="sidebar-photo-wrapper">
+      <div class="sidebar-photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
+      </div>
+    </div>
+
+
+    <div class="sidebar-content">
+
       <div class="sidebar__nav">
         <p><a href="#" @click="close">&larr; Back to Search</a></p>
         <div class="close-sidebar" @click="close">╳</div>
       </div>
+
       <lake-card :lake='lake' :to_detail="true"></lake-card>
-    </div>
 
+      <div class="lake-summary">
 
-    <div class="lake-summary">
-
-      <data-tabs :lake='lake' :with_sections='false'></data-tabs>
+        <data-tabs :lake='lake' :with_sections='false'></data-tabs>
 
       <!-- <div class="summary-chart">
         <label>Area </label>
         <div>{{ lake.area_sq_km }}sq. km.</div>
       </div> -->
 
+        <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
 
-      <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
-
-
+      </div>
     </div>
-
-
   </div>
-
-
 </template>
 
 <script>
@@ -70,19 +71,45 @@ export default {
     }
   }
 
-  .sidebar--top {
-    position: relative;
-    background-color: #838383;
-  }
-
   .sidebar__nav {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0px 15px;
+    position: relative;
+    top: -30px;
 
     a {
       color: white;
     }
+  }
+
+  .sidebar-photo-wrapper {
+    background-color: #838383;
+    overflow: hidden;
+    position: relative;
+
+    @include respond-to(handheld) {
+      width: 100vw;
+    }
+
+  }
+
+  .sidebar-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 160px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    filter: blur(9px);
+    transform: scale(1.1);
+  }
+
+  .sidebar-content {
+    position: relative;
+    top: -130px;
   }
 
   .close-sidebar {
@@ -105,6 +132,10 @@ export default {
     overflow-y: scroll;
     padding: 65px 15px 0px 15px;
     height: calc(100vh - (45px + 40px + 160px));//45px padding + 40px header + 160px graybar
+
+    @include respond-to(handheld) {
+      width: calc(100vw - 50px);
+    }
 
   }
 
