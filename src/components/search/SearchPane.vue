@@ -93,7 +93,7 @@ export default {
 
     .intro__photo {
       height: 140px;
-      background-image: url('~@/assets/generic_thumb_large.png');
+      background-image: url('~@/assets/intro-umpqua-lake.png');
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center center;

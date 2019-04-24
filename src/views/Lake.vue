@@ -1,9 +1,10 @@
 <template>
   <div v-if='lake' class="lake-detail-wrapper">
 
-    <div class="detail-shaded-head">
+    <div class="blur-image-wrapper">
+      <div class="detail-shaded-head" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
+      </div>
     </div>
-
 
     <div class="lake-detail">
 
@@ -143,8 +144,23 @@ export default {
     }
   }
 
-  .detail-shaded-head {
+  .blur-image-wrapper {
     background-color: #838383;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .detail-shaded-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    filter: blur(9px);
+    transform: scale(1.1);
   }
 
   .close-sidebar {

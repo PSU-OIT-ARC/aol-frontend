@@ -1,7 +1,7 @@
 <template>
   <div id='nav'>
 
-    <h1><a href="/">Atlas</a></h1>
+    <h1><a href="/">Atlas <span>of Oregon Lakes</span></a></h1>
 
     <div class="nav-links">
       <router-link to="/aquatic-invasives">Aquatic Invasives</router-link>
@@ -25,20 +25,24 @@ export default {
 
 <style scoped lang='scss'>
 #nav {
-
+  position: relative;
+  z-index: 3;
   display: grid;
-  grid-template-columns: 20% 1fr;
+  grid-template-columns: 45% 1fr;
+  @include respond-to(handheld) {
+    grid-template-columns: 25% 1fr;
+  }
 
   padding: 3px 0px;
-  background-color: black;
+  background-color: white;
   text-align: left;
 
   h1 {
     padding: 0px;
     margin: 0px;
-    color: white;
+    color: $primary_color;
     font-size: 26px;
-    margin-left: 20px;
+    margin-left: 10px;
   }
 
   .nav-links {
@@ -53,9 +57,16 @@ export default {
 }
 
 a:link, a:visited {
-  color: white;
+  color: $primary_color;
   padding: 10px;
   text-decoration: none;
+
+  span {
+    color: #666;
+    @include respond-to(handheld) {
+      display: none;
+    }
+  }
 
   &:hover {
     color: lightgray;

@@ -1,49 +1,11 @@
 .tabs {
-  display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: 50% 50%;
-  grid-gap: 20px;
-  width: 90%;
-
   li:last-of-type {
     display:none;
   }
 }
-
-.tab-icon {
-  background-repeat: no-repeat;
-  background-position: 20px center;
-  background-size: 13% auto;
-}
-
-.body-main .tab-icon {
-  background-repeat: no-repeat;
-  background-position: center 10px;
-  background-size: 23px auto;
-}
-
 /* Each tab is wrapped in a router a tag */
-.lake-summary {
-  a:link, a:visited {
-    font-family: "Lato-Regular", sans-serif;
-    background-color: #ECECEC;
-    padding: 10px 20px 10px 50px;
-    display: block;
-    text-decoration: none;
-    color: #000;
 
-    &:hover, &:focus {
-      background-color: #D8D8D8;
-    }
-
-    &.active {
-      font-family: "Lato-Bold", sans-serif;
-      font-weight: 700;
-    }
-  }
-}
-
-.body-main .tabs {
+.tabs {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -55,56 +17,97 @@
   top: 1px;
 
   margin-top: 0px;
+  margin-bottom: 25px;
   margin-left: 0px;
-  padding-left: 0px;
+  padding: 0px;
 
   grid-gap: 0px;
 
   @include respond-to(handheld) {
     margin-left: 15px;
-    width: calc(100vw - 15px);
+    width: calc(100vw - 50px);
     overflow-y: scroll;
   }
 
   li {
-    margin-right: 7px;
-    max-width: 180px;
-    width: auto;
-    padding-left: 0px;
-    border-left: 1px solid #EAEAEA;
-    border-top: 1px solid #EAEAEA;
-    border-right: 1px solid #EAEAEA;
+    width: 100px;
+    padding: 0px;
+    background-color: #E7E7E7;
   }
 
   a:link, a:visited {
-    display:block;
+    display: block;
     font-family: "Lato-Regular", sans-serif;
-    background-color: #ECECEC;
     text-transform: uppercase;
     text-decoration: none;
     color: #000;
-    padding: 40px 20px 5px 20px;
+    padding: 50px 20px 10px 20px;
     text-align: center;
-    height: 20px;
     font-size: .8em;
 
 
     &:hover, &:focus {
-      background-color: #D8D8D8;
+      background-color: $primary_color;
+      color: white;
     }
 
     &.active {
       font-family: "Lato-Bold", sans-serif;
       font-weight: 700;
-      background-color: white;
+      background-color: #fff;
+      color: #222;
     }
   }
 }
 
+.lake-summary {
+  margin-top: -30px;
+
+  .tabs {
+    margin-bottom: 0px;
+  }
+
+  .tabs li {
+    width: 33%;
+  }
+}
+
+
+.tab-icon {
+  background-repeat: no-repeat;
+  background-position: center 16px;
+  background-size: 26px auto;
+}
+
+/* For the Data Tabs, there *should* be a way to just dynamically call a section-name.svg and then change the fill color of that svg on hover, focus and active state. Using <use> was useless. <object> calls a source by the data= attribute, which Vue thinks is ridiculous. So for now we have two sets of simple svg icons, and like animals, swap them out. */
+
+
+.tab-icon--plants:hover, .tab-icon--plants:focus
+ { background-image: url(~@/assets/plants-white.svg);}
+.tab-icon--mussels:hover, .tab-icon--mussels:focus { background-image: url(~@/assets/clam-white.svg);}
+.tab-icon--atlas_text:hover, .tab-icon--atlas_text:focus { background-image: url(~@/assets/book-open-white.svg); }
+.tab-icon--watershed:hover, .tab-icon--watershed:focus { background-image: url(~@/assets/water-white.svg);}
+.tab-icon--photos:hover, .tab-icon--photos:focus { background-image: url(~@/assets/camera-white.svg);}
+.tab-icon--documents:hover, .tab-icon--documents:focus { background-image: url(~@/assets/file-white.svg);}
+
+
+.tab-icon--plants,
+.active.tab-icon--plants:hover { background-image: url(~@/assets/plants.svg);}
+.tab-icon--mussels,
+.active.tab-icon--mussels:hover { background-image: url(~@/assets/clam.svg); }
+.tab-icon--atlas_text,
+.active.tab-icon--atlas_text:hover { background-image: url(~@/assets/book-open.svg);}
+.tab-icon--watershed,
+.active.tab-icon--watershed:hover { background-image: url(~@/assets/water.svg);}
+.tab-icon--photos,
+.active.tab-icon--photos:hover { background-image: url(~@/assets/camera.svg);}
+.tab-icon--documents,
+.active.tab-icon--documents:hover { background-image: url(~@/assets/file.svg);}
+
+
 .data-section {
   background-color: white;
   padding: 15px;
-  border: 1px solid #EAEAEA;
 
   h3 {
     font-size: 1.3em;

@@ -2,15 +2,16 @@
   <router-link :to="href" @click.native="activateLake(lake)">
 
   <div class="lake-card">
-    <div class="photo" :style="{'background-image': 'url(' + require('@/assets/generic_thumb_detail.png') + ')'}">
+    <div class="photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
     </div>
     <div class="info">
       <h3>{{ lake.name }} <i>({{lake.county_set}})</i></h3>
       <div class="data-icons">
+        <div class="icon summary"></div>
         <div class="icon mussels"></div>
         <div class="icon plants"></div>
         <div class="icon documents"></div>
-        <div class="icon other"></div>
+        <div class="icon watershed"></div>
       </div>
       <p>093234582348</p>
 
@@ -18,13 +19,13 @@
         <table cellpadding="0" cellspacing="0">
           <thead>
             <tr>
-              <th>Area</th>
+              <th class="longrow">Area</th>
               <th>Shoreline</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>10166.4 acres</td>
+              <td class="longrow">10166.4 acres</td>
               <td>53.2 mi</td>
             </tr>
           </tbody>
@@ -75,7 +76,7 @@ a:link, a:visited {
 }
 
 a:hover, a:focus {
-  background-color: #E7E7E7;
+  background-color: transparent;
 }
 
 </style>

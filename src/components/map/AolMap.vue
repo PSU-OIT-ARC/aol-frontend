@@ -11,6 +11,21 @@
 
     <div class="map-buttons-wrapper">
       <div class="map-buttons">
+
+        <a role="button" href="#" class="map-button map-button--zoomin">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+            <path fill="#06186A" d="M12,8 L20,8 L20,11 L12,11 L12,20 L9,20 L9,11 L0,11 L0,8 L9,8 L9,0 L12,0 L12,8 Z"/>
+          </svg>
+        </a>
+
+
+        <a role="button" href="#" class="map-button map-button--zoomout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="3" viewBox="0 0 20 3">
+            <rect width="3" height="20" x="8.5" y="-8.5" fill="#06186A" transform="rotate(90 10 1.5)"/>
+          </svg>
+        </a>
+
+
         <a role="button" href="#"
         v-bind:class="['map-button map-button--layers', { selected: show_filters}]" @click="show_filters = !show_filters; show_legend = false">
           <svg width="20px" height="22px" viewBox="0 0 20 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
