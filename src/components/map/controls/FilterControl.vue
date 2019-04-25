@@ -18,9 +18,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'filter-control',
-  props: ['lake_markers', 'lake_markers_layer'],
   data () {
     return {
       filters: [
@@ -36,39 +37,34 @@ export default {
       selectedFilters: null //[]
     }
   },
+  computed: {
+    ...mapGetters(['getLakeByReachcode'])
+  },
   methods: {
     emitFilterChange () {
       this.$emit('filter-change', this.selectedFilters)
     },
     selectLakesFromFilters () {
-      /* this will need to change to using a query
-      if using a feature layer service in the future
-      // like:
-      this.view.whenLayerView(layer).then(function(layerView) {
-        var query = layer.createQuery();
-        layerView.queryFeatures(query).then((r)=>{
-          console.log(r)
-        });
-      });
-      // NOTE: To execute a query against all the features in a Feature Service
-      // rather than only those in the client, you must use the
-      // FeatureLayer.queryFeatures() method.
-      */
+      const map = this.$store.state.map_object;
       let filter = this.selectedFilters;
       if(!filter) return;
-      let filtered_lakes = this.lake_markers.filter((lake) => {
-        return lake.attributes[filter] == true
+      let lake_markers_layer = map.findLayerById('lake_clusters');
+
+      let filtered_lakes = lake_markers_layer.data.filter((graphic) => {
+        let reachcode = graphic.attributes.REACHCODE;
+        // Temporary  fake filter
+        let value = 0;
+        if (filter == 'has_docs') value = 1;
+        return reachcode % 2 == value;
+        /*let lake = this.getLakeByReachcode(parseInt(reachcode));
+        if (lake) {
+          console.log(lake[filter])
+          return lake[filter] == true;
+        }
+        return false
+        */
       });
-      /*
-      this.lake_markers_layer.applyEdits({
-        addFeatures: filtered_lakes,
-        deleteFeatures: this.lake_markers,
-      }).catch((error) => {
-          console.log('error: ' + error)
-      })
-      */
-      // FlareClusterLayer is a GraphicsLayer not a FeatureLayer
-      this.lake_markers_layer.setData(filtered_lakes);
+      lake_markers_layer.setData(filtered_lakes);
     },
   }
 }
