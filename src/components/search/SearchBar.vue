@@ -41,13 +41,12 @@ export default {
   #search-bar {
     display: flex;
     position: relative;
-    z-index: 1000;
+    z-index: 0;
 
     input {
       font-family: "Lato-Bold", sans-serif;
       padding: 10px 35px 6px 10px;
       width: 100%;
-      border: 0px solid black;
       border: 1px solid #aaa;
     }
   }
@@ -55,7 +54,7 @@ export default {
   .search-clear {
     position: absolute;
     top: 6px;
-    right: 12px;
+    right: 8px;
     color: #333;
     cursor: pointer;
 

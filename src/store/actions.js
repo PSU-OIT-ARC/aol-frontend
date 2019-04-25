@@ -1,5 +1,3 @@
-import * as proj from 'ol/proj';
-import * as olExtent from  'ol/extent';
 import config from '@/components/map/config';
 
 // this should be moved to a central place
@@ -10,6 +8,14 @@ const actions = {
 
     setMapObject (context, map) {
         context.commit('setMap', map);
+    },
+
+    setMapNode (context, node) {
+        context.commit('setMapNode', node);
+    },
+
+    setMapView (context, view) {
+        context.commit('setMapView', view);
     },
 
     searchLakes (context, query) {
@@ -30,34 +36,59 @@ const actions = {
     },
 
     fitBounds (context, options) {
-        let geom = options['geom'];
+        /*
+        Zoom/pan to lake bounds.
+        If the lake object is provided, query feature service for lake geometry
+        If the geometry is supplied, goTo geom extent directly.
+        Hardcoded zoom level should not be needed when using
+        feature layer with lake geometries.
+        */
+        const ZOOM_LEVEL = 13;
+        let lake = options['lake'];
         let buffer = options['buffer'];
+        let geom = options['geom'] || undefined;
 
-        const map = context.rootState.map_object.$map;
-        if (geom === null) {
-            map.getView().setZoom(8)
-            setTimeout(() => {
-                map.getView().setCenter(
-                    proj.fromLonLat(config.map_center, 'EPSG:3857')
-                )
-            }, 0);
-            return;
-        }
-        setTimeout(() => {
-            map.updateSize();}, 2);
-        let transformed_geom = geom.map((coord) => {
-            return proj.fromLonLat([coord[1], coord[0]], 'EPSG:3857');
-        });
-        let bounds = olExtent.boundingExtent(transformed_geom)
-        let bounds_buffer = buffer !== undefined ? buffer : config.bounds_padding;
-        let padding = Array(4).fill(bounds_buffer);
-        let lake_bounds= olExtent.buffer(bounds, bounds_buffer)
-        //console.log('viewport: '+ map.getViewport().height)
-
-        setTimeout(() => {
-            // possibly just keep zoom the same?
-            map.getView().fit(lake_bounds, {padding: padding});
-        }, 0);
+        const map =  context.rootState.map_object;
+        const view = context.rootState.map_view;
+        view.when().then(()=> {
+            if (geom == undefined) {
+                let lake_layer = map.findLayerById('lake_markers');
+                let lake_graphic = lake_layer.data.find((l) => {
+                    return l.reachcode == lake.reachcode
+                });
+                geom = lake_graphic.geometry;
+                view.goTo({center: [geom.x, geom.y], zoom: ZOOM_LEVEL})
+                /*
+                let query = lake_layer.createQuery();
+                query.where = `reachcode = ${lake.reachcode}`;
+                lake_layer.queryFeatures(query).then((response) => {
+                    console.log(response)
+                    if (response.results) {
+                        console.log(response.results)
+                        geom = response.resuts[0].graphic.geometry;
+                        let extent = geom.extent;
+                        if (extent != null) {
+                            view.goTo(extent)
+                        }
+                        else {
+                            view.goTo({center: geom, zoom: ZOOM_LEVEL})
+                        }
+                    }
+                }).catch((e) => {
+                    console.log("I am an error: " + e)
+                });
+                */
+            }
+            else if (geom != null) {
+                let extent = geom.extent;
+                if (extent != null) {
+                    view.goTo(extent)
+                }
+                else {
+                    view.goTo({center: geom, zoom: ZOOM_LEVEL })
+                }
+            }
+        })
     },
 
     fetchLakes (context) {

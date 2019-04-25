@@ -81,8 +81,7 @@ a:link, a:visited {
 }
 
 
-
-/* OpenLayers overrides */
+/* if the sidebar is active, hide these layers */
 .home.sidebar_active .ol-zoom.ol-control,
 .home.sidebar_active .map-controls-wrapper,
 .home.sidebar_active .site-intro {
@@ -92,28 +91,6 @@ a:link, a:visited {
 }
 
 
-.ol-zoom.ol-control {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-
-  button {
-    display: block;
-    padding: 0px 8px;
-    margin-bottom: 10px;
-    font-size: 30px;
-    background-color: white;
-    border: 1px solid #aaa;
-    cursor: pointer;
-
-    appearance: none;
-
-    &:hover {
-      background-color: #ccc;
-    }
-  }
-}
-
 
 /* MAP COMPONENT */
 
@@ -122,43 +99,67 @@ a:link, a:visited {
   display: grid;
   grid-area: map;
   position: relative;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   @include respond-to(handheld) {
-    width: 100vw;
+    width: 100vh;
   }
 }
 
-.map-controls-wrapper {
+.map-buttons-wrapper {
+  /*contains the buttons AND the button stage */
   display: grid;
   grid-template-columns: 1fr;
-  display: none;
+  /*display: none;*/
 
   position: absolute;
   top: 57px;
   right: 15px;
-  z-index: 1001;
+  z-index: 3000;
 
   width: 350px;
   height: auto;
   padding: 5px 20px;
 
   @include respond-to(handheld) {
-
-  }
-
-  .map-controls--secondary {
-    position: absolute;
-    top: 0px;
-    right: 50px;
-    z-index: 1002;
-    width: 300px;
-    height: auto;
-    border: 1px solid #ccc;
-    padding-bottom: 20px;
-    background-color: #fff;
+    width: 100vw;
+    top: 92px; /* BUTTON-SHIFT below full-width search */
+    right: 0px;
   }
 }
+
+.sidebar_active .map {
+    @include respond-to(handheld) {
+        width: 100vw;
+        position: relative;
+    }
+}
+
+.sidebar_active .map-buttons-wrapper {
+  @include respond-to(handheld) {
+    display: none;
+  }
+}
+
+.map-filter-wrapper {
+  position: absolute;
+  top: 57px;
+  right: 65px;
+  z-index: 3003;
+  width: 300px;
+  height: auto;
+  border: 1px solid #ccc;
+  padding-bottom: 20px;
+  background-color: #fff;
+  animation: slide-in 200ms forwards;
+
+  @include respond-to(handheld) {
+    top: 42px; /* BUTTON-SHIFT */
+    width: 100vw;
+    right: 0px;
+  }
+}
+
 
 .layer-switcher--container {
   display: flex;
@@ -166,6 +167,7 @@ a:link, a:visited {
   align-items: stretch;
   padding: 15px;
   background-color: #fff;
+  position: relative;
 
   .layer {
     position: relative;
@@ -173,10 +175,14 @@ a:link, a:visited {
     width: 100%;
   }
 
+  h4 {
+    margin: 5px 5px 10px 5px;
+  }
+
+
   input {
     position: relative;
     z-index: 1009;
-    width: 100%;
     top: 10px;
   }
 
@@ -190,17 +196,32 @@ a:link, a:visited {
     border: 1px solid #ccc;
     background-color: #fff;
     width: calc(100% - 43px);
+    cursor: pointer;
   }
 
   input:checked + label {
-    border: 1px solid #222;
+    border: 1px solid #444;
     background-color: #bbb;
+  }
+
+  input + label {
+    &:hover {
+      border: 1px solid #222;
+    }
+  }
+
+  input:focus + label {
+    border: 1px solid #4D90FE;
   }
 }
 
 .filter-control--container {
   padding: 0px 15px;
   background-color: #fff;
+  @include respond-to(handheld) {
+    padding-bottom: 20px;
+  }
+
 
   .filter {
     display: block;
@@ -210,29 +231,94 @@ a:link, a:visited {
   label {
     display: inline-block;
     width: 90%;
+    cursor: pointer;
+    &:hover {background-color: #eee;}
   }
 }
 
-.map-buttons--secondary {
+.map-legend-wrapper {
   position: absolute;
-  z-index: 9999;
-  top: 93px;
-  right: 0px;
-  width: 35px;
+  top: 57px;
+  right: 65px;
+  z-index: 3003;
   height: auto;
+  width: 300px;
+  right: 65px;
+  max-height: 75vh;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  background-color: white;
+  padding: 15px 0px 20px 15px;
+  animation: slide-in 200ms forwards;
+
+  @include respond-to(handheld) {
+    width: calc(100vw - 15px);
+    right: 0px;
+    top: 42px;
+  }
+
+h4 {
+  margin: 8px 0px 15px 0px;
 }
 
-.map-button {
-  position: relative;
-  width: 24px;
-  background-color: white;
-  border: 1px solid #aaa;
-  padding: 5px;
-  margin-bottom: 10px;
-  text-align: center;
+}
+
+.close-filters {
   cursor: pointer;
 
   &:hover, &:focus {
+    color: black;
+  }
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+}
+
+.map-buttons {
+  position: absolute;
+  z-index: 1008;
+  /* top: 83px; */
+  right: -15px;
+  width: 51px;
+  height: auto;
+
+  @include respond-to(handheld) {
+    padding-bottom: 20px;
+    top: 100px;
+    right: 0px;
+  }
+}
+
+a.map-button {
+  position: relative;
+  left: 0px;
+
+  display: block;
+  padding: 5px;
+  margin: 10px 0px;
+
+  width: 24px;
+  background-color: white;
+  border: 1px solid #aaa;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+
+  @include respond-to(handheld) {
+    padding-bottom: 20px;
+    right: 16px;
+    height: 10px;
+  }
+
+  &:hover {
     background-color: #ccc;
+  }
+}
+
+a.map-button.selected {
+  background-color: #848484;
+  svg * {
+    fill: white;
   }
 }

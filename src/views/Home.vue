@@ -3,20 +3,20 @@
     <side-bar class='sidebar-wrapper'
       v-bind:class="[getCurrentLake ? 'sidebar_active' : '']">
     </side-bar>
-    <aol-map class='map-wrapper'></aol-map>
+    <map-container class='map-wrapper'></map-container>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import AolOLMap from '@/components/map/AolOLMap';
+import MapContainer from '@/components/map/MapContainer';
 import SideBar from '@/components/SideBar';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'home',
   components: {
-    'aol-map': AolOLMap,
+    MapContainer,
     SideBar
   },
   computed: {
@@ -48,11 +48,16 @@ export default {
   overflow: hidden;
   @include respond-to(handheld) {
     grid-template-areas: "map sidebar";
+
   }
 }
 
 .home.sidebar_active {
-  grid-template-columns: $sidebar_width 1fr;
+  //grid-template-columns: $sidebar_width 1fr;
+  @include respond-to(handheld) {
+    grid-template-rows: 200px 1fr; /* should use a variable/calc? */
+
+  }
 }
 
 </style>

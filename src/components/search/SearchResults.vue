@@ -33,12 +33,14 @@ export default {
 
 <style scoped lang="scss">
   #search-results-wrapper {
-    color: #333;
-    padding: 10px 0px;
+    position: relative;
+    z-index: 99999;
     min-height: auto;
     overflow: hidden;
+    margin-top: 14px;
+    padding: 0px 0px;
+    color: #333;
     background-color: white;
-    margin-top: 15px;
   }
 
   #search-results-wrapper li {
