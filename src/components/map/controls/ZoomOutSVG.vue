@@ -1,0 +1,5 @@
+<template>
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="3" viewBox="0 0 20 3">
+    <rect width="3" height="20" x="8.5" y="-8.5" fill="#06186A" transform="rotate(90 10 1.5)"/>
+  </svg>
+</template>

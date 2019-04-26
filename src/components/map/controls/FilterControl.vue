@@ -1,12 +1,18 @@
 <template>
   <div class='filter-control--container'>
-    <div class='filter' v-for="filter in filters">
 
-      <input type='radio' :value='filter.name' :id="filter.name"
-        :key='filter.name' v-model='selectedFilters'
-        @change="selectLakesFromFilters"/>
+    <div class='filter'>
+      <input type="radio" value="no-filters" id="no-filters" v-model='selectedFilters'
+      @change="selectLakesFromFilters" />
+      <label for="no-filters">Show all lakes</label>
 
-      <label :for='filter.name'>{{ filter.label }}</label>
+      <div v-for="filter in filters">
+        <input type='radio' :value='filter.name' :id="filter.name"
+          :key='filter.name' v-model='selectedFilters'
+          @change="selectLakesFromFilters"/>
+
+        <label :for='filter.name'>{{ filter.label }}</label>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +81,9 @@ export default {
 
     label {
       margin-left: 5px;
+      line-height: 2em;
+      padding-left: 5px;
+      width: 88%;
     }
   }
 </style>

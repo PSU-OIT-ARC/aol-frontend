@@ -63,8 +63,5 @@ export default {
 
 <style scoped lang='scss'>
 
-.data-sections {
-  margin-bottom: 20px;
-}
 
 </style>
