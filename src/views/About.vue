@@ -1,7 +1,9 @@
 <template>
   <div class="lake-detail-wrapper about-wrapper">
 
-    <div class="detail-shaded-head">
+    <div class="blur-image-wrapper">
+      <div class="blur-image" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
+      </div>
     </div>
 
     <div class="lake-detail about-detail">
@@ -21,7 +23,7 @@
           <div class="close-sidebar" @click="close">╳</div>
 
           <div class="lake-card">
-            <div class="photo" :style="{'background-image': 'url(' + require('@/assets/generic_thumb_detail.png') + ')'}">
+            <div class="photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
             </div>
             <div class="info">
               <h4>A Public Resource Since 1985</h4>
@@ -119,8 +121,23 @@
   }
 }
 
-.detail-shaded-head {
+.blur-image-wrapper {
   background-color: #838383;
+  overflow: hidden;
+  position: relative;
+}
+
+.blur-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  filter: blur(9px);
+  transform: scale(1.1);
 }
 
 .close-sidebar {

@@ -8,8 +8,6 @@
       <router-link to="/about">About</router-link>
     </div>
 
-
-
   </div>
 </template>
 
@@ -54,12 +52,20 @@ export default {
       font-size: .8em;
     }
   }
+
+
+}
+
+a.router-link-active {
+  border-bottom: 5px $primary_color solid;
+
 }
 
 a:link, a:visited {
   color: $primary_color;
-  padding: 10px;
+  padding-bottom: 6px;
   text-decoration: none;
+  margin-left: 25px;
 
   span {
     color: #666;
