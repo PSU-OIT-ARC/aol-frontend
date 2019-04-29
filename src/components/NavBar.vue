@@ -28,7 +28,7 @@ export default {
   display: grid;
   grid-template-columns: 45% 1fr;
   @include respond-to(handheld) {
-    grid-template-columns: 25% 1fr;
+    grid-template-columns: 20% 1fr;
   }
 
   padding: 3px 0px;
@@ -41,24 +41,27 @@ export default {
     color: $primary_color;
     font-size: 26px;
     margin-left: 10px;
+    @include respond-to(handheld) {
+      margin-left: -10px;
+    }
   }
 
   .nav-links {
     text-align: right;
-    margin-right: 10px;
+    margin-right: 30px;
     margin-top: 8px;
     font-size: 1em;
     @include respond-to(handheld) {
       font-size: .8em;
+      margin-right: 10px;
     }
   }
-
-
 }
 
 a.router-link-active {
   border-bottom: 5px $primary_color solid;
-
+  @include respond-to(handheld) {
+  }
 }
 
 a:link, a:visited {
@@ -66,6 +69,10 @@ a:link, a:visited {
   padding-bottom: 6px;
   text-decoration: none;
   margin-left: 25px;
+
+  @include respond-to(handheld) {
+    padding-bottom: 10px;
+  }
 
   span {
     color: #666;
