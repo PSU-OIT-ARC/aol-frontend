@@ -4,8 +4,8 @@
     <div v-else-if="!loading && query && !results.length">
       <div class="no-results">Sorry, no results</div>
     </div>
-    <li v-else v-for="result in results">
-      <lake-card :lake="result" :key="result.slug">
+    <li v-else v-for="result in results" :key="result.slug">
+      <lake-card :lake="result">
     </lake-card>
     </li>
   </ul>

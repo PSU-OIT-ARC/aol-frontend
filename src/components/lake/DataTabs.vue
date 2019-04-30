@@ -1,14 +1,11 @@
 <template>
 
-  <div class="content-body">
-
-    <div class="body-main">
 
       <div class='data-sections'>
 
         <ul class='tabs'>
           <tab
-            v-for="section in sections" :key="section.name"
+            v-for="section in rendered_sections" :key="section.name"
             :section="section" :lake="lake"
             :active="currentSectionTitle === section.title">
           </tab>
@@ -20,22 +17,6 @@
           </component>
         </keep-alive>
       </div>
-
-    </div>
-
-    <div class="body-sidebar">
-
-      <watershed></watershed>
-      <documents></documents>
-      <photos></photos>
-
-    </div>
-
-  </div> <!-- end content-body -->
-
-
-
-
 
 </template>
 
@@ -65,6 +46,14 @@ export default {
       currentSectionTitle: Object.values(this.$options.components)[0].title
     }
   },
+  computed: {
+    rendered_sections() {
+      let sections = Object.entries(this.sections).filter((section) => {
+          return section[1] != Documents
+        })
+      return sections
+    }
+  },
   methods: {
     setCurrentSection () {
       let hash = this.$route.hash;
@@ -91,24 +80,7 @@ export default {
 
 <style scoped lang='scss'>
 
-.content-body {
-  display: grid;
-  grid-template-columns: 2.1fr .9fr;
-  margin-top: 40px;
-  @include respond-to(handheld) {
-    margin-top: 20px;
-    grid-template-columns: none;
-    grid-template-rows: auto auto;
-  }
-}
 
-.body-sidebar {
-  padding: 0px 0px 0px 50px;
-  @include respond-to(handheld) {
-    display: none;
-    padding: 0px 15px;
-  }
-}
 
 
 

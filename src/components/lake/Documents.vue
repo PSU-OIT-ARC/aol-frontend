@@ -15,16 +15,6 @@
     props: ['lake'],
     name: 'documents',
     title: 'Documents',
-    data() {
-      return {
-        mobile_only: false,
-      }
-    },
-    methods: {
-      mobileOnly () {
-        this.$emit('mobile_only', this.mobile_only)
-      },
-    }
   }
 </script>
 

@@ -6,9 +6,9 @@
       @change="selectLakesFromFilters" />
       <label for="no-filters">Show all lakes</label>
 
-      <div v-for="filter in filters">
+      <div v-for="filter in filters" :key='filter.name'>
         <input type='radio' :value='filter.name' :id="filter.name"
-          :key='filter.name' v-model='selectedFilters'
+           v-model='selectedFilters'
           @change="selectLakesFromFilters"/>
 
         <label :for='filter.name'>{{ filter.label }}</label>

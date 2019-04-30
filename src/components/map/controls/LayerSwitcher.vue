@@ -3,8 +3,8 @@
     <h4>Map Layers</h4>
     <div class="close-filters" @click="emitFilterVisibility()">╳</div>
 
-    <div class='layer base' v-for="layer in featureLayers">
-      <input type='radio' :value='layer.name' :id="layer.name" :key='layer.name'
+    <div class='layer base' v-for="layer in featureLayers" :key='layer.name'>
+      <input type='radio' :value='layer.name' :id="layer.name"
         v-model='selectedFeatureLayer' @change="selectVectorTileLayer"/>
       <label :for='layer.name'>{{ layer.label }}</label>
     </div>
