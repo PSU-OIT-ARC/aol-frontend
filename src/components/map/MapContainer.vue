@@ -14,11 +14,11 @@
 
         <a role="button" href="#" class="map-button map-button--zoom-in"
            @click="zoomIn">
-          +
+           <zoom-in-svg/>
         </a>
         <a role="button" href="#" class="map-button map-button--zoom-out"
            @click="zoomOut">
-          -
+           <zoom-out-svg/>
         </a>
 
         <a role="button" href="#" class="map-button map-button--layers"
@@ -55,6 +55,8 @@
 import AolMap from '@/components/map/AolMap';
 import LayerSVG from '@/components/map/controls/LayerSVG';
 import LegendSVG from '@/components/map/controls/LegendSVG';
+import ZoomInSVG from '@/components/map/controls/ZoomInSVG';
+import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
 
@@ -73,6 +75,8 @@ export default {
   components: {
     'layer-svg': LayerSVG,
     'legend-svg': LegendSVG,
+    'zoom-in-svg': ZoomInSVG,
+    'zoom-out-svg': ZoomOutSVG,
     LayerSwitcher,
     FilterControl,
     AolMap

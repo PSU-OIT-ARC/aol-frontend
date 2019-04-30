@@ -20,19 +20,22 @@
   margin-bottom: 25px;
   margin-left: 0px;
   padding: 0px;
-
   grid-gap: 0px;
 
   @include respond-to(handheld) {
-    margin-left: 15px;
-    width: calc(100vw - 50px);
+    width: 100vw;
     overflow-y: scroll;
   }
 
   li {
-    width: 100px;
+    width: 110px;
     padding: 0px;
     background-color: #E7E7E7;
+    overflow: hidden;
+    @include respond-to(handheld) {
+      width: 33.333%;
+    }
+
   }
 
   a:link, a:visited {
@@ -40,10 +43,13 @@
     font-family: "Lato-Regular", sans-serif;
     text-transform: uppercase;
     text-decoration: none;
-    color: #000;
-    padding: 50px 20px 10px 20px;
+    color: $primary_color;
+    padding: 50px 10px 10px 10px;
     text-align: center;
     font-size: .8em;
+    @include respond-to(handheld) {
+      font-size: .7em;
+    }
 
 
     &:hover, &:focus {
@@ -55,16 +61,17 @@
       font-family: "Lato-Bold", sans-serif;
       font-weight: 700;
       background-color: #fff;
-      color: #222;
+      color: $primary_color;
     }
   }
 }
 
 .lake-summary {
-  margin-top: -30px;
+  margin-top: -60px;
 
   .tabs {
     margin-bottom: 0px;
+    width: 100%;
   }
 
   .tabs li {
@@ -79,31 +86,44 @@
   background-size: 26px auto;
 }
 
-/* For the Data Tabs, there *should* be a way to just dynamically call a section-name.svg and then change the fill color of that svg on hover, focus and active state. Using <use> was useless. <object> calls a source by the data= attribute, which Vue thinks is ridiculous. So for now we have two sets of simple svg icons, and like animals, swap them out. */
+/* For the Data Tabs, there *should* be a way to just dynamically call a section-name.svg and then change the fill color of that svg on hover, focus and active state. Using <use> was useless. <object> calls a source by the data= attribute, which Vue thinks is ridiculous. So for now we have two sets of simple svg icons, and like animals, we swap them out. */
 
-
-.tab-icon--plants:hover, .tab-icon--plants:focus
- { background-image: url(~@/assets/plants-white.svg);}
-.tab-icon--mussels:hover, .tab-icon--mussels:focus { background-image: url(~@/assets/clam-white.svg);}
-.tab-icon--atlas_text:hover, .tab-icon--atlas_text:focus { background-image: url(~@/assets/book-open-white.svg); }
-.tab-icon--watershed:hover, .tab-icon--watershed:focus { background-image: url(~@/assets/water-white.svg);}
-.tab-icon--photos:hover, .tab-icon--photos:focus { background-image: url(~@/assets/camera-white.svg);}
-.tab-icon--documents:hover, .tab-icon--documents:focus { background-image: url(~@/assets/file-white.svg);}
-
+.tab-icon--plants:hover,
+.tab-icon--plants:focus { background-image: url(~@/assets/plants-white.svg);}
+.tab-icon--mussels:hover,
+.tab-icon--mussels:focus { background-image: url(~@/assets/clam-white.svg);}
+.tab-icon--atlas_text:hover,
+.tab-icon--atlas_text:focus { background-image: url(~@/assets/book-open-white.svg); }
+.tab-icon--watershed:hover,
+.tab-icon--watershed:focus { background-image: url(~@/assets/water-white.svg);}
+.tab-icon--photos:hover,
+.tab-icon--photos:focus { background-image: url(~@/assets/camera-white.svg);}
+.tab-icon--documents:hover,
+.tab-icon--documents:focus { background-image: url(~@/assets/file-white.svg);}
 
 .tab-icon--plants,
-.active.tab-icon--plants:hover { background-image: url(~@/assets/plants.svg);}
+.active.tab-icon--plants:hover,
+.active.tab-icon--plants:focus { background-image: url(~@/assets/plants.svg);}
 .tab-icon--mussels,
-.active.tab-icon--mussels:hover { background-image: url(~@/assets/clam.svg); }
+.active.tab-icon--mussels:hover,
+.active.tab-icon--mussels:focus { background-image: url(~@/assets/clam.svg); }
 .tab-icon--atlas_text,
-.active.tab-icon--atlas_text:hover { background-image: url(~@/assets/book-open.svg);}
+.active.tab-icon--atlas_text:hover,
+.active.tab-icon--atlas_text:focus { background-image: url(~@/assets/book-open.svg);}
 .tab-icon--watershed,
-.active.tab-icon--watershed:hover { background-image: url(~@/assets/water.svg);}
+.active.tab-icon--watershed:hover,
+.active.tab-icon--watershed:focus { background-image: url(~@/assets/water.svg);}
 .tab-icon--photos,
-.active.tab-icon--photos:hover { background-image: url(~@/assets/camera.svg);}
+.active.tab-icon--photos:hover,
+.active.tab-icon--photos:focus { background-image: url(~@/assets/camera.svg);}
 .tab-icon--documents,
-.active.tab-icon--documents:hover { background-image: url(~@/assets/file.svg);}
+.active.tab-icon--documents:hover,
+.active.tab-icon--documents:focus { background-image: url(~@/assets/file.svg);}
 
+
+.data-sections {
+  margin-bottom: 20px;
+}
 
 .data-section {
   background-color: white;

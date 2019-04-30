@@ -134,16 +134,13 @@ export default {
     height: calc(100vh - (45px + 40px + 160px));//45px padding + 40px header + 160px graybar
 
     @include respond-to(handheld) {
-      width: calc(100vw - 50px);
+      width: calc(100vw - 30px);
     }
-
   }
 
   .summary-chart {
     margin-top: 30px;
   }
-
-
 
   table {
     width: 100%;
