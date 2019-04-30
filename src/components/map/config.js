@@ -59,7 +59,7 @@ const config = {
         {
             name: "reachcode",
             alias: "reachcode",
-            type: "integer"
+            type: "string"
         }
     ],
 
@@ -86,13 +86,12 @@ const config = {
             getLayerUrl: getServiceLayerUrl,
             visible: false
         },
-        /* TBD
         {
             id:'lake_bbox_service_layer',
-            AGOLName: 'TBD',
+            AGOLName: 'NHDH_bounding_selection_shp',
             getLayerUrl: getServiceLayerUrl,
-            visible: true
-        }*/
+            visible: false
+        }
     ],
     vectorTileLayers: [
       {

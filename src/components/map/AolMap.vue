@@ -41,7 +41,7 @@ export default {
         this.setCurrentLake(lake);
         this.searchLakes(null); // reset search
     },
-    selectLakeFromClick (event, view) {
+    selectLakeFromPointClick (event, view) {
         view.hitTest(event).then((response) => {
             let features = response.results.filter((r) => {
               if (r.graphic) {
@@ -58,6 +58,45 @@ export default {
               this.fitBounds({geom: features[0].graphic.geometry});
             }
         });
+    },
+    selectLakeFromBBoxClick (event, view) {
+      view.hitTest(event).then((response) => {
+        let features = response.results.filter((r) => {
+          if (r.graphic) {
+            return r.graphic.layer.id == 'lake_bbox_graphics_layer'
+          }
+          return false
+        })
+        if (features.length) {
+          let reachcode = features[0].graphic.attributes.REACHCODE;
+          let lake = this.getLakeByReachcode(parseInt(reachcode));
+          if (lake) {
+            this.showSideBar(lake);
+          }
+          this.fitBounds({geom: features[0].graphic.geometry});
+        }
+      })
+    },
+    BoundingBoxServiceToGraphicLayer (FeatureLayer) {
+      const map = this.$store.state.map_object;
+      const bbox_layer = map.findLayerById('lake_bbox_service_layer');
+      let query = bbox_layer.createQuery()
+      query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
+      bbox_layer.queryFeatures(query).then((results) => {
+        let feature_layer = new FeatureLayer({
+          source: results.features,
+          id: 'lake_bbox_graphics_layer',
+          fields: config.lake_marker_fields,
+        })
+        feature_layer.when().then((l) => {
+          // change to transparent later
+          l.renderer.symbol.color.a = 0.1;
+          l.renderer.symbol.outline.color.a = 0.1;
+        })
+        map.add(feature_layer)
+      }).catch((e)=> {
+        console.log('error: ' + e)
+      })
     },
     mountClusterLayer (
         SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
@@ -181,7 +220,7 @@ export default {
               'token': config.token
           });
           IdentityManager.registerToken({
-              'server': "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services/OR_Lake_Points_test/FeatureServer",
+              'server': "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services",
               'token': config.token
           });
           let map = new EsriMap({
@@ -225,15 +264,17 @@ export default {
           this.setMapNode(this.$refs.map);
           this.setMapView(view);
 
-
           //create clusters
           this.mountClusterLayer(
               SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
               ClassBreaksRenderer,
               fcl
           );
+          this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
           view.when().then(()=> {
-              view.on('click', (event) => this.selectLakeFromClick(event, view));
+              view.on('click', (event) => this.selectLakeFromPointClick(event, view));
+              view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
+
               resolve(map)
           });
         });

@@ -50,26 +50,29 @@ const actions = {
 
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
-        console.log(options)
         if (geom == undefined) {
-            let lake_layer = map.findLayerById('lake_points_service_layer');
-            /*
+            //let lake_layer = map.findLayerById('lake_clusters');
+              /*
             // use the cluster graphics layer
             console.log(lake_layer)
             let lake_graphic = lake_layer.data.find((l) => {
-                return l.reachcode == lake.reachcode
+                console.log(l)
+                return l.attributes.REACHCODE == String(lake.reachcode)
             });
+            console.log(lake_graphic)
             geom = lake_graphic.geometry;
-            console.log(geom)
+          //  console.log(geom)
             view.goTo({center: [geom.x, geom.y], zoom: ZOOM_LEVEL})
-            */
 
+            */
             // use the feature service layer
+            let lake_layer = map.findLayerById('lake_points_service_layer');
             let query = lake_layer.createQuery();
-            query.where = `REACHCODE = ${String(lake.reachcode)}`;
+            query.where = `REACHCODE = ${lake.reachcode}`;
             query.maxRecordCountFactor = 4;
             lake_layer.queryFeatures(query).then((response) => {
-                if (response.features) {
+                if (response.features.length) {
+                    console.log(response)
                     geom = response.features[0].geometry;
                     let extent = geom.extent;
                     if (extent != null) {
