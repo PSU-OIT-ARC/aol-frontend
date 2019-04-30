@@ -39,7 +39,6 @@
 
               <watershed></watershed>
               <documents></documents>
-              <photos></photos>
 
             </div>
 
@@ -62,7 +61,6 @@ import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 import Watershed from '@/components/lake/Watershed';
 import Documents from '@/components/lake/Documents';
-import Photos from '@/components/lake/Photos';
 import AolMap from '@/components/map/AolMap';
 
 export default {
@@ -75,7 +73,6 @@ export default {
     DataTabs,
     Documents,
     Watershed,
-    Photos,
     AolMap
   },
   computed: {
@@ -203,10 +200,12 @@ export default {
 
   .body-sidebar {
     padding: 0px 0px 0px 50px;
+
     @include respond-to(handheld) {
       display: none;
       padding: 0px 15px;
     }
+
   }
 
 

@@ -1,6 +1,7 @@
 <template>
 
   <div class="map-image--wrapper">
+    <a name="watershed" id="watershed"></a>
     <img src="~@/assets/watershed_fpo.jpg" />
     <p class="caption">
       <a href="#">Lake</a>|<a href="#">Watershed</a>
