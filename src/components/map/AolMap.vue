@@ -41,84 +41,87 @@ export default {
         this.setCurrentLake(lake);
         this.searchLakes(null); // reset search
     },
-    selectLakeFromClick (event, view) {
-        console.log(event)
+    selectLakeFromPointClick (event, view) {
         view.hitTest(event).then((response) => {
             let features = response.results.filter((r) => {
               if (r.graphic) {
-                return r.graphic.layer.id = 'lake_markers'
+                return r.graphic.layer.id == 'lake_clusters' && r.graphic.symbol.type == 'simple-marker'
               }
               return false
             })
             if (features.length) {
-              let reachcode = features[0].graphic.attributes.reachcode;
-              let lake = this.getLakeByReachcode(reachcode);
-              this.showSideBar(lake);
+              let reachcode = features[0].graphic.attributes.attributes.REACHCODE;
+              let lake = this.getLakeByReachcode(parseInt(reachcode));
+              if (lake) {
+                this.showSideBar(lake);
+              }
               this.fitBounds({geom: features[0].graphic.geometry});
             }
         });
     },
-    generateLakeObjects (FeatureLayer) {
-
-          let lakes = this.lakes;
-          // Add a bunch of dummy points to test clustering
-          let others = [];
-          for (let i = 0; i < 200; i++) {
-            let other = Object.assign({}, this.lakes[i%3]);
-            let center = this.lakes[i%3].center.map((c) => {
-              return c + 1.1 * (0.4-Math.random())
-            });
-            other.reachcode = parseInt(123456789 + (i * 4))
-            other.center = center;
-            other.has_plants = Math.random() > 0.3 ? true : false;
-            others.push(other);
+    selectLakeFromBBoxClick (event, view) {
+      view.hitTest(event).then((response) => {
+        let features = response.results.filter((r) => {
+          if (r.graphic) {
+            return r.graphic.layer.id == 'lake_bbox_graphics_layer'
           }
-          lakes = lakes.concat(others);
-
-          lakes = lakes.map((lake) => {
-            return {
-                attributes: {
-                  name: lake.slug,
-                  id: lake.reachcode,
-                  reachcode: lake.reachcode,
-                  has_plants: Math.random() > 0.5 ? true : false,
-                  has_docs:  Math.random() > 0.4 ? true : false,
-                },
-                name: lake.slug,
-                id: lake.reachcode,
-                reachcode: lake.reachcode,
-                has_plants: Math.random() > 0.5 ? true : false,
-                has_docs:  Math.random() > 0.4 ? true : false,
-                geometry: {
-                  type: "point",
-                  x: lake.center[1],
-                  y: lake.center[0],
-                },
-                x: parseFloat(lake.center[1]),
-                y: parseFloat(lake.center[0]),
-              }
-          });
-          /*
-          let layer = new FeatureLayer({
-              source: lakes,
-              fields: config.lake_marker_fields,
-              id: 'lake_markers'
-          });
-
-          this.lake_markers_layer = layer;
-          */
-        //  this.lake_markers = lakes;
-          //this.map.add(layer)
-          return lakes;
+          return false
+        })
+        if (features.length) {
+          let reachcode = features[0].graphic.attributes.REACHCODE;
+          let lake = this.getLakeByReachcode(parseInt(reachcode));
+          if (lake) {
+            this.showSideBar(lake);
+          }
+          this.fitBounds({geom: features[0].graphic.geometry});
+        }
+      })
+    },
+    BoundingBoxServiceToGraphicLayer (FeatureLayer) {
+      const map = this.$store.state.map_object;
+      const bbox_layer = map.findLayerById('lake_bbox_service_layer');
+      let query = bbox_layer.createQuery()
+      query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
+      bbox_layer.queryFeatures(query).then((results) => {
+        let feature_layer = new FeatureLayer({
+          source: results.features,
+          id: 'lake_bbox_graphics_layer',
+          fields: config.lake_marker_fields,
+        })
+        feature_layer.when().then((l) => {
+          // change to transparent later
+          l.renderer.symbol.color.a = 0.1;
+          l.renderer.symbol.outline.color.a = 0.1;
+        })
+        map.add(feature_layer)
+      }).catch((e)=> {
+        console.log('error: ' + e)
+      })
     },
     mountClusterLayer (
-      SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-      ClassBreaksRenderer, fcl)
+        SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+        ClassBreaksRenderer, fcl)
       {
-          const map = this.$store.state.map_object;
-          let data = this.lake_markers; //getLakeMarkers();
-          const maxSingleFlareCount = 8;
-          let areaDisplayMode = "activated";
+        return new Promise ((resolve) => {
+        const map = this.$store.state.map_object;
+        const lake_markers_layer = map.findLayerById('lake_points_service_layer');
+
+        let query = lake_markers_layer.createQuery()
+        query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
+        lake_markers_layer.queryFeatures(query).then((results) => {
+
+          // filter out lakes to show on map (TEMP CODE)
+          let active_lakes = results.features.filter((f) => {
+            let rc = f.attributes.REACHCODE
+            return config.cms_reachcodes.indexOf(rc) > -1
+          });
+
+          // transform features objects to graphics objects
+          let data = active_lakes.map((f) => {
+            f.x = f.geometry.longitude;
+            f.y = f.geometry.latitude;
+            return f;
+          });
 
           let defaultSym = new SimpleMarkerSymbol({
               size: 6,
@@ -126,55 +129,70 @@ export default {
               outline: null
           });
 
-          let renderer = new ClassBreaksRenderer({
+          let clusterRenderer = new ClassBreaksRenderer({
               defaultSymbol: defaultSym
           });
-          renderer.field = "clusterCount";
+          clusterRenderer.field = "clusterCount";
 
-          let smSymbol = new SimpleMarkerSymbol({ size: 22, outline: new SimpleLineSymbol({ color: [221, 159, 34, 0.8] }), color: [255, 204, 102, 0.8] });
-          let mdSymbol = new SimpleMarkerSymbol({ size: 24, outline: new SimpleLineSymbol({ color: [82, 163, 204, 0.8] }), color: [102, 204, 255, 0.8] });
-          let lgSymbol = new SimpleMarkerSymbol({ size: 28, outline: new SimpleLineSymbol({ color: [41, 163, 41, 0.8] }), color: [51, 204, 51, 0.8] });
-          let xlSymbol = new SimpleMarkerSymbol({ size: 32, outline: new SimpleLineSymbol({ color: [200, 52, 59, 0.8] }), color: [250, 65, 74, 0.8] });
+          let smSymbol = new SimpleMarkerSymbol({
+              size: 22,
+              color: [255, 204, 102, 0.9],
+              outline: new SimpleLineSymbol({
+                  color: [221, 159, 34, 0.9]
+              }),
+          });
 
-          renderer.addClassBreakInfo(0, 19, smSymbol);
-          renderer.addClassBreakInfo(20, 150, mdSymbol);
-          renderer.addClassBreakInfo(151, 1000, lgSymbol);
-          renderer.addClassBreakInfo(1001, Infinity, xlSymbol);
+          let mdSymbol = new SimpleMarkerSymbol({
+              size: 24,
+              color: [102, 204, 255, 0.9],
+              outline: new SimpleLineSymbol({
+                  color: [82, 163, 204, 0.9]
+              }),
+          });
 
+          let lgSymbol = new SimpleMarkerSymbol({
+              size: 28,
+              color: [51, 204, 51, 0.9],
+              outline: new SimpleLineSymbol({
+                  color: [41, 163, 41, 0.9]
+              }),
+          });
+
+          let xlSymbol = new SimpleMarkerSymbol({
+            size: 32,
+            color: [250, 65, 74, 0.9],
+            outline: new SimpleLineSymbol({
+                color: [200, 52, 59, 0.9]
+            }),
+          });
+
+          clusterRenderer.addClassBreakInfo(0, 19, smSymbol);
+          clusterRenderer.addClassBreakInfo(20, 150, mdSymbol);
+          clusterRenderer.addClassBreakInfo(151, 1000, lgSymbol);
+          clusterRenderer.addClassBreakInfo(1001, Infinity, xlSymbol);
 
           let options = {
-              id: "lake_markers",
-              clusterRenderer: renderer,
+              id: "lake_clusters",
+              clusterRenderer: clusterRenderer,
               displayFlares: false,
-              clusterRatio: 130,
-              clusterToScale: 53672,
-              clusterMinCount: 4,
+              clusterRatio: config.clusterRatio,
+              clusterToScale: config.clusterToScale,
+              clusterMinCount: config.clusterMinCount,
               data: data
           }
 
           let clusterLayer = new fcl.FlareClusterLayer(options);
           map.add(clusterLayer);
-          return clusterLayer;
-    }
-    // end methods
-  },
-  mounted () {
-
-        const options = {
-          // tell Dojo where to load other packages
-            dojoConfig: {
-            async: true,
-
-            packages: [
-              {
-                location: '/amd',
-                name: 'fcl'
-              },
-            ]
-          }
-        };
-
-
+          clusterLayer.when().then(()=> {
+            resolve(clusterLayer)
+          })
+        }).catch((e)=> {
+          console.log('error: ' + e)
+        });
+      });
+    },
+    initMap () {
+      return new Promise ((resolve, reject) => {
         loadModules([
           'esri/Map',
           'esri/views/MapView',
@@ -188,7 +206,7 @@ export default {
           "esri/symbols/SimpleFillSymbol",
           "esri/renderers/ClassBreaksRenderer",
           "fcl/FlareClusterLayer_v4"
-        ], options).then(([
+        ], config.dojo_options).then(([
             EsriMap, MapView, Extent,
             VectorTileLayer, TileLayer,
             IdentityManager, FeatureLayer,
@@ -196,85 +214,96 @@ export default {
             ClassBreaksRenderer,
             fcl
         ]) => {
+          // TODO: get token from backend
+          IdentityManager.registerToken({
+              'server': config.ArcGisOnlineTilesUrl,
+              'token': config.token
+          });
+          IdentityManager.registerToken({
+              'server': "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services",
+              'token': config.token
+          });
+          let map = new EsriMap({
+              basemap: 'gray'
+          });
+          let view = new MapView({
+              map: map,
+              container: 'map',
+              zoom: config.zoom,
+              center: config.map_center,
+          });
+          view.ui.components = [];
 
-          const initMap = () => {
-            // TODO: get token from backend
-            IdentityManager.registerToken({
-                'server': config.ArcGisOnlineTilesUrl,
-                'token': config.token
+          let nlcd = config.baseLayers[1];
+          let nlcd_layer = new TileLayer({
+              url: nlcd.url
+          });
+          map.add(nlcd_layer);
+
+          config.vectorTileLayers.forEach((layer) => {
+              let vector_tile_layer = new VectorTileLayer({
+                  url: layer.getLayerUrl(),
+                  id: layer.id,
+                  visible: layer.visible,
+                  minScale: layer.minScale
+              })
+              map.add(vector_tile_layer);
+          });
+
+          config.featureServiceLayers.forEach((layer) => {
+            let feature_layer = new FeatureLayer({
+              url: layer.getLayerUrl(),
+              id: layer.id,
+              visible: layer.visible
             });
+            map.add(feature_layer);
+            //this[layer.id] = feature_layer;
+          });
 
-            let map = new EsriMap({
-                basemap: 'gray'
-            });
-            let view = new MapView({
-                map: map,
-                container: 'map',
-                zoom: config.zoom,
-                center: config.map_center,
-            });
-            view.ui.components = [];
+          this.setMapObject(map);
+          this.setMapNode(this.$refs.map);
+          this.setMapView(view);
 
-            let nlcd = config.baseLayers[1];
-            let nlcd_layer = new TileLayer({
-                url: nlcd.url
-            });
-            map.add(nlcd_layer);
+          //create clusters
+          this.mountClusterLayer(
+              SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+              ClassBreaksRenderer,
+              fcl
+          );
+          this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
+          view.when().then(()=> {
+              view.on('click', (event) => this.selectLakeFromPointClick(event, view));
+              view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
 
-            config.vectorTileLayers.forEach((layer) => {
-                let vector_tile_layer = new VectorTileLayer({
-                    url: layer.getLayerUrl(),
-                    id: layer.id,
-                    visible: layer.visible,
-                    minScale: layer.minScale
-                })
-                map.add(vector_tile_layer);
-            });
-
-            view.when().then(()=> {
-                view.on('click', (event) => this.selectLakeFromClick(event, view));
-
-            });
-            this.setMapObject(map);
-            this.setMapNode(this.$refs.map);
-            this.setMapView(view);
-            this.map = map;
-
-            this.lake_markers_layer = this.mountClusterLayer(
-                SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-                ClassBreaksRenderer,
-                fcl
-            );
-            this.$emit('layer-ready', {
-              markers: this.lake_markers,
-              layer: this.lake_markers_layer
-            });
-          }
-
-          // avoid re-rendering map when using client-side routing.
-            let hasCachedMap = this.$store.state.map_node != null;
-            if (hasCachedMap) {
-              this.$refs.map.appendChild(this.$store.state.map_node)
-              this.map = this.$store.state.map_object;
-              this.selectLakeFromUrl();
-            }
-            else {
-              if(!this.lakes.length) {
-                this.fetchLakes().then(()=> {
-                  this.lake_markers = this.generateLakeObjects()
-                  initMap()
-                  this.selectLakeFromUrl();
-                })
-              }
-              else {
-                console.log('I already have the lakes. I will not fetch them again');
-                this.lake_markers = this.generateLakeObjects()
-                initMap();
-                this.selectLakeFromUrl();
-              }
-          }
-    }); // end LoadModules.then
-
+              resolve(map)
+          });
+        });
+      });
+    }, //end initMap
+// end methods
+  },
+  mounted () {
+  // avoid re-rendering map when using client-side routing.
+    let hasCachedMap = this.$store.state.map_node != null;
+    if (hasCachedMap) {
+      this.$refs.map.appendChild(this.$store.state.map_node)
+      this.selectLakeFromUrl();
+    }
+    else {
+      if(!this.lakes.length) {
+        this.fetchLakes().then(()=> {
+          this.initMap().then(()=> {
+            this.selectLakeFromUrl();
+          });
+        })
+      }
+      else {
+        console.log('I already have the lakes. I will not fetch them again');
+        this.initMap().then(() => {
+          this.selectLakeFromUrl();
+        });
+      }
+    }
   }
   // end mounted
 }

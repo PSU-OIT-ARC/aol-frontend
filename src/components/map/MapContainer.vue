@@ -1,7 +1,7 @@
 <template>
   <div class='map-container'>
 
-    <aol-map @layer-ready="setLakeMarkersLayer"></aol-map>
+    <aol-map></aol-map>
 
     <div v-if="show_legend == true" class="map-legend-wrapper">
       <h4>Map Legend</h4>
@@ -40,9 +40,7 @@
 
       <layer-switcher @show_filters="toggleFilters" />
 
-      <filter-control
-        :lake_markers="lake_markers" :lake_markers_layer="lake_markers_layer">
-      </filter-control>
+      <filter-control/>
 
     </div>
 
@@ -82,10 +80,6 @@ export default {
     AolMap
   },
   methods: {
-    setLakeMarkersLayer (layer) {
-      this.lake_markers = layer.markers;
-      this.lake_markers_layer = layer.layer;
-    },
     zoomIn () {
       const view = this.$store.state.map_view;
       view.zoom += 1;
