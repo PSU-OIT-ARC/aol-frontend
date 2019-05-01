@@ -18,7 +18,7 @@
 
       <div class="lake-summary">
 
-        <data-tabs :lake='lake' :with_sections='false'></data-tabs>
+        <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
 
       <!-- <div class="summary-chart">
         <label>Area </label>

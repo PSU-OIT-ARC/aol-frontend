@@ -1,18 +1,17 @@
 <template>
 
-
       <div class='data-sections'>
 
         <ul class='tabs'>
-          <tab
-            v-for="section in rendered_sections" :key="section.name"
+          <tab :class='section.name'
+            v-for="section in rendered_tabs" :key="section.name"
             :section="section" :lake="lake"
-            :active="currentSectionTitle === section.title">
+            :active="currentSectionName === section.name">
           </tab>
         </ul>
 
-        <keep-alive v-if='with_sections'>
-          <component
+        <keep-alive v-if='!tabs_only && show_section'>
+          <component :class="currentSection.name"
             class='data-section' :lake='lake' v-bind:is="currentSection">
           </component>
         </keep-alive>
@@ -29,7 +28,7 @@ import Photos from '@/components/lake/Photos';
 
 
 export default {
-  props: ['lake', 'with_sections'],
+  props: ['lake', 'tabs_only'],
   components: {
     TextSection,
     PlantData,
@@ -40,18 +39,36 @@ export default {
     Tab
   },
   data () {
+    const sections = [
+      TextSection,
+      PlantData,
+      MusselData,
+      Photos,
+      Watershed,
+      Documents,
+    ];
     return {
-      sections: this.$options.components,
-      currentSection: Object.keys(this.$options.components)[0],
-      currentSectionTitle: Object.values(this.$options.components)[0].title
+      all_sections: sections,
+      mobile_only_sections: [Watershed, Documents],
+      currentSection: sections[0],
+      currentSectionName: sections[0].name
     }
   },
   computed: {
-    rendered_sections() {
-      let sections = Object.entries(this.sections).filter((section) => {
-          return section[1] != Documents
-        })
-      return sections
+    desktop_mode () {
+      return window.innerWidth > 600;
+    },
+    rendered_tabs () {
+      if (this.desktop_mode && !this.tabs_only) {
+        return this.all_sections.filter(i => !this.mobile_only_sections.includes(i))
+      }
+      return this.all_sections
+    },
+    show_section () {
+      let tab = !this.mobile_only_sections.includes(this.currentSection);
+      if (tab || !this.desktop_mode) {
+        return true
+      }
     }
   },
   methods: {
@@ -59,21 +76,27 @@ export default {
       let hash = this.$route.hash;
       hash = hash.replace(/#/g,'');
       if (hash) {
-        let component = Object.entries(this.$options.components).find(
-          i => i[1].name == hash
-        )
-        this.currentSection = component[0];
-        this.currentSectionTitle = component[1].title
+        let component = this.all_sections.find(
+            i => i.name == hash
+        );
+        if (!this.mobile_only_sections.includes(component) || !this.desktop_mode) {
+          this.currentSection = component;
+          this.currentSectionName = component.name
+        }
+        else {
+          this.currentSection = this.all_sections[0];
+          this.currentSectionName = this.all_sections[0].name
+        }
       }
     }
   },
   created () {
-    this.setCurrentSection ();
+    this.setCurrentSection();
   },
   watch: {
-      '$route.hash': function () {
+      '$route': function (to) {
         this.setCurrentSection();
-      }
+    }
   },
 }
 </script>

@@ -1,6 +1,7 @@
 <template>
 
   <div class="photos-wrapper">
+    <a name="photos" id='photos'></a>
     <h3>Photos</h3>
 
     <div class="photos">

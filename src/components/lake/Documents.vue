@@ -1,6 +1,7 @@
 <template>
 
   <div>
+    <a name="documents" id="documents"></a>
     <h3>Documents</h3>
     <ul class="documents-wrapper">
       <li><a href="#">Basin Statistics (pdf)</a></li>
