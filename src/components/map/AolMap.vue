@@ -33,7 +33,6 @@ export default {
       if (slug) {
         let lake = this.getLakeBySlug(slug);
         this.setCurrentLake(lake);
-        this.fitBounds({lake: lake});
       }
     },
     showSideBar (lake) {
@@ -283,27 +282,35 @@ export default {
 // end methods
   },
   mounted () {
-  // avoid re-rendering map when using client-side routing.
-    let hasCachedMap = this.$store.state.map_node != null;
-    if (hasCachedMap) {
-      this.$refs.map.appendChild(this.$store.state.map_node)
-      this.selectLakeFromUrl();
-    }
-    else {
-      if(!this.lakes.length) {
-        this.fetchLakes().then(()=> {
-          this.initMap().then(()=> {
-            this.selectLakeFromUrl();
-          });
-        })
+  	this.$nextTick(() => {
+    // avoid re-rendering map when using client-side routing.
+      let hasCachedMap = this.$store.state.map_node != null;
+      if (hasCachedMap) {
+        this.$refs.map.appendChild(this.$store.state.map_node)
+        this.selectLakeFromUrl();
       }
       else {
-        console.log('I already have the lakes. I will not fetch them again');
-        this.initMap().then(() => {
+        if(!this.lakes.length) {
+          this.fetchLakes().then(()=> {
+            this.selectLakeFromUrl();
+            this.initMap().then(()=> {
+              if(this.getCurrentLake) {
+                this.fitBounds({lake: this.getCurrentLake});
+              }
+            });
+          })
+        }
+        else {
+          console.log('I already have the lakes. I will not fetch them again');
           this.selectLakeFromUrl();
-        });
+          this.initMap().then(() => {
+            if(this.getCurrentLake) {
+              this.fitBounds({lake: this.getCurrentLake});
+            }
+          });
+        }
       }
-    }
+    });
   }
   // end mounted
 }
