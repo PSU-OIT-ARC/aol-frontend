@@ -49,24 +49,24 @@ export default {
     ];
     return {
       all_sections: sections,
-      mobile_only_sections: [Watershed, Documents],
+      mobile_only: [Watershed, Documents],
       currentSection: sections[0],
       currentSectionName: sections[0].name
     }
   },
   computed: {
-    desktop_mode () {
-      return window.innerWidth > 600;
+    mobile_mode () {
+      return window.innerWidth < 600;
     },
     rendered_tabs () {
-      if (this.desktop_mode && !this.tabs_only) {
-        return this.all_sections.filter(i => !this.mobile_only_sections.includes(i))
+      if (this.tabs_only || this.mobile_mode) {
+        return this.all_sections
       }
-      return this.all_sections
+      return this.all_sections.filter(i => !this.mobile_only.includes(i))
     },
     show_section () {
-      let tab = !this.mobile_only_sections.includes(this.currentSection);
-      if (tab || !this.desktop_mode) {
+      let show_for_all = !this.mobile_only.includes(this.currentSection);
+      if (show_for_all || this.mobile_mode) {
         return true
       }
     }
@@ -79,7 +79,7 @@ export default {
         let component = this.all_sections.find(
             i => i.name == hash
         );
-        if (!this.mobile_only_sections.includes(component) || !this.desktop_mode) {
+        if (!this.mobile_only.includes(component) || this.mobile_mode) {
           this.currentSection = component;
           this.currentSectionName = component.name
         }
