@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="map-filter-wrapper" v-if="show_filters == true">
+    <div class="map-filter-wrapper" v-show="show_filters == true">
 
       <layer-switcher @show_filters="toggleFilters" />
 
