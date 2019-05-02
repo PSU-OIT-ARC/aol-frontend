@@ -33,6 +33,11 @@
           <legend-svg/>
         </a>
 
+        <a role="button" href="#"
+           class="map-button map-button--locate"
+           @click="locate">
+           &#8982;
+        </a>
       </div>
     </div>
 
@@ -92,6 +97,13 @@ export default {
       this.show_filters = toggle_filters;
       this.show_legend = false;
     },
+    locate () {
+      const view = this.$store.state.map_view;
+      let locate = view.ui.components.find(
+        i => i.declaredClass == 'aol-locate-widget')
+      locate.goToLocationEnabled = true;
+      locate.locate()
+    }
   }
 }
 </script>
