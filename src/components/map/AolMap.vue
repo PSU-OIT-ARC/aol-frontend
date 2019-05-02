@@ -196,6 +196,7 @@ export default {
           'esri/Map',
           'esri/views/MapView',
           "esri/geometry/Extent",
+          "esri/widgets/Locate",
           'esri/layers/VectorTileLayer',
           'esri/layers/TileLayer',
           'esri/identity/IdentityManager',
@@ -206,7 +207,7 @@ export default {
           "esri/renderers/ClassBreaksRenderer",
           "fcl/FlareClusterLayer_v4"
         ], config.dojo_options).then(([
-            EsriMap, MapView, Extent,
+            EsriMap, MapView, Extent, Locate,
             VectorTileLayer, TileLayer,
             IdentityManager, FeatureLayer,
             SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
@@ -231,7 +232,16 @@ export default {
               zoom: config.zoom,
               center: config.map_center,
           });
-          view.ui.components = [];
+          // we're using custom controls
+          let locateWidget = new Locate({
+            viewModel: {
+              view: view
+            },
+            goToLocationEnabled: false, // otherwise it starts immediatley?
+            declaredClass: 'aol-locate-widget'
+          });
+          view.ui.components = [locateWidget];
+
 
           let nlcd = config.baseLayers[1];
           let nlcd_layer = new TileLayer({
