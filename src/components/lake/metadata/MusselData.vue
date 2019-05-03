@@ -1,5 +1,6 @@
 <template>
   <div class=''>
+    <h3>Photos</h3>
     <table class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
@@ -31,5 +32,5 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 </style>
