@@ -89,7 +89,16 @@ a:link, a:visited {
   @include respond-to(handheld) {
     width: 100vh;
   }
-}
+
+ }
+
+.map.small {
+   height: 310px;
+   width: 310px;
+   z-index: 1;
+   pointer-events: none;
+   animation: fade-in 400ms forwards;
+ }
 
 .map-buttons-wrapper {
   /*contains the buttons AND the button stage */
