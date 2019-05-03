@@ -1,10 +1,10 @@
 <template>
   <div class="map-image--wrapper">
-
-    <a name="watershed" id="watershed"></a>
-
-    <aol-map :small='true' id='map'></aol-map>
-    <img src="~@/assets/generic_thumb_square.png">
+    <div class='inner'>
+      <a name="watershed" id="watershed"></a>
+      <aol-map :small='true' id='map'></aol-map>
+      <!--img src="~@/assets/generic_thumb_square.png"-->
+    </div>
     <p class="caption">
       <a href="#">Lake</a>|<a href="#">Watershed</a>
     </p>
@@ -24,13 +24,9 @@
 <style scoped lang='scss'>
 
 .map-image--wrapper {
-  position: relative;
-  pointer-events: none;
-  img {
-    width: 100%;
-    height: auto;
-    position: absolute;
-    top: 0;
+  margin: auto;
+  .inner {
+    background-image: url("~@/assets/generic_thumb_square.png");
   }
 }
 
