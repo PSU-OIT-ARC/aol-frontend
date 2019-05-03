@@ -311,3 +311,15 @@ a.map-button.selected {
     fill: white;
   }
 }
+
+
+/* lightbox */
+
+#blueimp-gallery a.close::before {
+  visibility: visible;
+  content: '╳';
+}
+
+#blueimp-gallery a.close {
+  visibility: hidden;
+}
