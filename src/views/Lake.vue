@@ -35,7 +35,7 @@
 
             <div class="body-sidebar">
 
-              <watershed></watershed>
+              <watershed v-if="!mobile_mode"></watershed>
               <documents></documents>
 
             </div>
@@ -59,7 +59,6 @@ import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 import Watershed from '@/components/lake/Watershed';
 import Documents from '@/components/lake/Documents';
-import AolMap from '@/components/map/AolMap';
 
 export default {
   name: 'lake',
@@ -71,7 +70,6 @@ export default {
     DataTabs,
     Documents,
     Watershed,
-    AolMap
   },
   computed: {
     ...mapGetters(['getCurrentLake']),
@@ -83,7 +81,10 @@ export default {
         return {lake: this.lake.slug };
       }
       return {};
-    }
+    },
+    mobile_mode () {
+      return window.innerWidth < 600;
+    },
   },
   methods: {
     ...mapActions(['fetchLake', 'fetchLakes', 'searchLakes']),
