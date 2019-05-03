@@ -1,6 +1,5 @@
 <template>
 <div class='outer-wrap'>
-  <aol-map class='behind'></aol-map>
   <div v-if='lake' class="lake-detail-wrapper">
 
     <div class="blur-image-wrapper">
@@ -22,7 +21,6 @@
                 &larr; Back to Map
               </router-link>
             </div>
-            <div id='map'></div>
             <div class="close-sidebar" @click="close">╳</div>
 
             <lake-card class="card" :lake="lake"></lake-card>
@@ -200,7 +198,6 @@ export default {
 
   .body-sidebar {
     padding: 0px 0px 0px 50px;
-
     @include respond-to(handheld) {
       display: none;
       padding: 0px 15px;

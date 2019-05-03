@@ -1,5 +1,7 @@
 <template>
-  <div id='map' class='map' ref='map'></div>
+  <div id='map' class='map'
+       ref='map' :class="small ? 'small' : ''">
+  </div>
 </template>
 
 <script>
@@ -11,6 +13,7 @@ import config from '@/components/map/config';
 
 export default {
   name: 'aol-map',
+  props: ['small'],
   data () {
     return {
       ...config,
@@ -104,90 +107,92 @@ export default {
         return new Promise ((resolve) => {
         const map = this.$store.state.map_object;
         const lake_markers_layer = map.findLayerById('lake_points_service_layer');
+        lake_markers_layer.when().then(() => {
+          let query = lake_markers_layer.createQuery()
+          //query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
+          query.maxRecordCount = 10000
+          lake_markers_layer.queryFeatures(query).then((results) => {
 
-        let query = lake_markers_layer.createQuery()
-        query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
-        lake_markers_layer.queryFeatures(query).then((results) => {
+            // filter out lakes to show on map (TEMP CODE)
+            let active_lakes = results.features.filter((f) => {
+              let rc = f.attributes.REACHCODE
+              return config.cms_reachcodes.indexOf(rc) > -1
+            });
 
-          // filter out lakes to show on map (TEMP CODE)
-          let active_lakes = results.features.filter((f) => {
-            let rc = f.attributes.REACHCODE
-            return config.cms_reachcodes.indexOf(rc) > -1
-          });
+            // transform features objects to graphics objects
+            let data = active_lakes.map((f) => {
+              f.x = f.geometry.longitude;
+              f.y = f.geometry.latitude;
+              return f;
+            });
 
-          // transform features objects to graphics objects
-          let data = active_lakes.map((f) => {
-            f.x = f.geometry.longitude;
-            f.y = f.geometry.latitude;
-            return f;
-          });
+            let defaultSym = new SimpleMarkerSymbol({
+                size: 6,
+                color: "#FF0000",
+                outline: null
+            });
 
-          let defaultSym = new SimpleMarkerSymbol({
-              size: 6,
-              color: "#FF0000",
-              outline: null
-          });
+            let clusterRenderer = new ClassBreaksRenderer({
+                defaultSymbol: defaultSym
+            });
+            clusterRenderer.field = "clusterCount";
 
-          let clusterRenderer = new ClassBreaksRenderer({
-              defaultSymbol: defaultSym
-          });
-          clusterRenderer.field = "clusterCount";
+            let smSymbol = new SimpleMarkerSymbol({
+                size: 22,
+                color: [255, 204, 102, 0.9],
+                outline: new SimpleLineSymbol({
+                    color: [221, 159, 34, 0.9]
+                }),
+            });
 
-          let smSymbol = new SimpleMarkerSymbol({
-              size: 22,
-              color: [255, 204, 102, 0.9],
+            let mdSymbol = new SimpleMarkerSymbol({
+                size: 24,
+                color: [102, 204, 255, 0.9],
+                outline: new SimpleLineSymbol({
+                    color: [82, 163, 204, 0.9]
+                }),
+            });
+
+            let lgSymbol = new SimpleMarkerSymbol({
+                size: 28,
+                color: [51, 204, 51, 0.9],
+                outline: new SimpleLineSymbol({
+                    color: [41, 163, 41, 0.9]
+                }),
+            });
+
+            let xlSymbol = new SimpleMarkerSymbol({
+              size: 32,
+              color: [250, 65, 74, 0.9],
               outline: new SimpleLineSymbol({
-                  color: [221, 159, 34, 0.9]
+                  color: [200, 52, 59, 0.9]
               }),
+            });
+
+            clusterRenderer.addClassBreakInfo(0, 19, smSymbol);
+            clusterRenderer.addClassBreakInfo(20, 150, mdSymbol);
+            clusterRenderer.addClassBreakInfo(151, 1000, lgSymbol);
+            clusterRenderer.addClassBreakInfo(1001, Infinity, xlSymbol);
+
+            let options = {
+                id: "lake_clusters",
+                clusterRenderer: clusterRenderer,
+                displayFlares: false,
+                clusterRatio: config.clusterRatio,
+                clusterToScale: config.clusterToScale,
+                clusterMinCount: config.clusterMinCount,
+                data: data
+            }
+
+            let clusterLayer = new fcl.FlareClusterLayer(options);
+            map.add(clusterLayer);
+            clusterLayer.when().then(()=> {
+              resolve(clusterLayer)
+            })
+          }).catch((e)=> {
+            console.log('error: ' + e)
           });
-
-          let mdSymbol = new SimpleMarkerSymbol({
-              size: 24,
-              color: [102, 204, 255, 0.9],
-              outline: new SimpleLineSymbol({
-                  color: [82, 163, 204, 0.9]
-              }),
-          });
-
-          let lgSymbol = new SimpleMarkerSymbol({
-              size: 28,
-              color: [51, 204, 51, 0.9],
-              outline: new SimpleLineSymbol({
-                  color: [41, 163, 41, 0.9]
-              }),
-          });
-
-          let xlSymbol = new SimpleMarkerSymbol({
-            size: 32,
-            color: [250, 65, 74, 0.9],
-            outline: new SimpleLineSymbol({
-                color: [200, 52, 59, 0.9]
-            }),
-          });
-
-          clusterRenderer.addClassBreakInfo(0, 19, smSymbol);
-          clusterRenderer.addClassBreakInfo(20, 150, mdSymbol);
-          clusterRenderer.addClassBreakInfo(151, 1000, lgSymbol);
-          clusterRenderer.addClassBreakInfo(1001, Infinity, xlSymbol);
-
-          let options = {
-              id: "lake_clusters",
-              clusterRenderer: clusterRenderer,
-              displayFlares: false,
-              clusterRatio: config.clusterRatio,
-              clusterToScale: config.clusterToScale,
-              clusterMinCount: config.clusterMinCount,
-              data: data
-          }
-
-          let clusterLayer = new fcl.FlareClusterLayer(options);
-          map.add(clusterLayer);
-          clusterLayer.when().then(()=> {
-            resolve(clusterLayer)
-          })
-        }).catch((e)=> {
-          console.log('error: ' + e)
-        });
+        })
       });
     },
     initMap () {
@@ -214,6 +219,7 @@ export default {
             ClassBreaksRenderer,
             fcl
         ]) => {
+
           // TODO: get token from backend
           IdentityManager.registerToken({
               'server': config.ArcGisOnlineTilesUrl,
@@ -224,7 +230,7 @@ export default {
               'token': config.token
           });
           let map = new EsriMap({
-              basemap: 'gray'
+              basemap: 'topo'
           });
           let view = new MapView({
               map: map,
@@ -237,11 +243,10 @@ export default {
             viewModel: {
               view: view
             },
-            goToLocationEnabled: false, // otherwise it starts immediatley?
+            goToLocationEnabled: false,  // otherwise it starts immediately?
             declaredClass: 'aol-locate-widget'
           });
           view.ui.components = [locateWidget];
-
 
           let nlcd = config.baseLayers[1];
           let nlcd_layer = new TileLayer({
@@ -266,7 +271,6 @@ export default {
               visible: layer.visible
             });
             map.add(feature_layer);
-            //this[layer.id] = feature_layer;
           });
 
           this.setMapObject(map);
@@ -279,7 +283,9 @@ export default {
               ClassBreaksRenderer,
               fcl
           );
+          // create client side bboxes (better as dynamic layer?)
           this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
+
           view.when().then(()=> {
               view.on('click', (event) => this.selectLakeFromPointClick(event, view));
               view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
@@ -294,10 +300,10 @@ export default {
   mounted () {
   	this.$nextTick(() => {
     // avoid re-rendering map when using client-side routing.
-      let hasCachedMap = this.$store.state.map_node != null;
-      if (hasCachedMap) {
-        this.$refs.map.appendChild(this.$store.state.map_node)
-        this.selectLakeFromUrl();
+      let map_node = this.$store.state.map_node;
+      if (map_node != null) {
+        this.$refs.map.replaceWith(map_node)
+        document.querySelector('#map').classList.toggle('small', this.small)
       }
       else {
         if(!this.lakes.length) {
@@ -321,8 +327,8 @@ export default {
         }
       }
     });
-  }
   // end mounted
+  },
 }
 </script>
 
