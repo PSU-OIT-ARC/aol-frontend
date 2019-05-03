@@ -57,6 +57,7 @@
   flex-wrap: wrap;
   align-content: flex-start;
   flex-direction: row;
+  margin-left: -5px;
 
   @include respond-to(handheld) {
     width: calc(100vw - 30px);
@@ -77,11 +78,4 @@
     height: 135px;
   }
 }
-
-h3 {
-  font-family: "Lato-Bold", sans-serif;
-  font-size: 1.1em;
-  font-weight: 700;
-}
-
 </style>
