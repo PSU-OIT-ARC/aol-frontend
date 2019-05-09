@@ -66,13 +66,13 @@ const actions = {
 
             */
             // use the feature service layer
-            let lake_layer = map.findLayerById('lake_points_service_layer');
+            //let lake_layer = map.findLayerById('lake_points_service_layer');
+            let lake_layer = map.findLayerById('lake_bbox_service_layer');
             let query = lake_layer.createQuery();
             query.where = `REACHCODE = ${lake.reachcode}`;
             query.maxRecordCountFactor = 4;
             lake_layer.queryFeatures(query).then((response) => {
                 if (response.features.length) {
-                    console.log(response)
                     geom = response.features[0].geometry;
                     let extent = geom.extent;
                     if (extent != null) {
@@ -88,6 +88,7 @@ const actions = {
 
         }
         else if (geom != null) {
+            console.log('geom' + geom)
             let extent = geom.extent;
             if (extent != null) {
                 view.goTo(extent)

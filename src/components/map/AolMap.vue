@@ -57,7 +57,8 @@ export default {
               if (lake) {
                 this.showSideBar(lake);
               }
-              this.fitBounds({geom: features[0].graphic.geometry});
+              this.fitBounds({lake: lake})
+              //this.fitBounds({geom: features[0].graphic.geometry});
             }
         });
     },
@@ -229,14 +230,24 @@ export default {
               'server': "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services",
               'token': config.token
           });
+
+          let zoom =config.zoom;
+          let center = config.map_center;
+
+          if (this.getCurrentLake) {
+            // TODO: get center from service?
+            center = this.getCurrentLake.center;
+            zoom = 13 // get zoom for lake extent?
+          }
+
           let map = new EsriMap({
               basemap: 'topo'
           });
           let view = new MapView({
               map: map,
               container: 'map',
-              zoom: config.zoom,
-              center: config.map_center,
+              zoom: zoom,
+              center: center
           });
           // we're using custom controls
           let locateWidget = new Locate({
@@ -287,6 +298,7 @@ export default {
           this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
 
           view.when().then(()=> {
+              // we might not need the point handler if the bounding boxes are accurate enough?
               view.on('click', (event) => this.selectLakeFromPointClick(event, view));
               view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
 
