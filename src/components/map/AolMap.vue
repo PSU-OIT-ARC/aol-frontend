@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'fetchLakes', 'setCurrentLake', 'fitBounds',
+      'fetchLakes', 'setCurrentLake', 'fitBounds', 'setLoading',
       'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
     ]),
     selectLakeFromUrl () {
@@ -257,6 +257,7 @@ export default {
             goToLocationEnabled: false,  // otherwise it starts immediately?
             declaredClass: 'aol-locate-widget'
           });
+
           view.ui.components = [locateWidget];
 
           let nlcd = config.baseLayers[1];
@@ -293,7 +294,9 @@ export default {
               SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
               ClassBreaksRenderer,
               fcl
-          );
+          ).then(()=> {
+            this.setLoading(false);
+          });
           // create client side bboxes (better as dynamic layer?)
           this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
 
@@ -318,10 +321,12 @@ export default {
         document.querySelector('#map').classList.toggle('small', this.small)
       }
       else {
+        this.setLoading(true);
         if(!this.lakes.length) {
           this.fetchLakes().then(()=> {
             this.selectLakeFromUrl();
             this.initMap().then(()=> {
+            //  this.setLoading(false);
               if(this.getCurrentLake) {
                 this.fitBounds({lake: this.getCurrentLake});
               }
@@ -332,6 +337,7 @@ export default {
           console.log('I already have the lakes. I will not fetch them again');
           this.selectLakeFromUrl();
           this.initMap().then(() => {
+          //  this.setLoading(false);
             if(this.getCurrentLake) {
               this.fitBounds({lake: this.getCurrentLake});
             }

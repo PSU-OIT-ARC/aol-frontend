@@ -24,6 +24,10 @@ const mutations = {
     setMapView (state, view) {
         state.map_view = view;
     },
+
+    setLoading (state, loading) {
+        state.is_loading = loading;
+    }
 }
 
 export default mutations;
