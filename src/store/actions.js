@@ -53,7 +53,7 @@ const actions = {
           geom = lake.geom || geom;
         }
 
-        if (geom == undefined) {
+        if (geom == undefined && lake) {
             let lake_layer = map.findLayerById('lake_bbox_service_layer');
             let query = lake_layer.createQuery();
             query.where = `REACHCODE = ${lake.reachcode}`;
@@ -81,6 +81,9 @@ const actions = {
                     context.dispatch('setLoading', false)
                 })
             }
+        }
+        else {
+            context.dispatch('setLoading', false);
         }
     },
 
