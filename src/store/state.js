@@ -9,7 +9,8 @@ const state = {
     map_object: null,
     map_node: null,
     map_view: null,
-    is_loading: false
+    is_loading: false,
+    intro_dismissed: false
 }
 
 export default state;

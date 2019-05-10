@@ -27,6 +27,10 @@ const mutations = {
 
     setLoading (state, loading) {
         state.is_loading = loading;
+    },
+
+    setIntroDismissed (state, dismissed) {
+      state.intro_dismissed = dismissed;
     }
 }
 

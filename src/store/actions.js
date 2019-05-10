@@ -131,6 +131,10 @@ const actions = {
 
     setLoading (context, is_loading) {
         context.commit("setLoading", is_loading);
+    },
+
+    setIntroDismissed (context, dismissed) {
+        context.commit("setIntroDismissed", dismissed);
     }
 }
 

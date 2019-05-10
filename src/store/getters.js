@@ -41,6 +41,10 @@ const getters = {
 
     getIsLoading (state) {
       return state.is_loading;
+    },
+
+    getIsIntroDismissed (state) {
+      return state.intro_dismissed;
     }
 }
 

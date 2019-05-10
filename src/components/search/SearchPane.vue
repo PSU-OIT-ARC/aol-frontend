@@ -6,8 +6,8 @@
     </div>
 
     <div v-if="results==''">
-      <div v-if="close_intro == false" class="site-intro">
-        <div class="close-intro" @click="close_intro = true">╳</div>
+      <div v-if="introDismissed == false" class="site-intro">
+        <div class="close-intro" @click="close">╳</div>
         <div class="intro__photo">
         </div>
         <div class="intro__copy">
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import SearchBar from "@/components/search/SearchBar";
 import SearchResults from "@/components/search/SearchResults";
 
@@ -32,15 +32,11 @@ export default {
     SearchBar,
     SearchResults
   },
-  data() {
-    return {
-      close_intro: false
-    }
-  },
   computed: {
     ...mapGetters({
       results: 'searchResults',
-      query: 'searchQuery'
+      query: 'searchQuery',
+      introDismissed: 'getIsIntroDismissed'
     }),
     hide_results() {
       if (this.$route.query['lake']) {
@@ -49,6 +45,12 @@ export default {
       return false;
     }
   },
+  methods: {
+    ...mapActions(['setIntroDismissed']),
+    close () {
+      this.setIntroDismissed(true);
+    }
+  }
 }
 </script>
 
