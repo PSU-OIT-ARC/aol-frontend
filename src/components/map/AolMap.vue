@@ -1,6 +1,6 @@
 <template>
   <div id='map' class='map'
-       ref='map' :class="small ? 'small' : ''">
+     ref='map' :class="small ? 'small' : ''">
   </div>
 </template>
 
@@ -9,7 +9,6 @@ import { mapGetters, mapActions } from 'vuex';
 
 import { loadModules } from 'esri-loader';
 import config from '@/components/map/config';
-
 
 export default {
   name: 'aol-map',
@@ -71,7 +70,7 @@ export default {
           return false
         })
         if (features.length) {
-          let reachcode = features[0].graphic.attributes.REACHCODE;
+          let reachcode = features[0].graphic.attributes.reachcode;
           let lake = this.getLakeByReachcode(parseInt(reachcode));
           if (lake) {
             this.showSideBar(lake);
@@ -249,6 +248,7 @@ export default {
               zoom: zoom,
               center: center
           });
+          view.constraints = { maxZoom: 15 };
           // we're using custom controls
           let locateWidget = new Locate({
             viewModel: {
@@ -304,7 +304,6 @@ export default {
               // we might not need the point handler if the bounding boxes are accurate enough?
               view.on('click', (event) => this.selectLakeFromPointClick(event, view));
               view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
-
               resolve(map)
           });
         });
@@ -315,10 +314,12 @@ export default {
   mounted () {
   	this.$nextTick(() => {
     // avoid re-rendering map when using client-side routing.
+      this.setLoading(true);
       let map_node = this.$store.state.map_node;
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
         document.querySelector('#map').classList.toggle('small', this.small)
+        this.fitBounds({lake: this.getCurrentLake});
       }
       else {
         this.setLoading(true);
@@ -350,4 +351,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.map {
+  animation: fade-in 1000ms forwards;
+}
+</style>

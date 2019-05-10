@@ -48,6 +48,7 @@ const actions = {
         let buffer = options['buffer'];
         let geom = options['geom'] || undefined;
 
+
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
         if (geom == undefined) {
@@ -76,10 +77,14 @@ const actions = {
                     geom = response.features[0].geometry;
                     let extent = geom.extent;
                     if (extent != null) {
-                        view.goTo(extent)
+                        view.goTo(extent).then(()=>{
+                            context.dispatch('setLoading', false)
+                        })
                     }
                     else {
-                        view.goTo({center: geom, zoom: ZOOM_LEVEL})
+                        view.goTo({center: geom, zoom: ZOOM_LEVEL}).then(()=> {
+                            context.dispatch('setLoading', false)
+                        })
                     }
                 }
             }).catch((e) => {
@@ -88,13 +93,16 @@ const actions = {
 
         }
         else if (geom != null) {
-            console.log('geom' + geom)
             let extent = geom.extent;
             if (extent != null) {
-                view.goTo(extent)
+                view.goTo(extent).then(()=>{
+                    context.dispatch('setLoading', false)
+                })
             }
             else {
-                view.goTo({center: geom, zoom: ZOOM_LEVEL})
+                view.goTo({center: geom, zoom: ZOOM_LEVEL}).then(()=> {
+                    context.dispatch('setLoading', false)
+                })
             }
         }
     },
