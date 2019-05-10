@@ -1,8 +1,6 @@
 <template>
   <div class='map-container'>
-   <div v-if="getIsLoading" class="map-loader">
-      <div>Loading...</div>
-  </div>
+    <map-loader/>
     <aol-map></aol-map>
 
     <div v-if="show_legend == true" class="map-legend-wrapper">
@@ -56,16 +54,14 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
-
 import AolMap from '@/components/map/AolMap';
+import MapLoader from '@/components/map/MapLoader'
 import LayerSVG from '@/components/map/controls/LayerSVG';
 import LegendSVG from '@/components/map/controls/LegendSVG';
 import ZoomInSVG from '@/components/map/controls/ZoomInSVG';
 import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
-
 
 export default {
   name: 'map-container',
@@ -85,10 +81,8 @@ export default {
     'zoom-out-svg': ZoomOutSVG,
     LayerSwitcher,
     FilterControl,
-    AolMap
-  },
-  computed: {
-    ...mapGetters(['getIsLoading'])
+    AolMap,
+    MapLoader
   },
   methods: {
     zoomIn () {
@@ -114,21 +108,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-  .map-loader {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.5);
-    font-weight: bold;
-
-    div {
-      position: relative;
-      top: 40%;
-      left: 50%;
-    }
-  }
-</style>
+<style lang="scss" scoped></style>

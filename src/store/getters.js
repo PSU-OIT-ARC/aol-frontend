@@ -40,7 +40,6 @@ const getters = {
     },
 
     getIsLoading (state) {
-      console.log(state.is_loading)
       return state.is_loading;
     }
 }
