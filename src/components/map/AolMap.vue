@@ -13,7 +13,7 @@ import config from '@/components/map/config';
 
 export default {
   name: 'aol-map',
-  props: ['small'],
+  props: {'small': { default: false }},
   data () {
     return {
       ...config,
