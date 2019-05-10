@@ -6,8 +6,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-
 import { loadModules } from 'esri-loader';
+
+import {
+  getFeaturesFromServiceLayer,
+  createClusterLayer
+} from '@/components/map/utils';
 import config from '@/components/map/config';
 
 export default {
@@ -30,6 +34,16 @@ export default {
       'fetchLakes', 'setCurrentLake', 'fitBounds', 'setLoading',
       'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
     ]),
+    assignLakeGeometries (features) {
+      features.forEach((feature) => {
+        let lake = this.getLakeByReachcode(
+          parseInt(feature.attributes.ReachCode)
+        );
+        if (lake) {
+            lake.geom = feature.geometry;
+        }
+      })
+    },
     selectLakeFromUrl () {
       let slug = this.$route.query['lake'];
       if (slug) {
@@ -46,7 +60,8 @@ export default {
         view.hitTest(event).then((response) => {
             let features = response.results.filter((r) => {
               if (r.graphic) {
-                return r.graphic.layer.id == 'lake_clusters' && r.graphic.symbol.type == 'simple-marker'
+                let is_a_marker = 'lake_clusters' && r.graphic.symbol.type == 'simple-marker';
+                return r.graphic.layer.id == is_a_marker;
               }
               return false
             })
@@ -78,140 +93,22 @@ export default {
           this.fitBounds({geom: features[0].graphic.geometry});
         }
       })
-    },
-    assignLakeGeometries (features) {
-      features.forEach((feature) => {
-        let lake = this.getLakeByReachcode(parseInt(feature.attributes.ReachCode));
-        if (lake) {
-            lake.geom = feature.geometry;
-        }
-      })
-    },
-    getFeaturesFromServiceLayer (layer_id) {
-      return new Promise ((resolve) => {
+    },  
+    createBoundingBoxGraphicLayer (FeatureLayer, features) {
         const map = this.$store.state.map_object;
-        const service_layer = map.findLayerById(layer_id);
-
-        service_layer.when().then(() => {
-          let query = service_layer.createQuery()
-          query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
-          query.maxRecordCount = 10000 // does this work?
-
-          service_layer.queryFeatures(query).then((results) => {
-               resolve(results.features);
-          }).catch((e)=> {
-            console.log('query error: ' + e)
-          });
-        });
-      });
-    },
-    BoundingBoxServiceToGraphicLayer (FeatureLayer) {
-      const map = this.$store.state.map_object;
-      this.getFeaturesFromServiceLayer('lake_bbox_service_layer').then((features) => {
-
-        this.assignLakeGeometries(features);
 
         let feature_layer = new FeatureLayer({
           source: features,
           id: 'lake_bbox_graphics_layer',
           fields: config.lake_marker_fields,
-        })
+        });
+
         feature_layer.when().then((l) => {
           // change to transparent later
           l.renderer.symbol.color.a = 0.1;
           l.renderer.symbol.outline.color.a = 0.1;
         })
         map.add(feature_layer)
-      }).catch((e)=> {
-        console.log('bounding box layer error: ' + e)
-      })
-    },
-    mountClusterLayer (
-        SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-        ClassBreaksRenderer, fcl)
-      {
-        return new Promise ((resolve) => {
-          const map = this.$store.state.map_object;
-          this.getFeaturesFromServiceLayer('lake_points_service_layer').then(
-            (features) => {
-            // filter out lakes to show on map (TEMP CODE)
-            let active_lakes = features.filter((f) => {
-              let rc = f.attributes.REACHCODE
-              return config.cms_reachcodes.indexOf(rc) > -1
-            });
-
-            // transform features objects to graphics objects
-            let data = active_lakes.map((f) => {
-              f.x = f.geometry.longitude;
-              f.y = f.geometry.latitude;
-              return f;
-            });
-
-            let defaultSym = new SimpleMarkerSymbol({
-                size: 6,
-                color: "#FF0000",
-                outline: null
-            });
-
-            let clusterRenderer = new ClassBreaksRenderer({
-                defaultSymbol: defaultSym
-            });
-            clusterRenderer.field = "clusterCount";
-
-            let smSymbol = new SimpleMarkerSymbol({
-                size: 22,
-                color: [255, 204, 102, 0.9],
-                outline: new SimpleLineSymbol({
-                    color: [221, 159, 34, 0.9]
-                }),
-            });
-
-            let mdSymbol = new SimpleMarkerSymbol({
-                size: 24,
-                color: [102, 204, 255, 0.9],
-                outline: new SimpleLineSymbol({
-                    color: [82, 163, 204, 0.9]
-                }),
-            });
-
-            let lgSymbol = new SimpleMarkerSymbol({
-                size: 28,
-                color: [51, 204, 51, 0.9],
-                outline: new SimpleLineSymbol({
-                    color: [41, 163, 41, 0.9]
-                }),
-            });
-
-            let xlSymbol = new SimpleMarkerSymbol({
-              size: 32,
-              color: [250, 65, 74, 0.9],
-              outline: new SimpleLineSymbol({
-                  color: [200, 52, 59, 0.9]
-              }),
-            });
-
-            clusterRenderer.addClassBreakInfo(0, 19, smSymbol);
-            clusterRenderer.addClassBreakInfo(20, 150, mdSymbol);
-            clusterRenderer.addClassBreakInfo(151, 1000, lgSymbol);
-            clusterRenderer.addClassBreakInfo(1001, Infinity, xlSymbol);
-
-            let options = {
-                id: "lake_clusters",
-                clusterRenderer: clusterRenderer,
-                displayFlares: false,
-                clusterRatio: config.clusterRatio,
-                clusterToScale: config.clusterToScale,
-                clusterMinCount: config.clusterMinCount,
-                data: data
-            }
-
-            let clusterLayer = new fcl.FlareClusterLayer(options);
-            map.add(clusterLayer);
-            clusterLayer.when().then(()=> {
-              resolve(clusterLayer)
-            })
-        })
-      }); //end Promise
     },
     initMap () {
       return new Promise ((resolve, reject) => {
@@ -248,14 +145,8 @@ export default {
               'token': config.token
           });
 
-          let zoom =config.zoom;
+          let zoom = config.zoom;
           let center = config.map_center;
-
-          if (this.getCurrentLake) {
-            // TODO: get center from service?
-            center = this.getCurrentLake.center;
-            zoom = 13 // get zoom for lake extent?
-          }
 
           let map = new EsriMap({
               basemap: 'topo'
@@ -308,31 +199,41 @@ export default {
           this.setMapView(view);
 
           //create clusters
-          this.mountClusterLayer(
+          createClusterLayer(
+              map,
               SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
               ClassBreaksRenderer,
               fcl
           ).then(()=> {
             this.setLoading(false);
           });
+
           // create client side bboxes (better as dynamic layer?)
-          this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
+          getFeaturesFromServiceLayer(map, 'lake_bbox_service_layer').then(
+            (features) => {
+              this.assignLakeGeometries(features);
+              this.createBoundingBoxGraphicLayer(FeatureLayer, features);
+          })
 
           view.when().then(()=> {
               // we might not need the point handler if the bounding boxes are accurate enough?
-              view.on('click', (event) => this.selectLakeFromPointClick(event, view));
-              view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
+              view.on('click', (event) => {
+                this.selectLakeFromPointClick(event, view)
+              });
+              view.on('click', (event) => {
+                this.selectLakeFromBBoxClick (event, view)
+              });
               resolve(map)
           });
+
         });
       });
     }, //end initMap
-// end methods
-  },
+  }, // end methods
   mounted () {
   	this.$nextTick(() => {
-    // avoid re-rendering map when using client-side routing.
       this.setLoading(true);
+    // avoid re-rendering map when using client-side routing.
       let map_node = this.$store.state.map_node;
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
@@ -353,7 +254,7 @@ export default {
           })
         }
         else {
-          console.log('I already have the lakes. I will not fetch them again');
+          console.log('I already have the lakes.');
           this.selectLakeFromUrl();
           this.initMap().then(() => {
           //  this.setLoading(false);
