@@ -8,7 +8,8 @@ const state = {
     },
     map_object: null,
     map_node: null,
-    map_view: null
+    map_view: null,
+    is_loading: false
 }
 
 export default state;

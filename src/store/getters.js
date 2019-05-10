@@ -38,6 +38,10 @@ const getters = {
     getCurrentLake (state) {
       return state.current_lake
     },
+
+    getIsLoading (state) {
+      return state.is_loading;
+    }
 }
 
 export default getters;

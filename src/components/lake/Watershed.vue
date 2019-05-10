@@ -2,6 +2,7 @@
   <div class="map-image--wrapper">
     <div class='inner'>
       <a name="watershed" id="watershed"></a>
+      <map-loader/>
       <aol-map :small='true' id='map'></aol-map>
       <!--img src="~@/assets/generic_thumb_square.png"-->
     </div>
@@ -13,11 +14,13 @@
 
 <script>
   import AolMap from '@/components/map/AolMap';
+  import MapLoader from '@/components/map/MapLoader';
+
   export default {
     props: ['lake'],
     name: 'watershed',
     title: 'Watershed',
-    components: { AolMap }
+    components: { AolMap, MapLoader },
   }
 </script>
 
@@ -26,6 +29,7 @@
 .map-image--wrapper {
   margin: auto;
   .inner {
+    position: relative;
     background-image: url("~@/assets/generic_thumb_square.png");
   }
 }

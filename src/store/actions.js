@@ -141,6 +141,9 @@ const actions = {
         context.commit("setCurrentLake", lake);
     },
 
+    setLoading (context, is_loading) {
+        context.commit("setLoading", is_loading);
+    }
 }
 
 export default actions;

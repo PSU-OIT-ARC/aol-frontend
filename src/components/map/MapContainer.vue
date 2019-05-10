@@ -1,6 +1,6 @@
 <template>
   <div class='map-container'>
-
+    <map-loader/>
     <aol-map></aol-map>
 
     <div v-if="show_legend == true" class="map-legend-wrapper">
@@ -54,15 +54,14 @@
 
 
 <script>
-
 import AolMap from '@/components/map/AolMap';
+import MapLoader from '@/components/map/MapLoader'
 import LayerSVG from '@/components/map/controls/LayerSVG';
 import LegendSVG from '@/components/map/controls/LegendSVG';
 import ZoomInSVG from '@/components/map/controls/ZoomInSVG';
 import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
-
 
 export default {
   name: 'map-container',
@@ -82,7 +81,8 @@ export default {
     'zoom-out-svg': ZoomOutSVG,
     LayerSwitcher,
     FilterControl,
-    AolMap
+    AolMap,
+    MapLoader
   },
   methods: {
     zoomIn () {
