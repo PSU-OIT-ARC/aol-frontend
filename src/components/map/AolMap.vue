@@ -79,14 +79,40 @@ export default {
         }
       })
     },
+    assignLakeGeometries (features) {
+      features.forEach((feature) => {
+        let lake = this.getLakeByReachcode(parseInt(feature.attributes.ReachCode));
+        if (lake) {
+            lake.geom = feature.geometry;
+        }
+      })
+    },
+    getFeaturesFromServiceLayer (layer_id) {
+      return new Promise ((resolve) => {
+        const map = this.$store.state.map_object;
+        const service_layer = map.findLayerById(layer_id);
+
+        service_layer.when().then(() => {
+          let query = service_layer.createQuery()
+          query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
+          query.maxRecordCount = 10000 // does this work?
+
+          service_layer.queryFeatures(query).then((results) => {
+               resolve(results.features);
+          }).catch((e)=> {
+            console.log('query error: ' + e)
+          });
+        });
+      });
+    },
     BoundingBoxServiceToGraphicLayer (FeatureLayer) {
       const map = this.$store.state.map_object;
-      const bbox_layer = map.findLayerById('lake_bbox_service_layer');
-      let query = bbox_layer.createQuery()
-      query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
-      bbox_layer.queryFeatures(query).then((results) => {
+      this.getFeaturesFromServiceLayer('lake_bbox_service_layer').then((features) => {
+
+        this.assignLakeGeometries(features);
+
         let feature_layer = new FeatureLayer({
-          source: results.features,
+          source: features,
           id: 'lake_bbox_graphics_layer',
           fields: config.lake_marker_fields,
         })
@@ -97,7 +123,7 @@ export default {
         })
         map.add(feature_layer)
       }).catch((e)=> {
-        console.log('error: ' + e)
+        console.log('bounding box layer error: ' + e)
       })
     },
     mountClusterLayer (
@@ -105,16 +131,11 @@ export default {
         ClassBreaksRenderer, fcl)
       {
         return new Promise ((resolve) => {
-        const map = this.$store.state.map_object;
-        const lake_markers_layer = map.findLayerById('lake_points_service_layer');
-        lake_markers_layer.when().then(() => {
-          let query = lake_markers_layer.createQuery()
-          //query.maxRecordCountFactor = 4; // get 4 * maxRecordCount (2000)
-          query.maxRecordCount = 10000
-          lake_markers_layer.queryFeatures(query).then((results) => {
-
+          const map = this.$store.state.map_object;
+          this.getFeaturesFromServiceLayer('lake_points_service_layer').then(
+            (features) => {
             // filter out lakes to show on map (TEMP CODE)
-            let active_lakes = results.features.filter((f) => {
+            let active_lakes = features.filter((f) => {
               let rc = f.attributes.REACHCODE
               return config.cms_reachcodes.indexOf(rc) > -1
             });
@@ -189,11 +210,8 @@ export default {
             clusterLayer.when().then(()=> {
               resolve(clusterLayer)
             })
-          }).catch((e)=> {
-            console.log('error: ' + e)
-          });
         })
-      });
+      }); //end Promise
     },
     initMap () {
       return new Promise ((resolve, reject) => {

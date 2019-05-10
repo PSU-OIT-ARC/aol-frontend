@@ -38,36 +38,22 @@ const actions = {
     fitBounds (context, options) {
         /*
         Zoom/pan to lake bounds.
-        If the lake object is provided, query feature service for lake geometry
         If the geometry is supplied, goTo geom extent directly.
-        Hardcoded zoom level should not be needed when using
-        feature layer with lake geometries.
+        If the lake object is provided, and it has a geom attribute, goTo it
+        Otherwise, query feature service for lake geometry using reachcode.
         */
-        const ZOOM_LEVEL = 13;
+        const map =  context.rootState.map_object;
+        const view = context.rootState.map_view;
+
         let lake = options['lake'];
         let buffer = options['buffer'];
         let geom = options['geom'] || undefined;
 
+        if (lake) {
+          geom = lake.geom || geom;
+        }
 
-        const map =  context.rootState.map_object;
-        const view = context.rootState.map_view;
         if (geom == undefined) {
-            //let lake_layer = map.findLayerById('lake_clusters');
-              /*
-            // use the cluster graphics layer
-            console.log(lake_layer)
-            let lake_graphic = lake_layer.data.find((l) => {
-                console.log(l)
-                return l.attributes.REACHCODE == String(lake.reachcode)
-            });
-            console.log(lake_graphic)
-            geom = lake_graphic.geometry;
-          //  console.log(geom)
-            view.goTo({center: [geom.x, geom.y], zoom: ZOOM_LEVEL})
-
-            */
-            // use the feature service layer
-            //let lake_layer = map.findLayerById('lake_points_service_layer');
             let lake_layer = map.findLayerById('lake_bbox_service_layer');
             let query = lake_layer.createQuery();
             query.where = `REACHCODE = ${lake.reachcode}`;
@@ -75,14 +61,10 @@ const actions = {
             lake_layer.queryFeatures(query).then((response) => {
                 if (response.features.length) {
                     geom = response.features[0].geometry;
+                    lake.geom = geom;
                     let extent = geom.extent;
                     if (extent != null) {
                         view.goTo(extent).then(()=>{
-                            context.dispatch('setLoading', false)
-                        })
-                    }
-                    else {
-                        view.goTo({center: geom, zoom: ZOOM_LEVEL}).then(()=> {
                             context.dispatch('setLoading', false)
                         })
                     }
@@ -96,11 +78,6 @@ const actions = {
             let extent = geom.extent;
             if (extent != null) {
                 view.goTo(extent).then(()=>{
-                    context.dispatch('setLoading', false)
-                })
-            }
-            else {
-                view.goTo({center: geom, zoom: ZOOM_LEVEL}).then(()=> {
                     context.dispatch('setLoading', false)
                 })
             }
