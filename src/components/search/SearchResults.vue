@@ -5,7 +5,7 @@
       <div class="no-results">Sorry, no results</div>
     </div>
     <li v-else v-for="result in results" :key="result.slug">
-      <lake-card :lake="result">
+      <lake-card :lake="result" :to_detail="false">
     </lake-card>
     </li>
   </ul>

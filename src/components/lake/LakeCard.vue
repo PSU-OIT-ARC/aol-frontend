@@ -45,7 +45,10 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'lake-card',
-  props: ['lake', 'to_detail'],
+  props: {
+    'lake': {default: null},
+    'to_detail': { default: true }
+  },
   methods: {
     ...mapActions(['setCurrentLake', 'fitBounds']),
     activateLake (lake) {
