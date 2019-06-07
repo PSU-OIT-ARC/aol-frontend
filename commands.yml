@@ -1,0 +1,5 @@
+extends: emcee.backends.aws:commands.yml
+
+name: "Atlas of Oregon Lakes Frontend"
+distribution: psu.oit.wdt.aol-frontend
+package: aol

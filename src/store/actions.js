@@ -3,6 +3,7 @@ import config from '@/components/map/config';
 // this should be moved to a central place
 const LOADING = 'loading';
 const BASE_URL = '//localhost:8080';
+const API_URL = config.backend_url;
 
 const actions = {
 

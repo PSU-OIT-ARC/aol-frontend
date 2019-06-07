@@ -1,4 +1,7 @@
 
+
+const backend_url = process.env.VUE_APP_BACKEND_URL;
+
 const access_token = `C93ORqYdWvUajz9fbAHAwq64ZzG6iWHI--VGjAhqVW4XVTjAgSpiBsAGE8grM28\
 OGDTM4Dd8eFBKMU-0dfylpNMhMjHH7wpM71PZG_wOWHYJkCyxyeyP7-DKvfMheQU0r3kSpxWRgff7c\
 lEvElhcew..`;
@@ -38,6 +41,9 @@ const config = {
                 }]
             }
     },
+
+    backend_url: backend_url,
+
     token: token,
     access_token: access_token,
     map_center: [-122.841856, 44.002925],
