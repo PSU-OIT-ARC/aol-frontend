@@ -3,6 +3,7 @@ const mutations = {
     setSearchResults (state, data) {
         state.search.query = data.query;
         state.search.results = data.results;
+        state.search.all_results = data.all_results;
     },
 
     setLakes (state, data) {

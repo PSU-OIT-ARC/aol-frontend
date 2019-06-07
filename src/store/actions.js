@@ -22,6 +22,7 @@ const actions = {
         let search = {};
         search.query = query;
         search.results = LOADING;
+        search.all_results = [];
 
         context.commit('setSearchResults', search);
         if (query == null || query == '') {
@@ -29,10 +30,26 @@ const actions = {
             context.commit('setSearchResults', search)
             return;
         }
+
         search.results = context.getters.getLakes.filter(lake => {
-            return lake.title.toLowerCase().startsWith(query.toLowerCase());
+            return lake.title.toLowerCase().includes(query.toLowerCase());
         });
-        context.commit('setSearchResults', search)
+        if (search.results.length > config.max_search_results) {
+            search.all_results = search.results;
+            let results = context.getters.getLakes.filter(lake => {
+                return lake.title.toLowerCase().startsWith(query.toLowerCase());
+            });
+
+            if (results.length == 0) {
+                search.results = search.all_results.slice(0, config.max_search_results);
+            } else if (results.length > config.max_search_results) {
+                search.results = results.slice(0, config.max_search_results);
+            } else {
+                search.results = results;
+            }
+        }
+
+        context.commit('setSearchResults', search);
     },
 
     fitBounds (context, options) {

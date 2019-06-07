@@ -1,13 +1,18 @@
 <template>
   <ul id="search-results-wrapper" v-if="query">
-    <p v-if="loading">Loading...</p>
+    <!-- <p v-if="loading">Loading...</p> -->
+    <p v-if="loading">Loading...</p> 
     <div v-else-if="!loading && query && !results.length">
       <div class="no-results">Sorry, no results</div>
     </div>
-    <li v-else v-for="result in results" :key="result.slug">
-      <lake-card :lake="result">
-    </lake-card>
-    </li>
+    <div v-else>
+      <li v-for="result in results" :key="result.reachcode">
+        <lake-card :lake="result"></lake-card>
+      </li>
+      <li class="show-all" v-if="all_results.length">
+        <a href="#">Show all results</a> ({{all_results.length}})
+      </li>
+    </div>
   </ul>
 </template>
 
@@ -16,7 +21,7 @@ import LakeCard from '@/components/lake/LakeCard';
 
 export default {
   name: 'search-results',
-  props: ["results", "query"],
+  props: ["query", "results", "all_results"],
   components: {
     LakeCard
   },

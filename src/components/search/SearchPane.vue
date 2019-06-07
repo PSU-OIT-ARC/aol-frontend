@@ -2,7 +2,7 @@
   <div>
     <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
       <search-bar></search-bar>
-      <search-results v-if="results!=''" :results="results" :query="query"></search-results>
+      <search-results v-if="results!=''" :query="query" :results="results" :all_results="all_results"></search-results>
     </div>
 
     <div v-if="results==''">
@@ -34,9 +34,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      results: 'searchResults',
+      introDismissed: 'getIsIntroDismissed',
       query: 'searchQuery',
-      introDismissed: 'getIsIntroDismissed'
+      results: 'searchResults',
+      all_results: 'searchResultsAll'
     }),
     hide_results() {
       if (this.$route.query['lake']) {

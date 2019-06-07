@@ -5,6 +5,7 @@ const state = {
     lakes: [],
     search: {
         results: [],
+        all_results: null,
         query: null
     },
     map_object: null,

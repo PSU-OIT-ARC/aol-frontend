@@ -1,6 +1,7 @@
 
 
 const backend_url = process.env.VUE_APP_BACKEND_URL;
+const max_search_results = 5
 
 const access_token = `C93ORqYdWvUajz9fbAHAwq64ZzG6iWHI--VGjAhqVW4XVTjAgSpiBsAGE8grM28\
 OGDTM4Dd8eFBKMU-0dfylpNMhMjHH7wpM71PZG_wOWHYJkCyxyeyP7-DKvfMheQU0r3kSpxWRgff7c\
@@ -43,6 +44,7 @@ const config = {
     },
 
     backend_url: backend_url,
+    max_search_results: max_search_results,
 
     token: token,
     access_token: access_token,

@@ -1,11 +1,15 @@
 const getters = {
 
+    searchQuery (state) {
+        return state.search.query;
+    },
+
     searchResults (state) {
         return state.search.results;
     },
 
-    searchQuery (state) {
-        return state.search.query;
+    searchResultsAll (state) {
+        return state.search.all_results;
     },
 
     getLakeBySlug (state) {
