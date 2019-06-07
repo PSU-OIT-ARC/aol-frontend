@@ -1,7 +1,9 @@
 <template>
   <div>
-    <p>
-      {{ lake.body }}
+    <p v-for="(line, index) in lake.body"
+       v-bind:index="index"
+       v-bind:key="index">
+      {{ line }}<br />
     </p>
   </div>
 </template>

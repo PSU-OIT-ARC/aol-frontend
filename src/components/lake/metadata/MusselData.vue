@@ -1,6 +1,9 @@
 <template>
-  <div class=''>
-    <h3>Photos</h3>
+
+  <div class="mussels-wrapper">
+    <a name="mussels" id="mussels"></a>
+    <h3>Molluscs</h3>
+
     <table class="table" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
@@ -10,15 +13,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Aug. 17, 2010</td>
-          <td>non detect</td>
-          <td>Oregon Dept of Fish and Wildlife</td>
-        </tr>
-        <tr>
-          <td>Aug. 10, 2012</td>
-          <td>non detect</td>
-          <td>Oregon Dept of Fish and Wildlife</td>
+        <tr v-for="(entry, index) in lake.mussels"
+            v-bind:item="entry"
+            v-bind:index="index"
+            v-bind:key="entry.pk">
+          <td class="nowrap">{{ entry.date_checked }}</td>
+          <td>{{ entry.specie['name'] }}</td>
+          <td>{{ entry.agency }}</td>
         </tr>
       </tbody>
     </table>
@@ -27,6 +28,7 @@
 
 <script>
   export default {
+    props: ['lake'],
     name: 'mussels',
     title: 'Mussels'
   }

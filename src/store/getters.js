@@ -11,15 +11,14 @@ const getters = {
     getLakeBySlug (state) {
         return (slug) => {
             return state.lakes.find((lake) => {
-
                 return lake.slug === slug
             });
         }
     },
 
-    getReachcodes () {
+    getReachcodes (state) {
         return state.lakes.map((lake) => {
-            return lake.reachcode
+            return parseInt(lake.reachcode);
         })
     },
 
@@ -35,8 +34,12 @@ const getters = {
       return state.lakes;
     },
 
+    getCurrentFocus (state) {
+      return state.current_focus;
+    },
+
     getCurrentLake (state) {
-      return state.current_lake
+      return state.current_lake;
     },
 
     getIsLoading (state) {
@@ -45,6 +48,10 @@ const getters = {
 
     getIsIntroDismissed (state) {
       return state.intro_dismissed;
+    },
+
+    getCurrentPage (state) {
+        return state.current_page;
     }
 }
 

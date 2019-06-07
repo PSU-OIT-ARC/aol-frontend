@@ -22,9 +22,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['searchLakes', 'setCurrentLake', 'fitBounds']),
+    ...mapActions(['searchLakes', 'setCurrentFocus', 'fitBounds']),
     search (query) {
-      this.setCurrentLake();
+      this.setCurrentFocus();
       this.searchLakes(query);
     },
     clear () {

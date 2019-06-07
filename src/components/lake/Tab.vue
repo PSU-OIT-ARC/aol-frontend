@@ -4,7 +4,7 @@
       v-bind:class="[active ? 'active' : '', 'tab-icon--'+section.name, 'tab-icon']"
       :to="{
         name: 'lake',
-        params: {'slug': lake.slug},
+        params: {'reachcode': lake.reachcode},
         hash: `#${section.name}`
       }">
       <span class="tab-title">{{ section.title }}</span>

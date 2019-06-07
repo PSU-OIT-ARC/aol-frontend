@@ -64,7 +64,7 @@ export default {
           return reachcode % 2 == value;
           /*let lake = this.getLakeByReachcode(parseInt(reachcode));
           if (lake) {
-            console.log(lake[filter])
+            console.info(lake[filter])
             return lake[filter] == true;
           }
           return false

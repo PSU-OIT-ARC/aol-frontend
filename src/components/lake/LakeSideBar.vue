@@ -17,16 +17,13 @@
       <lake-card :lake='lake' :to_detail="true"></lake-card>
 
       <div class="lake-summary">
-
         <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
 
-      <!-- <div class="summary-chart">
-        <label>Area </label>
-        <div>{{ lake.area_sq_km }}sq. km.</div>
-      </div> -->
-
-        <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
-
+        <p v-for="(line, index) in lake.body"
+           v-bind:index="index"
+           v-bind:key="index">
+         {{ line }}<br />
+        </p>
       </div>
     </div>
   </div>
@@ -41,9 +38,9 @@ export default {
   name: 'lake-sidebar',
   props: ['lake'],
   methods: {
-    ...mapActions(['setCurrentLake', 'fitBounds']),
+    ...mapActions(['setCurrentFocus', 'fitBounds']),
     close () {
-      this.setCurrentLake();
+      this.setCurrentFocus();
       this.$router.push({name: 'home'});
     }
   },

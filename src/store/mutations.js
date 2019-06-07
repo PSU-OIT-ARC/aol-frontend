@@ -7,6 +7,10 @@ const mutations = {
 
     setLakes (state, data) {
       state.lakes = data;
+    }, 
+
+    setCurrentFocus (state, data) {
+      state.current_focus = data;
     },
 
     setCurrentLake (state, data) {
@@ -31,6 +35,10 @@ const mutations = {
 
     setIntroDismissed (state, dismissed) {
       state.intro_dismissed = dismissed;
+    },
+
+    setCurrentPage (state, page) {
+        state.current_page = page;
     }
 }
 

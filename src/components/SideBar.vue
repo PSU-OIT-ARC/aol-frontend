@@ -2,7 +2,7 @@
   <div class="sidebar">
     <search-pane></search-pane>
     <lake-side-bar
-        v-if="getCurrentLake" :lake="getCurrentLake">
+        v-if="getCurrentFocus" :lake="getCurrentFocus">
     </lake-side-bar>
   </div>
 </template>
@@ -15,10 +15,10 @@ import SearchPane from '@/components/search/SearchPane';
 export default {
   name: 'sidebar',
   methods: {
-    ...mapActions(['setCurrentLake']),
+    ...mapActions(['setCurrentFocus']),
   },
   computed: {
-    ...mapGetters(['getCurrentLake']),
+    ...mapGetters(['getCurrentFocus']),
   },
   components: {
     LakeSideBar,

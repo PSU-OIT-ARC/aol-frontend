@@ -26,12 +26,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ lakes: 'getLakes' }),
-    ...mapGetters(['getCurrentLake', 'getLakeBySlug', 'getLakeByReachcode']),
+    ...mapGetters({ lakes: 'getLakes', 'reachcodes': 'getReachcodes' }),
+    ...mapGetters(['getCurrentFocus', 'getLakeBySlug', 'getLakeByReachcode']),
   },
   methods: {
     ...mapActions([
-      'fetchLakes', 'setCurrentLake', 'fitBounds', 'setLoading',
+      'fetchLakes', 'setCurrentFocus', 'fitBounds', 'setLoading',
       'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
     ]),
     assignLakeGeometries (features) {
@@ -45,15 +45,15 @@ export default {
       })
     },
     selectLakeFromUrl () {
-      let slug = this.$route.query['lake'];
-      if (slug) {
-        let lake = this.getLakeBySlug(slug);
-        this.setCurrentLake(lake);
+      let reachcode = this.$route.query['lake'];
+      if (reachcode) {
+        let lake = this.getLakeByReachcode(parseInt(reachcode));
+        this.setCurrentFocus(lake);
       }
     },
     showSideBar (lake) {
-        this.$router.push({name: 'home', query: {'lake': lake.slug}})
-        this.setCurrentLake(lake);
+        this.$router.push({name: 'home', query: {'lake': lake.reachcode}})
+        this.setCurrentFocus(lake);
         this.searchLakes(null); // reset search
     },
     selectLakeFromPointClick (event, view) {
@@ -200,7 +200,7 @@ export default {
 
           //create clusters
           createClusterLayer(
-              map,
+              map, this.reachcodes,
               SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
               ClassBreaksRenderer,
               fcl
@@ -238,7 +238,7 @@ export default {
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
         document.querySelector('#map').classList.toggle('small', this.small)
-        this.fitBounds({lake: this.getCurrentLake});
+        this.fitBounds({lake: this.getCurrentFocus});
       }
       else {
         this.setLoading(true);
@@ -247,19 +247,19 @@ export default {
             this.selectLakeFromUrl();
             this.initMap().then(()=> {
             //  this.setLoading(false);
-              if(this.getCurrentLake) {
-                this.fitBounds({lake: this.getCurrentLake});
+              if(this.getCurrentFocus) {
+                this.fitBounds({lake: this.getCurrentFocus});
               }
             });
           })
         }
         else {
-          console.log('I already have the lakes.');
+          console.warn('I already have the lakes.');
           this.selectLakeFromUrl();
           this.initMap().then(() => {
           //  this.setLoading(false);
-            if(this.getCurrentLake) {
-              this.fitBounds({lake: this.getCurrentLake});
+            if(this.getCurrentFocus) {
+              this.fitBounds({lake: this.getCurrentFocus});
             }
           });
         }

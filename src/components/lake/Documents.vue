@@ -1,11 +1,16 @@
 <template>
 
-  <div>
+  <div class="documents-wrapper">
     <a name="documents" id="documents"></a>
     <h3>Documents</h3>
+
     <ul class="documents-wrapper">
-      <li><a href="#">Basin Statistics (pdf)</a></li>
-      <li><a href="#">Atlas of Oregon Lakes Original book page (pdf)</a></li>
+      <li v-for="(doc, index) in docs"
+          v-bind:item="doc"
+          v-bind:index="index"
+          v-bind:key="doc.file">
+        <a :href="doc.file">{{ doc.name }}</a>
+      </li>
     </ul>
   </div>
 
@@ -16,6 +21,12 @@
     props: ['lake'],
     name: 'documents',
     title: 'Documents',
+
+    data () {
+      return {
+        docs: this.lake.documents
+      }
+    }
   }
 </script>
 

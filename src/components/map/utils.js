@@ -1,5 +1,6 @@
 import config from '@/components/map/config';
 
+
 const getFeaturesFromServiceLayer = (map, layer_id) => {
   return new Promise ((resolve) => {
     const service_layer = map.findLayerById(layer_id);
@@ -12,14 +13,14 @@ const getFeaturesFromServiceLayer = (map, layer_id) => {
       service_layer.queryFeatures(query).then((results) => {
            resolve(results.features);
       }).catch((e)=> {
-        console.log('query error: ' + e)
+        console.error(e.message)
       });
     });
   });
 };
 
 const createClusterLayer = (
-    map,
+    map, reachcodes,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
     ClassBreaksRenderer, fcl
   ) => {
@@ -27,10 +28,11 @@ const createClusterLayer = (
       getFeaturesFromServiceLayer(
         map, 'lake_points_service_layer').then(
         (features) => {
+
         // filter out lakes to show on map (TEMP CODE)
         let active_lakes = features.filter((f) => {
-          let rc = f.attributes.REACHCODE
-          return config.cms_reachcodes.indexOf(rc) > -1
+          let rc = parseInt(f.attributes.REACHCODE)
+          return reachcodes.indexOf(rc) > -1
         });
 
         // transform features objects to graphics objects
