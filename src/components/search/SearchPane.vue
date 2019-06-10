@@ -13,7 +13,7 @@
         <div class="intro__copy">
           <h3>Atlas of Oregon Lakes</h3>
           <p>Oregon has a rich diversity of lakes and reservoirs ranging from some of the clearest lakes in the world, to extremely productive fisheries, to lakes in trouble from pollution. Lakes and reservoirs are very important to the citizens of Oregon as they provide drinking water, flood control, irrigation, power generation, and recreational opportunities such as swimming, boating, fishing, and relaxation.</p>
-          <p><a href="/about">Read More ...</a></p>
+          <p><router-link to="/about">Read More ...</router-link></p>
         </div>
       </div>
     </div>

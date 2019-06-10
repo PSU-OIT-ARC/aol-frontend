@@ -333,3 +333,8 @@ a.map-button.selected {
 #blueimp-gallery a.close {
   visibility: hidden;
 }
+
+
+h1 a.router-link-active {
+  border-bottom: 0px;
+}
