@@ -2,15 +2,7 @@
 
 const backend_url = process.env.VUE_APP_BACKEND_URL;
 const max_search_results = 5
-
-const access_token = `C93ORqYdWvUajz9fbAHAwq64ZzG6iWHI--VGjAhqVW4XVTjAgSpiBsAGE8grM28\
-OGDTM4Dd8eFBKMU-0dfylpNMhMjHH7wpM71PZG_wOWHYJkCyxyeyP7-DKvfMheQU0r3kSpxWRgff7c\
-lEvElhcew..`;
-
-const token = `CGixBe3rUT8bM2Vp32X0iTX9Gy3rxLbzyrcqUUPWV7zMp7tRKbFFYQpqDd_pmf6w\
-HUd9BoJ0RzgrUAqqQHXLBA-HOIjQ4BS9cV5whnERL3U7xb6OQz7gI6jq7FQDv9NI9blc5VbCdn0axtk\
-gIPltMS-VeJUc7rM8UsCZClE_X3rDvVeQfzBQIoStKZqxsUHPRr_Iuqx1ZeiYtCcV4wxTE3H4OZYP2E\
-xuLkEwo8lgnT7Xn14fr6JVKYipvGXxUMSV`;
+const LOADING = 'loading';
 
 const AGOL_GROUP_ID = '6Miy5NqQWjMYTGFY';
 const REST_PATH = "arcgis/rest/services";
@@ -46,8 +38,6 @@ const config = {
     backend_url: backend_url,
     max_search_results: max_search_results,
 
-    token: token,
-    access_token: access_token,
     map_center: [-122.841856, 44.002925],
     zoom: 9,
     clusterRatio: 130,
@@ -73,59 +63,77 @@ const config = {
 
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
-    baseLayers: [
-      {
-        id: "gray",
-        visible: true,
-        url: `${ArcGisOnlineServicesUrl}/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
-        extent: undefined
-      },
-      {
-        id: "nlcd",
-        visible: true,
-        url: `${ArcGisOnlineTilesUrl}/Hillshade_NLCD/MapServer`, //tile/{z}/{y}/{x}?token=${token}`,
-        extent: [-13847487.234310532, 5367239.26625923, -13539022.354823876, 5532200.785834997],
-      }
-    ],
-    featureServiceLayers: [
+    layers: [
+        {
+            id: "gray",
+            name: "Base Map",
+            type: "base",
+            visible: true,
+            url: `${ArcGisOnlineServicesUrl}/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
+            extent: undefined
+        },
+        {
+            id: "nlcd",
+            type: "base",
+            name: "Hillshade",
+            visible: false,
+            url: `${ArcGisOnlineTilesUrl}/Hillshade_NLCD/MapServer`,
+                  //tile/{z}/{y}/{x}?token=${token}`,
+            extent: [-13847487.234310532, 5367239.26625923,
+                     -13539022.354823876, 5532200.785834997],
+            input_type: "checkbox",
+            input_group: "hillshade",
+        },
         {
             id: 'lake_points_service_layer',
+            type: "feature",
+            name: "Lake Points",
+            visible: false,
             AGOLName: 'OR_Lake_Points_test',
             getLayerUrl: getServiceLayerUrl,
-            visible: false
         },
         {
             id:'lake_bbox_service_layer',
+            type: "feature",
+            name: "Lake Bounding Boxes",
+            visible: false,
             AGOLName: 'NHDH_bounding_selection_shp',
             getLayerUrl: getServiceLayerUrl,
-            visible: false
+        },
+        {
+            id: 'publand',
+            type: "vector",
+            name: 'Ownership',
+            visible: false,
+            minScale: 0,
+            AGOLName: 'Vector_Publands',
+            getLayerUrl: getVectorTileLayerUrl,
+            input_type: 'radio',
+            input_group: 'lands',
+        },
+        {
+            id: 'nopubland',
+            type: "vector",
+            name: 'Naturalistic',
+            visible: false,
+            AGOLName: 'Vector_NoPub',
+            minScale: 0,
+            getLayerUrl: getVectorTileLayerUrl,
+            input_type: 'radio',
+            input_group: 'lands',
+        },
+        {
+            id: 'bathymetry',
+            type: "vector",
+            name: 'Bathymetry',
+            visible: false,
+            zIndex: 8,
+            minScale: 577790.5542885,
+            AGOLName: 'Vector_Bath_Test_2',
+            getLayerUrl: getVectorTileLayerUrl,
+            input_type: 'checkbox',
+            input_group: 'bathymetry',
         }
-    ],
-    vectorTileLayers: [
-      {
-        id: 'publand',
-        visible: false,
-        minScale: 0,
-        AGOLName: 'Vector_Publands',
-        getLayerUrl: getVectorTileLayerUrl,
-      },
-
-      {
-        id: 'nopubland',
-        visible: true,
-        AGOLName: 'Vector_NoPub',
-        minScale: 0,
-        getLayerUrl: getVectorTileLayerUrl,
-      },
-
-      {
-        id: 'bathymetry',
-        visible: true,
-        zIndex: 8,
-        minScale: 577790.5542885,
-        AGOLName: 'Vector_Bath_Test_2',
-        getLayerUrl: getVectorTileLayerUrl,
-      }
     ]
 }
 

@@ -1,10 +1,13 @@
 import config from '@/components/map/config';
 
-// this should be moved to a central place
-const LOADING = 'loading';
 const API_URL = config.backend_url;
-
 const actions = {
+
+    getAuthToken (context) {
+        return fetch(`${API_URL}/token/?format=json`).then(response => {
+            return response.json();
+        });
+    },
 
     setMapObject (context, map) {
         context.commit('setMap', map);
@@ -21,7 +24,7 @@ const actions = {
     searchLakes (context, query) {
         let search = {};
         search.query = query;
-        search.results = LOADING;
+        search.results = config.LOADING;
         search.all_results = [];
 
         context.commit('setSearchResults', search);
@@ -105,24 +108,25 @@ const actions = {
 
     fetchLakes (context) {
         return new Promise((resolve, reject) => {
-          fetch(
-              `${API_URL}/lake/?format=json`
-          ).then(
-              response => {
-                return response.json();
-            }
-          ).then(
-              data => {
-                console.info("Fetched " + data.length + " lakes");
-                context.commit("setLakes", data);
-                resolve();
-            }
-          ).catch(
-              e => {
-                console.log(e.message);
-                reject();
-          });
-      });
+            fetch(
+                `${API_URL}/lake/?format=json`
+            ).then(
+                response => {
+                    return response.json();
+                }
+            ).then(
+                data => {
+                    console.info("Fetched " + data.length + " lakes");
+                    context.commit("setLakes", data);
+                    resolve();
+                }
+            ).catch(
+                e => {
+                    console.log(e.message);
+                    reject();
+                }
+            );
+        });
     },
 
     setCurrentFocus (context, lake) {
@@ -130,22 +134,26 @@ const actions = {
     },
 
     fetchLake (context, reachcode) {
-      fetch(
-          `${API_URL}/lake/${reachcode}/?format=json`
-      ).then(
-        response => {
-          return response.json();
-        }
-      ).then(
-          data => {
-              console.info("Fetched lake " + reachcode);
-              context.commit("setCurrentLake", data);
-        }
-      ).catch(
-        e => {
-          console.error(e.message);
-        }
-      );
+        return new Promise((resolve, reject) => {
+            fetch(
+                `${API_URL}/lake/${reachcode}/?format=json`
+            ).then(
+                response => {
+                    return response.json();
+                }
+            ).then(
+                data => {
+                    console.info("Fetched lake " + reachcode);
+                    context.commit("setCurrentLake", data);
+                    resolve();
+                }
+            ).catch(
+                e => {
+                    console.error(e.message);
+                    reject();
+                }
+            );
+        });
     },
 
     setCurrentLake (context, lake) {
@@ -161,20 +169,24 @@ const actions = {
     },
 
     fetchPage (context, slug) {
-        fetch(`${API_URL}/flatpage/${slug}/?format=json`).then(
-            response => {
-                return response.json();
-            }
-        ).then(
-            data => {
-                console.info("Fetched page " + slug);
-                context.commit("setCurrentPage", data);
-            }
-        ).catch(
-            e => {
-                console.error(e.message);
-            }
-        );
+        return new Promise((resolve, reject) => {
+            fetch(`${API_URL}/flatpage/${slug}/?format=json`).then(
+                response => {
+                    return response.json();
+                }
+            ).then(
+                data => {
+                    console.info("Fetched page " + slug);
+                    context.commit("setCurrentPage", data);
+                    resolve();
+                }
+            ).catch(
+                e => {
+                    console.error(e.message);
+                    reject();
+                }
+            );
+        });
     }
 }
 

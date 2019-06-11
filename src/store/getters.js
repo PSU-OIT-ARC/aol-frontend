@@ -1,3 +1,5 @@
+
+
 const getters = {
 
     searchQuery (state) {
