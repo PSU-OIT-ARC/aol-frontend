@@ -195,29 +195,81 @@ export default {
         })
       });
     },
+    loadLayers (map, view) {
+        return new Promise ((resolve, reject) => {
+          loadModules([
+            'esri/layers/VectorTileLayer',
+            'esri/layers/TileLayer',
+            'esri/layers/FeatureLayer',
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/symbols/SimpleLineSymbol",
+            "esri/symbols/SimpleFillSymbol",
+            "esri/renderers/ClassBreaksRenderer",
+            "fcl/FlareClusterLayer_v4"
+          ], config.dojo_options).then(([
+              VectorTileLayer, TileLayer,
+              FeatureLayer,
+              SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+              ClassBreaksRenderer,
+              fcl
+          ]) => {
+
+            let nlcd = config.baseLayers[1];
+            let nlcd_layer = new TileLayer({
+                url: nlcd.url
+            });
+            map.add(nlcd_layer);
+
+            config.vectorTileLayers.forEach((layer) => {
+                let vector_tile_layer = new VectorTileLayer({
+                    url: layer.getLayerUrl(),
+                    id: layer.id,
+                    visible: layer.visible,
+                    minScale: layer.minScale
+                })
+                map.add(vector_tile_layer);
+            });
+
+            config.featureServiceLayers.forEach((layer) => {
+              let feature_layer = new FeatureLayer({
+                url: layer.getLayerUrl(),
+                id: layer.id,
+                visible: layer.visible
+              });
+              map.add(feature_layer);
+            });
+
+            //create clusters
+            this.mountClusterLayer(
+                SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+                ClassBreaksRenderer, fcl
+            );
+            // create client side bboxes (better as dynamic layer?)
+            this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
+
+            view.when().then(()=> {
+                // we might not need the point handler
+                // if the bounding boxes are accurate enough?
+                view.on('click', (event) =>
+                  this.selectLakeFromPointClick(event, view)
+                );
+                view.on('click', (event) =>
+                  this.selectLakeFromBBoxClick (event, view)
+                );
+              resolve('everything is done.')
+            });
+          }); // end loadModules
+        }); // end promise
+    },
     initMap () {
       return new Promise ((resolve, reject) => {
         loadModules([
           'esri/Map',
           'esri/views/MapView',
-          "esri/geometry/Extent",
           "esri/widgets/Locate",
-          'esri/layers/VectorTileLayer',
-          'esri/layers/TileLayer',
           'esri/identity/IdentityManager',
-          'esri/layers/FeatureLayer',
-          "esri/symbols/SimpleMarkerSymbol",
-          "esri/symbols/SimpleLineSymbol",
-          "esri/symbols/SimpleFillSymbol",
-          "esri/renderers/ClassBreaksRenderer",
-          "fcl/FlareClusterLayer_v4"
         ], config.dojo_options).then(([
-            EsriMap, MapView, Extent, Locate,
-            VectorTileLayer, TileLayer,
-            IdentityManager, FeatureLayer,
-            SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-            ClassBreaksRenderer,
-            fcl
+            EsriMap, MapView, Locate, IdentityManager,
         ]) => {
 
           // TODO: get token from backend
@@ -260,54 +312,15 @@ export default {
 
           view.ui.components = [locateWidget];
 
-          let nlcd = config.baseLayers[1];
-          let nlcd_layer = new TileLayer({
-              url: nlcd.url
-          });
-          map.add(nlcd_layer);
-
-          config.vectorTileLayers.forEach((layer) => {
-              let vector_tile_layer = new VectorTileLayer({
-                  url: layer.getLayerUrl(),
-                  id: layer.id,
-                  visible: layer.visible,
-                  minScale: layer.minScale
-              })
-              map.add(vector_tile_layer);
-          });
-
-          config.featureServiceLayers.forEach((layer) => {
-            let feature_layer = new FeatureLayer({
-              url: layer.getLayerUrl(),
-              id: layer.id,
-              visible: layer.visible
-            });
-            map.add(feature_layer);
-          });
-
-          this.setMapObject(map);
-          this.setMapNode(this.$refs.map);
-          this.setMapView(view);
-
-          //create clusters
-          this.mountClusterLayer(
-              SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-              ClassBreaksRenderer,
-              fcl
-          ).then(()=> {
-            this.setLoading(false);
-          });
-          // create client side bboxes (better as dynamic layer?)
-          this.BoundingBoxServiceToGraphicLayer(FeatureLayer);
-
           view.when().then(()=> {
-              // we might not need the point handler if the bounding boxes are accurate enough?
-              view.on('click', (event) => this.selectLakeFromPointClick(event, view));
-              view.on('click', (event) => this.selectLakeFromBBoxClick (event, view));
-              resolve(map)
+            this.setMapObject(map);
+            this.setMapNode(this.$refs.map);
+            this.setMapView(view);
+            resolve([map, view])
           });
-        });
-      });
+
+        }); // end Promise
+      }); // end loadModules
     }, //end initMap
 // end methods
   },
@@ -316,7 +329,8 @@ export default {
     // avoid re-rendering map when using client-side routing.
       this.setLoading(true);
       let map_node = this.$store.state.map_node;
-      if (map_node != null) {
+      //if (map_node != null) {
+      if (false) {
         this.$refs.map.replaceWith(map_node)
         document.querySelector('#map').classList.toggle('small', this.small)
         this.fitBounds({lake: this.getCurrentLake});
@@ -326,22 +340,26 @@ export default {
         if(!this.lakes.length) {
           this.fetchLakes().then(()=> {
             this.selectLakeFromUrl();
-            this.initMap().then(()=> {
-            //  this.setLoading(false);
-              if(this.getCurrentLake) {
-                this.fitBounds({lake: this.getCurrentLake});
-              }
+            this.initMap().then(([map, view])=> {
+              this.loadLayers(map, view).then(()=> {
+                this.setLoading(false);
+                if(this.getCurrentLake) {
+                  this.fitBounds({lake: this.getCurrentLake});
+                }
+              });
             });
           })
         }
         else {
           console.log('I already have the lakes. I will not fetch them again');
           this.selectLakeFromUrl();
-          this.initMap().then(() => {
-          //  this.setLoading(false);
-            if(this.getCurrentLake) {
-              this.fitBounds({lake: this.getCurrentLake});
-            }
+          this.initMap().then(([map, view]) => {
+            this.loadLayers(map, view).then(()=> {
+              this.setLoading(false);
+              if(this.getCurrentLake) {
+                this.fitBounds({lake: this.getCurrentLake});
+              }
+            })
           });
         }
       }
