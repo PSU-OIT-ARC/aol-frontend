@@ -1,5 +1,17 @@
 const mutations = {
 
+    setMap (state, map) {
+        state.map_object = map;
+    },
+
+    setMapNode (state, node) {
+        state.map_node = node;
+    },
+
+    setMapView (state, view) {
+        state.map_view = view;
+    },
+
     setSearchResults (state, data) {
         state.search.query = data.query;
         state.search.results = data.results;
@@ -18,16 +30,8 @@ const mutations = {
       state.current_lake = data;
     },
 
-    setMap (state, map) {
-        state.map_object = map;
-    },
-
-    setMapNode (state, node) {
-        state.map_node = node;
-    },
-
-    setMapView (state, view) {
-        state.map_view = view;
+    setCurrentPage (state, page) {
+        state.current_page = page;
     },
 
     setLoading (state, loading) {
@@ -36,10 +40,6 @@ const mutations = {
 
     setIntroDismissed (state, dismissed) {
       state.intro_dismissed = dismissed;
-    },
-
-    setCurrentPage (state, page) {
-        state.current_page = page;
     }
 }
 

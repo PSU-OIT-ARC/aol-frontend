@@ -8,11 +8,12 @@
 import { mapGetters, mapActions } from 'vuex';
 import { loadModules } from 'esri-loader';
 
-import {
-  getFeaturesFromServiceLayer,
-  createClusterLayer
-} from '@/components/map/utils';
 import config from '@/components/map/config';
+import {
+  createNLCDTileLayer,
+  createVectorTileLayers,
+  createFeatureServiceLayers
+} from '@/components/map/utils';
 
 export default {
   name: 'aol-map',
@@ -30,51 +31,41 @@ export default {
     ...mapGetters(['getCurrentFocus', 'getLakeBySlug', 'getLakeByReachcode']),
   },
   methods: {
-    ...mapActions([
-      'fetchLakes', 'setCurrentFocus', 'fitBounds', 'setLoading',
-      'searchLakes', 'setMapObject', 'setMapNode', 'setMapView'
-    ]),
-    assignLakeGeometries (features) {
-      features.forEach((feature) => {
-        let lake = this.getLakeByReachcode(
-          parseInt(feature.attributes.ReachCode)
-        );
-        if (lake) {
-            lake.geom = feature.geometry;
-        }
-      })
-    },
+    ...mapActions(['getAuthToken', 'setMapObject', 'setMapNode', 'setMapView',
+                   'setLoading', 'setCurrentFocus', 'fitBounds',
+                   'fetchLakes', 'searchLakes']),
+
     selectLakeFromUrl () {
       let reachcode = this.$route.query['lake'];
       if (reachcode) {
         let lake = this.getLakeByReachcode(parseInt(reachcode));
-        this.setCurrentFocus(lake);
+        if (lake != null) { this.setCurrentFocus(lake); }
       }
     },
     showSideBar (lake) {
-        this.$router.push({name: 'home', query: {'lake': lake.reachcode}})
-        this.setCurrentFocus(lake);
-        this.searchLakes(null); // reset search
+      this.$router.push({name: 'home', query: {'lake': lake.reachcode}})
+      this.setCurrentFocus(lake);
+      this.searchLakes(null); // reset search
     },
     selectLakeFromPointClick (event, view) {
-        view.hitTest(event).then((response) => {
-            let features = response.results.filter((r) => {
-              if (r.graphic) {
-                let is_a_marker = 'lake_clusters' && r.graphic.symbol.type == 'simple-marker';
-                return r.graphic.layer.id == is_a_marker;
-              }
-              return false
-            })
-            if (features.length) {
-              let reachcode = features[0].graphic.attributes.attributes.REACHCODE;
-              let lake = this.getLakeByReachcode(parseInt(reachcode));
-              if (lake) {
-                this.showSideBar(lake);
-              }
-              this.fitBounds({lake: lake})
-              //this.fitBounds({geom: features[0].graphic.geometry});
-            }
-        });
+      view.hitTest(event).then((response) => {
+        let features = response.results.filter((r) => {
+          if (r.graphic) {
+            let is_a_marker = 'lake_clusters' && r.graphic.symbol.type == 'simple-marker';
+            return r.graphic.layer.id == is_a_marker;
+          }
+          return false
+        })
+        if (features.length) {
+          let reachcode = features[0].graphic.attributes.attributes.REACHCODE;
+          let lake = this.getLakeByReachcode(parseInt(reachcode));
+          if (lake) {
+            this.showSideBar(lake);
+          }
+          this.fitBounds({lake: lake})
+          //this.fitBounds({geom: features[0].graphic.geometry});
+        }
+      });
     },
     selectLakeFromBBoxClick (event, view) {
       view.hitTest(event).then((response) => {
@@ -94,181 +85,128 @@ export default {
         }
       })
     },  
-    createBoundingBoxGraphicLayer (FeatureLayer, features) {
-        const map = this.$store.state.map_object;
+    loadLayers (map, view) {
+      return new Promise ((resolve) => {
+        // TODO: The following utilities load layers which are hosted
+        //       as secure (i.e., private) data sources. Such data sources
+        //       are incompatible with app-based logins.
+        createNLCDTileLayer(map);
+        createVectorTileLayers(map);
+        createFeatureServiceLayers(map, this);
 
-        let feature_layer = new FeatureLayer({
-          source: features,
-          id: 'lake_bbox_graphics_layer',
-          fields: config.lake_marker_fields,
+        view.when().then(()=> {
+          // we might not need the point handler
+          // if the bounding boxes are accurate enough?
+          view.on('click', (event) =>
+            this.selectLakeFromPointClick(event, view)
+          );
+          view.on('click', (event) =>
+            this.selectLakeFromBBoxClick (event, view)
+          );
+          console.info("All layers loaded...")
+          resolve();
         });
-
-        feature_layer.when().then((l) => {
-          // change to transparent later
-          l.renderer.symbol.color.a = 0.1;
-          l.renderer.symbol.outline.color.a = 0.1;
-        })
-        map.add(feature_layer)
+      }); // end promise
+    },
+    initMetadata () {
+      if (!this.lakes.length) {
+        return this.fetchLakes();
+      } else {
+        return new Promise ((resolve) => {
+          console.warn('I already have the lakes.');
+          resolve();
+        });
+      }
     },
     initMap () {
       return new Promise ((resolve) => {
         loadModules([
-          'esri/Map',
-          'esri/views/MapView',
-          "esri/geometry/Extent",
+          "esri/Map",
+          "esri/views/MapView",
           "esri/widgets/Locate",
-          'esri/layers/VectorTileLayer',
-          'esri/layers/TileLayer',
-          'esri/identity/IdentityManager',
-          'esri/layers/FeatureLayer',
-          "esri/symbols/SimpleMarkerSymbol",
-          "esri/symbols/SimpleLineSymbol",
-          "esri/symbols/SimpleFillSymbol",
-          "esri/renderers/ClassBreaksRenderer",
-          "fcl/FlareClusterLayer_v4"
+          "esri/identity/IdentityManager",
         ], config.dojo_options).then(([
-            // eslint-disable-next-line
-            EsriMap, MapView, Extent, Locate,
-            VectorTileLayer, TileLayer,
-            IdentityManager, FeatureLayer,
-            SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-            ClassBreaksRenderer,
-            fcl
+            EsriMap, MapView, Locate, IdentityManager
         ]) => {
 
-          // TODO: get token from backend
-          IdentityManager.registerToken({
+          this.getAuthToken().then((data) => {
+            let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
+            IdentityManager.registerToken({
               'server': config.ArcGisOnlineTilesUrl,
-              'token': config.token
-          });
-          IdentityManager.registerToken({
-              'server': "https://services2.arcgis.com/6Miy5NqQWjMYTGFY/arcgis/rest/services",
-              'token': config.token
-          });
+              'token': data.access_token,
+              'expires': timeout
+            });
+            IdentityManager.registerToken({
+              'server': config.ArcGisOnlineServicesUrl,
+              'token': data.access_token,
+              'expires': timeout
+            });
 
-          let zoom = config.zoom;
-          let center = config.map_center;
+            let zoom = config.zoom;
+            let center = config.map_center;
 
-          let map = new EsriMap({
+            let map = new EsriMap({
               basemap: 'topo'
-          });
-          let view = new MapView({
+            });
+            let view = new MapView({
               map: map,
               container: 'map',
               zoom: zoom,
               center: center
-          });
-          view.constraints = { maxZoom: 15 };
-          // we're using custom controls
-          let locateWidget = new Locate({
-            viewModel: {
-              view: view
-            },
-            goToLocationEnabled: false,  // otherwise it starts immediately?
-            declaredClass: 'aol-locate-widget'
-          });
-
-          view.ui.components = [locateWidget];
-
-          let nlcd = config.baseLayers[1];
-          let nlcd_layer = new TileLayer({
-              url: nlcd.url
-          });
-          map.add(nlcd_layer);
-
-          config.vectorTileLayers.forEach((layer) => {
-              let vector_tile_layer = new VectorTileLayer({
-                  url: layer.getLayerUrl(),
-                  id: layer.id,
-                  visible: layer.visible,
-                  minScale: layer.minScale
-              })
-              map.add(vector_tile_layer);
-          });
-
-          config.featureServiceLayers.forEach((layer) => {
-            let feature_layer = new FeatureLayer({
-              url: layer.getLayerUrl(),
-              id: layer.id,
-              visible: layer.visible
             });
-            map.add(feature_layer);
-          });
+            view.constraints = { maxZoom: 15 };
+            // we're using custom controls
+            let locateWidget = new Locate({
+              viewModel: {
+                view: view
+              },
+              goToLocationEnabled: false,  // otherwise it starts immediately?
+              declaredClass: 'aol-locate-widget'
+            });
 
-          this.setMapObject(map);
-          this.setMapNode(this.$refs.map);
-          this.setMapView(view);
-
-          //create clusters
-          createClusterLayer(
-              map, this.reachcodes,
-              SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
-              ClassBreaksRenderer,
-              fcl
-          ).then(()=> {
-            this.setLoading(false);
-          });
-
-          // create client side bboxes (better as dynamic layer?)
-          getFeaturesFromServiceLayer(map, 'lake_bbox_service_layer').then(
-            (features) => {
-              this.assignLakeGeometries(features);
-              this.createBoundingBoxGraphicLayer(FeatureLayer, features);
-          })
-
-          view.when().then(()=> {
-              // we might not need the point handler if the bounding boxes are accurate enough?
-              view.on('click', (event) => {
-                this.selectLakeFromPointClick(event, view)
-              });
-              view.on('click', (event) => {
-                this.selectLakeFromBBoxClick (event, view)
-              });
-              resolve(map)
-          });
-
-        });
-      });
+            view.ui.components = [locateWidget];
+            view.when().then(()=> {
+              this.setMapObject(map);
+              this.setMapNode(this.$refs.map);
+              this.setMapView(view);
+              resolve([map, view])
+            });
+          }); // end getAuthToken
+        }); // end loadModules
+      }); // end Promise
     }, //end initMap
   }, // end methods
   mounted () {
     this.$nextTick(() => {
+      let map_node = this.$store.state.map_node;
       this.setLoading(true);
 
-      // avoid re-rendering map when using client-side routing.
-      let map_node = this.$store.state.map_node;
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
         document.querySelector('#map').classList.toggle('small', this.small)
         this.fitBounds({lake: this.getCurrentFocus});
-      }
-      else {
-        this.setLoading(true);
-        if(!this.lakes.length) {
-          this.fetchLakes().then(()=> {
+      } else {
+        // initialize map context
+        this.initMap().then(([map, view])=> {
+          // load full lake dataset from backend
+          this.initMetadata().then(()=> {
+            // set current context
             this.selectLakeFromUrl();
-            this.initMap().then(()=> {
-            //  this.setLoading(false);
+            // load layers utilizing lake dataset
+            this.loadLayers(map, view).then(()=> {
               if(this.getCurrentFocus) {
                 this.fitBounds({lake: this.getCurrentFocus});
               }
             });
-          })
-        }
-        else {
-          console.warn('I already have the lakes.');
-          this.selectLakeFromUrl();
-          this.initMap().then(() => {
-          //  this.setLoading(false);
-            if(this.getCurrentFocus) {
-              this.fitBounds({lake: this.getCurrentFocus});
-            }
           });
-        }
+
+        });
       }
+
+      this.setLoading(false);
+
     });
-  // end mounted
-  },
+  }, // end mounted
 }
 </script>
 

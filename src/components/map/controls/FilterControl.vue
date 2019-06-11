@@ -1,6 +1,6 @@
 <template>
   <div class='filter-control--container'>
-
+    <h4>Map Filters</h4>
     <div class='filter'>
       <div v-for="filter in filters" :key='filter.name'>
         <input type='radio' :value='filter.name' :id="filter.name"

@@ -157,16 +157,11 @@ a:link, a:visited {
 
 
 .layer-switcher--container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
   padding: 15px;
   background-color: #fff;
-  position: relative;
 
   .layer {
-    position: relative;
-    margin-bottom: -15px;
+    display: block;
     width: 100%;
   }
 
@@ -174,39 +169,14 @@ a:link, a:visited {
     margin: 5px 5px 10px 5px;
   }
 
-
-  input {
-    position: relative;
-    z-index: 1009;
-    top: 10px;
+  fieldset {
+    padding: 0.25em 1em;
+    margin-bottom: 1em;
+    border: solid 1px #eee;
   }
 
   label {
-    display: flex;
-    position: relative;
-    z-index: 1010;
-    top: -15px;
-    left: -5px;
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    width: calc(100% - 43px);
-    cursor: pointer;
-  }
-
-  input:checked + label {
-    border: 1px solid #444;
-    background-color: #bbb;
-  }
-
-  input + label {
-    &:hover {
-      border: 1px solid #222;
-    }
-  }
-
-  input:focus + label {
-    border: 1px solid #4D90FE;
+      margin-right: 1em;
   }
 }
 
@@ -217,10 +187,13 @@ a:link, a:visited {
     padding-bottom: 20px;
   }
 
-
   .filter {
     display: block;
     width: 100%;
+  }
+
+  h4 {
+    margin: 5px 5px 10px 5px;
   }
 
   label {

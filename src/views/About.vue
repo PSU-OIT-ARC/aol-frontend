@@ -101,6 +101,22 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'about',
+  computed: {
+    back () {
+      return {};
+    }
+  },
+  methods: {
+    close () {
+      this.$router.push({name: 'home'});
+    }
+  },
+}
+</script>
+
 <style scoped lang='scss'>
 .about-wrapper {
   display: grid;
