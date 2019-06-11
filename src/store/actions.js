@@ -63,7 +63,6 @@ const actions = {
         const view = context.rootState.map_view;
 
         let lake = options['lake'];
-        let buffer = options['buffer'];
         let geom = options['geom'] || undefined;
 
         if (lake) {

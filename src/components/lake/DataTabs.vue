@@ -75,7 +75,7 @@ export default {
     },
     rendered_tabs () {
       var self = this;
-      var sections = this.allSections.filter(function(el, idx, arr) {
+      var sections = this.allSections.filter(function(el, idx) {
           var key = self.detailSectionKeys[idx];
           if (self.tabs_only ) {
             key = self.sidebarSectionKeys[idx];
@@ -99,6 +99,7 @@ export default {
       if (show_for_all || this.mobile_mode) {
         return true
       }
+      return false
     }
   },
   methods: {
@@ -124,8 +125,8 @@ export default {
     this.setCurrentSection();
   },
   watch: {
-      '$route': function (to) {
-        this.setCurrentSection();
+    '$route': function () {
+      this.setCurrentSection();
     }
   },
 }

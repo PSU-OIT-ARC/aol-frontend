@@ -77,9 +77,11 @@ export default {
       return this.getCurrentLake;
     },
     back () {
+      let query = {}
       if (this.lake) {
-        return {lake: this.lake.reachcode };
+        query["lake"] = this.lake.reachcode;
       }
+      return query
     },
     mobile_mode () {
       return window.innerWidth < 600;

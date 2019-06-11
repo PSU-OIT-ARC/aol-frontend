@@ -111,7 +111,7 @@ export default {
         map.add(feature_layer)
     },
     initMap () {
-      return new Promise ((resolve, reject) => {
+      return new Promise ((resolve) => {
         loadModules([
           'esri/Map',
           'esri/views/MapView',
@@ -127,6 +127,7 @@ export default {
           "esri/renderers/ClassBreaksRenderer",
           "fcl/FlareClusterLayer_v4"
         ], config.dojo_options).then(([
+            // eslint-disable-next-line
             EsriMap, MapView, Extent, Locate,
             VectorTileLayer, TileLayer,
             IdentityManager, FeatureLayer,
@@ -231,9 +232,10 @@ export default {
     }, //end initMap
   }, // end methods
   mounted () {
-  	this.$nextTick(() => {
+    this.$nextTick(() => {
       this.setLoading(true);
-    // avoid re-rendering map when using client-side routing.
+
+      // avoid re-rendering map when using client-side routing.
       let map_node = this.$store.state.map_node;
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
