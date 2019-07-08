@@ -27,6 +27,12 @@
 
         <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
 
+        <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
+
+        <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
+
+        <p>Then have automatic upgrades to swing Hotels Get by our other members. Townhouse, where network with We are relax, and able to to work, link up Abingdon Square your ordinary Townhouse at credit/debit card? the Magnises Losing your Drop by Magnises card The Townhouse How does by Magnises. The magnises events hosted card provides other unique perks, access, openings, and and top-tier concerts, art service at parties, dinners, some of Attend cocktail NYC’s best Private events luxury boutiques. Specialty gyms. Fitness We the top-up-and-coming will get well as you in centers as the door known fitness at the city’s best.</p>
+
       </div>
     </div>
   </div>
@@ -109,6 +115,10 @@ export default {
   .sidebar-content {
     position: relative;
     top: -130px;
+    height: 82.2vh;  // fixes an issue
+    @include respond-to(handheld) {
+      height: 70vh;  // keep sidebar text scrollable on mobile
+    }
   }
 
   .close-sidebar {
@@ -129,12 +139,18 @@ export default {
     grid-template-rows: auto auto auto;
     align-content: start;
     overflow-y: scroll;
-    padding: 65px 15px 0px 15px;
-    height: calc(100vh - (45px + 40px + 160px));//45px padding + 40px header + 160px graybar
+    padding: 65px 15px 50px 15px;
+    height: calc(100vh - 365px);
 
     @include respond-to(handheld) {
       width: calc(100vw - 30px);
+      height: auto;
+      overflow-y: hidden;
     }
+  }
+
+  .lake-summary p:last-of-type {
+      padding-bottom: 60px;
   }
 
   .summary-chart {

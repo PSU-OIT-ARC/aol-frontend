@@ -1,5 +1,5 @@
 <template>
-  <div id='nav'>
+  <div id="nav">
 
     <h1><a href="/">Atlas <span>of Oregon Lakes</span></a></h1>
 
@@ -30,7 +30,6 @@ export default {
   @include respond-to(handheld) {
     grid-template-columns: 20% 1fr;
   }
-
   padding: 3px 0px;
   background-color: white;
   text-align: left;
@@ -82,7 +81,7 @@ a:link, a:visited {
   }
 
   &:hover {
-    color: lightgray;
+    color: #888;
   }
 }
 </style>
