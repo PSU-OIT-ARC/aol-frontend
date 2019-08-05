@@ -4,6 +4,27 @@
     <div class="close-filters" @click="emitFilterVisibility()">╳</div>
     <div class="layer base">
       <fieldset>
+        <legend>Basemap</legend>
+        <input type="radio"
+               name="basemap"
+               id="topo_basemap"
+               :checked="topo_basemap"
+               @change="selectBaseMap" />
+        <label for="topo_basemap">Topo</label>
+        <input type="radio"
+               name="basemap"
+               id="osm_basemap"
+               :checked="osm_basemap"
+               @change="selectBaseMap" />
+        <label for="osm_basemap">OSM</label>
+        <input type="radio"
+               name="basemap"
+               id="gray_basemap"
+               :checked="gray_basemap"
+               @change="selectBaseMap" />
+        <label for="gray_basemap">Gray</label>
+      </fieldset>
+      <fieldset>
         <legend>Lands</legend>
         <input type="radio"
                name="lands"
@@ -48,6 +69,24 @@ import config from '@/components/map/config';
 export default {
   name: 'layer-switcher',
   computed: {
+    topo_basemap () {
+      if (this.$store.state.map_object == null) {
+        return false;
+      }
+      return this.$store.state.map_object.basemap.id == "topo";
+    },
+    osm_basemap () {
+      if (this.$store.state.map_object == null) {
+        return false;
+      }
+      return this.$store.state.map_object.basemap.id == "osm";
+    },
+    gray_basemap () {
+      if (this.$store.state.map_object == null) {
+        return false;
+      }
+      return this.$store.state.map_object.basemap.id == "gray";
+    },
     hillshadeLayer () {
       return config.layers.find((l) => {return "nlcd" == l.id})
     },
@@ -62,11 +101,21 @@ export default {
     }
   },
   methods: {
-    selectVectorTileLayer (event) {
-
+    selectBaseMap (event) {
       let map = this.$store.state.map_object;
-      //let layers = map.allLayers;
 
+      if (event.target.id == "topo_basemap") {
+        map.basemap = "topo";
+      }
+      else if (event.target.id == "osm_basemap") {
+        map.basemap = "osm";
+      }
+      else if (event.target.id == "gray_basemap") {
+        map.basemap = "gray";
+      }
+    },
+    selectVectorTileLayer (event) {
+      let map = this.$store.state.map_object;
       map.allLayers.forEach((layer) => {
           let configLayer = config.layers.find((l) => {
               return layer.id == l.id;

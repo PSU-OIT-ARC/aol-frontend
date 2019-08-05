@@ -65,14 +65,6 @@ const config = {
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [
         {
-            id: "gray",
-            name: "Base Map",
-            type: "base",
-            visible: true,
-            url: `${ArcGisOnlineServicesUrl}/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
-            extent: undefined
-        },
-        {
             id: "nlcd",
             type: "base",
             name: "Hillshade",
