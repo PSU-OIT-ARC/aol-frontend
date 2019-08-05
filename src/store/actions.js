@@ -1,10 +1,13 @@
 import config from '@/components/map/config';
 
-// this should be moved to a central place
-const LOADING = 'loading';
-const BASE_URL = '//localhost:8080';
-
+const API_URL = config.backend_url;
 const actions = {
+
+    getAuthToken (context) {
+        return fetch(`${API_URL}/token/?format=json`).then(response => {
+            return response.json();
+        });
+    },
 
     setMapObject (context, map) {
         context.commit('setMap', map);
@@ -21,7 +24,8 @@ const actions = {
     searchLakes (context, query) {
         let search = {};
         search.query = query;
-        search.results = LOADING;
+        search.results = config.LOADING;
+        search.all_results = [];
 
         context.commit('setSearchResults', search);
         if (query == null || query == '') {
@@ -29,10 +33,26 @@ const actions = {
             context.commit('setSearchResults', search)
             return;
         }
+
         search.results = context.getters.getLakes.filter(lake => {
-            return lake.name.toLowerCase().startsWith(query.toLowerCase());
+            return lake.title.toLowerCase().includes(query.toLowerCase());
         });
-        context.commit('setSearchResults', search)
+        if (search.results.length > config.max_search_results) {
+            search.all_results = search.results;
+            let results = context.getters.getLakes.filter(lake => {
+                return lake.title.toLowerCase().startsWith(query.toLowerCase());
+            });
+
+            if (results.length == 0) {
+                search.results = search.all_results.slice(0, config.max_search_results);
+            } else if (results.length > config.max_search_results) {
+                search.results = results.slice(0, config.max_search_results);
+            } else {
+                search.results = results;
+            }
+        }
+
+        context.commit('setSearchResults', search);
     },
 
     fitBounds (context, options) {
@@ -46,7 +66,6 @@ const actions = {
         const view = context.rootState.map_view;
 
         let lake = options['lake'];
-        let buffer = options['buffer'];
         let geom = options['geom'] || undefined;
 
         if (lake) {
@@ -66,11 +85,11 @@ const actions = {
                     if (extent != null) {
                         view.goTo(extent).then(()=>{
                             context.dispatch('setLoading', false)
-                        })
+                       })
                     }
                 }
             }).catch((e) => {
-                console.log("I am an error: " + e)
+                console.error(e.message)
             });
 
         }
@@ -89,40 +108,52 @@ const actions = {
 
     fetchLakes (context) {
         return new Promise((resolve, reject) => {
-          fetch(
-            `${BASE_URL}/data/lakes.json`
-          ).then(
-            response => {
-              return response.json();
-            }
-          ).then(
-            data => {
-              context.commit("setLakes", data);
-              resolve();
-            }
-          ).catch(
-              e => {
-                console.log(e.message);
-                reject();
-          });
-      });
+            fetch(
+                `${API_URL}/lake/?format=json`
+            ).then(
+                response => {
+                    return response.json();
+                }
+            ).then(
+                data => {
+                    console.info("Fetched " + data.length + " lakes");
+                    context.commit("setLakes", data);
+                    resolve();
+                }
+            ).catch(
+                e => {
+                    console.log(e.message);
+                    reject();
+                }
+            );
+        });
     },
 
-    fetchLake (context, slug) {
-      fetch(
-        `${BASE_URL}/data/${slug}.json`
-      ).then(
-        response => {
-          return response.json();
-        }
-      ).then(
-        data => {
-          context.commit("setCurrentLake", data)
-        }
-      ).catch(
-        e => {
-          console.log(e.message);
-      });
+    setCurrentFocus (context, lake) {
+        context.commit("setCurrentFocus", lake);
+    },
+
+    fetchLake (context, reachcode) {
+        return new Promise((resolve, reject) => {
+            fetch(
+                `${API_URL}/lake/${reachcode}/?format=json`
+            ).then(
+                response => {
+                    return response.json();
+                }
+            ).then(
+                data => {
+                    console.info("Fetched lake " + reachcode);
+                    context.commit("setCurrentLake", data);
+                    resolve();
+                }
+            ).catch(
+                e => {
+                    console.error(e.message);
+                    reject();
+                }
+            );
+        });
     },
 
     setCurrentLake (context, lake) {
@@ -135,6 +166,27 @@ const actions = {
 
     setIntroDismissed (context, dismissed) {
         context.commit("setIntroDismissed", dismissed);
+    },
+
+    fetchPage (context, slug) {
+        return new Promise((resolve, reject) => {
+            fetch(`${API_URL}/flatpage/${slug}/?format=json`).then(
+                response => {
+                    return response.json();
+                }
+            ).then(
+                data => {
+                    console.info("Fetched page " + slug);
+                    context.commit("setCurrentPage", data);
+                    resolve();
+                }
+            ).catch(
+                e => {
+                    console.error(e.message);
+                    reject();
+                }
+            );
+        });
     }
 }
 

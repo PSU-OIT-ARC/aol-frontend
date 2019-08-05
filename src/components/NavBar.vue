@@ -1,7 +1,7 @@
 <template>
   <div id='nav'>
 
-    <h1><a href="/">Atlas <span>of Oregon Lakes</span></a></h1>
+    <h1><router-link to="/">Atlas <span>of Oregon Lakes</span></router-link></h1>
 
     <div class="nav-links">
       <router-link to="/aquatic-invasives">Aquatic Invasives</router-link>

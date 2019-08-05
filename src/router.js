@@ -22,18 +22,20 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
-        path: '/lake/:slug',
+        path: '/lake/:reachcode',
         name: 'lake',
         props: (route) => ({
-            slug: route.params.slug,
+            reachcode: route.params.reachcode,
         }),
         component: () => import(/* webpackChunkName: "lake" */ './views/Lake.vue')
     },
     {
-        path: '*',
-        name: '404',
-        component: () => import(/* webpackChunkName: "NotFound" */ './views/NotFound.vue')
+        path: '/:slug',
+        name: 'flatpage',
+        props: (route) => ({
+            slug: route.params.slug,
+        }),
+        component: () => import(/* webpackChunkName: "FlatPage" */ './views/FlatPage.vue')
     }
-
   ]
 })

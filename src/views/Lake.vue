@@ -36,7 +36,7 @@
             <div class="body-sidebar">
 
               <watershed v-if="!mobile_mode"></watershed>
-              <documents></documents>
+              <documents :lake="lake"></documents>
 
             </div>
 
@@ -63,7 +63,7 @@ import Documents from '@/components/lake/Documents';
 export default {
   name: 'lake',
   props: {
-    slug: String,
+    reachcode: String,
   },
   components: {
     LakeCard,
@@ -77,17 +77,18 @@ export default {
       return this.getCurrentLake;
     },
     back () {
+      let query = {}
       if (this.lake) {
-        return {lake: this.lake.slug };
+        query["lake"] = this.lake.reachcode;
       }
-      return {};
+      return query
     },
     mobile_mode () {
       return window.innerWidth < 600;
     },
   },
   methods: {
-    ...mapActions(['fetchLake', 'fetchLakes', 'searchLakes']),
+    ...mapActions(['fetchLake', 'searchLakes']),
     close () {
       this.$router.push({name: 'home'});
     }
@@ -96,15 +97,8 @@ export default {
     // clear out any search SearchResults
     this.searchLakes(null);
 
-    if (this.getCurrentLake == null) {
-      // get this lake first, then fetch the other lakes.
-      this.fetchLake(this.slug).then(()=>{
-        this.fetchLakes();
-      })
-    }
-    else {
-      console.log("I already have a lake, don't make me fetch it again")
-    }
+    //
+    this.fetchLake(this.reachcode);
   }
 }
 </script>

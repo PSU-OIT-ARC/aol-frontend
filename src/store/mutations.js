@@ -1,18 +1,5 @@
 const mutations = {
 
-    setSearchResults (state, data) {
-        state.search.query = data.query;
-        state.search.results = data.results;
-    },
-
-    setLakes (state, data) {
-      state.lakes = data;
-    },
-
-    setCurrentLake (state, data) {
-      state.current_lake = data;
-    },
-
     setMap (state, map) {
         state.map_object = map;
     },
@@ -23,6 +10,28 @@ const mutations = {
 
     setMapView (state, view) {
         state.map_view = view;
+    },
+
+    setSearchResults (state, data) {
+        state.search.query = data.query;
+        state.search.results = data.results;
+        state.search.all_results = data.all_results;
+    },
+
+    setLakes (state, data) {
+      state.lakes = data;
+    }, 
+
+    setCurrentFocus (state, data) {
+      state.current_focus = data;
+    },
+
+    setCurrentLake (state, data) {
+      state.current_lake = data;
+    },
+
+    setCurrentPage (state, page) {
+        state.current_page = page;
     },
 
     setLoading (state, loading) {

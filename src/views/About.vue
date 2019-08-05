@@ -1,12 +1,12 @@
 <template>
-  <div class="lake-detail-wrapper about-wrapper">
+  <div class="about-wrapper">
 
     <div class="blur-image-wrapper">
       <div class="blur-image" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
       </div>
     </div>
 
-    <div class="lake-detail about-detail">
+    <div class="about-detail">
 
       <div class="gutter gutter--left">
       </div>
@@ -101,8 +101,24 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'about',
+  computed: {
+    back () {
+      return {};
+    }
+  },
+  methods: {
+    close () {
+      this.$router.push({name: 'home'});
+    }
+  },
+}
+</script>
+
 <style scoped lang='scss'>
-.lake-detail-wrapper {
+.about-wrapper {
   display: grid;
   grid-template-rows: 200px 1fr;
   grid-template-columns: 1fr;
@@ -112,7 +128,7 @@
   }
 }
 
-.lake-detail {
+.about-detail {
   display: grid;
   grid-template-columns: 1fr minmax(900px, 1200px) 1fr;
   background: white;

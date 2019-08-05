@@ -1,7 +1,7 @@
 <template>
-  <div v-bind:class="[getCurrentLake ? 'sidebar_active' : '', 'home']">
+  <div v-bind:class="[getCurrentFocus ? 'sidebar_active' : '', 'home']">
     <side-bar class='sidebar-wrapper'
-      v-bind:class="[getCurrentLake ? 'sidebar_active' : '']">
+      v-bind:class="[getCurrentFocus ? 'sidebar_active' : '']">
     </side-bar>
     <map-container class='map-wrapper'></map-container>
   </div>
@@ -20,17 +20,7 @@ export default {
     SideBar
   },
   computed: {
-    ...mapGetters(['getCurrentLake']),
-  },
-  created () {
-    // set query param to current lake when 'returning' home?
-    // alternatively we could clear current_lake
-    // when navigating to other pages
-    let lake = this.getCurrentLake;
-    let hash = this.$route.hash;
-    if (lake && !hash) {
-      this.$router.push({name: 'home', query: {'lake': lake.slug}})
-    }
+    ...mapGetters(['getCurrentFocus']),
   }
 }
 </script>

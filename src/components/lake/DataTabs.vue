@@ -39,19 +39,34 @@ export default {
     Tab
   },
   data () {
-    const sections = [
-      TextSection,
-      PlantData,
-      MusselData,
-      Photos,
-      Watershed,
-      Documents,
-    ];
     return {
-      all_sections: sections,
+      allSections: [
+        TextSection,
+        Watershed,
+        Documents,
+        PlantData,
+        MusselData,
+        Photos
+      ],
+      sidebarSectionKeys: [
+        'body',
+        true,
+        'has_docs',
+        'has_plants',
+        'has_mussels',
+        'has_photos'
+      ],
+      detailSectionKeys: [
+        'body',
+        true,
+        'documents',
+        'plants',
+        'mussels',
+        'photos'
+      ],
       mobile_only: [Watershed, Documents],
-      currentSection: sections[0],
-      currentSectionName: sections[0].name
+      currentSection: TextSection,
+      currentSectionName: TextSection.name
     }
   },
   computed: {
@@ -59,16 +74,32 @@ export default {
       return window.innerWidth < 600;
     },
     rendered_tabs () {
-      if (this.tabs_only || this.mobile_mode) {
-        return this.all_sections
-      }
-      return this.all_sections.filter(i => !this.mobile_only.includes(i))
+      var self = this;
+      var sections = this.allSections.filter(function(el, idx) {
+          var key = self.detailSectionKeys[idx];
+          if (self.tabs_only ) {
+            key = self.sidebarSectionKeys[idx];
+          }
+
+          if (key === true) {
+              return true
+          } else if (self.lake[key]) {
+              if (Array.isArray(self.lake[key])) {
+                return self.lake[key].length;
+              }
+              return true
+          }
+          return false
+      });
+
+      return sections.filter(i => !this.mobile_only.includes(i))
     },
     show_section () {
       let show_for_all = !this.mobile_only.includes(this.currentSection);
       if (show_for_all || this.mobile_mode) {
         return true
       }
+      return false
     }
   },
   methods: {
@@ -76,7 +107,7 @@ export default {
       let hash = this.$route.hash;
       hash = hash.replace(/#/g,'');
       if (hash) {
-        let component = this.all_sections.find(
+        let component = this.allSections.find(
             i => i.name == hash
         );
         if (!this.mobile_only.includes(component) || this.mobile_mode) {
@@ -94,8 +125,8 @@ export default {
     this.setCurrentSection();
   },
   watch: {
-      '$route': function (to) {
-        this.setCurrentSection();
+    '$route': function () {
+      this.setCurrentSection();
     }
   },
 }

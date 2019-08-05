@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Resource stack for Atlas of Oregon Lakes Frontend
+Resources:
+  AppRole:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20190607/iam/application_role.template.yml
+      Parameters:
+        Name: aol
+        VpcStackName: vpc-stage
+        EnableParameterEncryption: false
+  Bucket:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20190607/s3/bucket.template.yml
+      Parameters:
+        BucketName: aol
+        BucketRealm: stage.wdt.pdx.edu
+        BucketRegion: us-west-2
+        WebsiteCertificate: arn:aws:acm:us-east-1:921749119607:certificate/bd60256a-18bd-4bb2-a3ef-8065c4d327ab
+        EnableStaticWebsite: true
+        IamPrinicipleArn: !GetAtt 'AppRole.Outputs.RoleArn'
+Parameters: {}
