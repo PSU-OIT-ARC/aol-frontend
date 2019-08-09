@@ -83,7 +83,10 @@ const createFeatureServiceLayers = (map, component) => {
                             let feature_layer = new FeatureLayer({
                                 url: layer.getLayerUrl(),
                                 id: layer.id,
-                                visible: layer.visible
+                                visible: layer.visible,
+                                minScale: layer.minScale != undefined ? layer.minScale : 0,
+                                maxScale: layer.maxScale != undefined ? layer.maxScale : 0,
+                                popupTemplate: layer.popupTemplate != undefined ? layer.popupTemplate : false,
                             });
                             console.info("Adding feature layer "+layer.name);
                             map.add(feature_layer);

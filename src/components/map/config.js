@@ -13,6 +13,7 @@ const ArcGisOnlineServicesUrl = `${ArcGisOnlineServicesBaseUrl}/${REST_PATH}`;
 const ArcGisOnlineTilesUrl = `${ArcGisOnlineTilesBaseUrl}/${REST_PATH}`;
 
 
+
 const getVectorTileLayerUrl = function () {
     return `${ArcGisOnlineTilesUrl}/${this.AGOLName}/`+
         `VectorTileServer`;
@@ -22,6 +23,52 @@ const getServiceLayerUrl = function () {
     return `${ArcGisOnlineServicesUrl}/${this.AGOLName}/`+
         `FeatureServer`;
 };
+
+const OregonMarineBoardFeatureLayerUrl = `https://services.arcgis.com/\
+uUvqNMGPm7axC2dD/arcgis/rest/services/Boating_Access_Sites/FeatureServer`;
+
+const MarineBoardTemplate = {
+    title: "{FACILNM} at {WATERBODYNM}",
+    content: [
+      {
+        type: "fields",
+
+        fieldInfos: [
+          {
+            fieldName: "FACILNM",
+            label: "Facility Name"
+          },
+          {
+            fieldName: "WATERBODYNM",
+            label: "Waterbody name",
+          },
+          {
+            fieldName: "FACILMGR",
+            label: "Facility Manager",
+          },
+          {
+            fieldName: "TELEPHONE",
+            label: "Telephone number",
+          },
+          {
+            fieldName: "USEFEE",
+            label: "Use fee",
+          },
+
+        ]
+      },
+      {
+        type: "media",
+        mediaInfos: [{
+            title: "Services",
+            type: "image",
+            value: {
+              sourceURL: "{SERVICESURL}"
+            }
+        }]
+      }
+    ]
+  };
 
 const config = {
     dojo_options:  {
@@ -34,7 +81,6 @@ const config = {
                 }]
             }
     },
-
     backend_url: backend_url,
     max_search_results: max_search_results,
 
@@ -83,6 +129,15 @@ const config = {
             visible: false,
             AGOLName: 'OR_Lake_Points_test',
             getLayerUrl: getServiceLayerUrl,
+        },
+        {
+            id: 'marine_board_facilities_service_layer',
+            type: "feature",
+            name: "Marine Board Facilities",
+            visible: true,
+            minScale: 288447,
+            popupTemplate: MarineBoardTemplate,
+            getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
         },
         {
             id:'lake_bbox_service_layer',
