@@ -15,6 +15,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import config from '@/components/map/config';
 
 export default {
   name: 'filter-control',
@@ -30,15 +31,15 @@ export default {
           label: 'Plant data'
         },
         {
-          name: 'has_docs',
-          label: 'Marine board facilities'
+          name: 'has_mussels',
+          label: 'Mussel data'
         }
       ],
       selectedFilters: 'all_lakes'
     }
   },
   computed: {
-    ...mapGetters(['getLakeByReachcode'])
+    ...mapGetters(['getLakeByReachcode', 'getLakes'])
   },
   methods: {
     emitFilterChange () {
@@ -46,32 +47,49 @@ export default {
     },
     selectLakesFromFilters () {
       const map = this.$store.state.map_object;
+      const view = this.$store.state.map_view;
       let filter = this.selectedFilters;
       let filtered_lakes = [];
-      let lake_markers_layer = map.findLayerById('lake_clusters');
+      let lake_markers_layer;
 
-      if(!filter) return
-      if (filter == 'all_lakes') {
-        filtered_lakes = lake_markers_layer.data;
+
+    //  if (this.clusteringEnabled) {
+      lake_markers_layer = map.findLayerById('lake_clusters');
+      if (lake_markers_layer.visible) {
+        if (filter == 'all_lakes') {
+          filtered_lakes = lake_markers_layer.data;
+        }
+        else {
+          filtered_lakes = lake_markers_layer.data.filter((graphic) => {
+            let reachcode = graphic.attributes.REACHCODE;
+            let lake = this.getLakeByReachcode(parseInt(reachcode));
+            if (lake) {
+              return lake[filter] == true;
+            }
+            return false
+          });
+        }
+        lake_markers_layer.setData(filtered_lakes);
       }
       else {
-
-        filtered_lakes = lake_markers_layer.data.filter((graphic) => {
-          let reachcode = graphic.attributes.REACHCODE;
-          // Temporary  fake filter
-          let value = 0;
-          if (filter == 'has_docs') value = 1;
-          return reachcode % 2 == value;
-          /*let lake = this.getLakeByReachcode(parseInt(reachcode));
-          if (lake) {
-            console.info(lake[filter])
-            return lake[filter] == true;
-          }
-          return false
-          */
+        if (filter == 'all_lakes') {
+          filtered_lakes = this.getLakes;
+        }
+        else {
+          filtered_lakes = this.getLakes.filter((lake)=> {
+              return lake[filter] == true;
+          })
+        }
+        let lake_reachcodes = filtered_lakes.map((l) => {
+          return "'" + l.reachcode + "'";
         });
+        let lake_markers_layer_view = view.allLayerViews.find((l)=> {
+          return l.layer.id == 'lake_points_service_layer'
+        })
+        let query = {};
+        query.where = `REACHCODE IN (${lake_reachcodes.join(',')})`;
+        lake_markers_layer_view.filter = query;
       }
-      lake_markers_layer.setData(filtered_lakes);
     },
   }
 }

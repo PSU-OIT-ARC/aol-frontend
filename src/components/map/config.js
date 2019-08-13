@@ -123,14 +123,6 @@ const config = {
             input_group: "hillshade",
         },
         {
-            id: 'lake_points_service_layer',
-            type: "feature",
-            name: "Lake Points",
-            visible: false,
-            AGOLName: 'OR_Lake_Points_test',
-            getLayerUrl: getServiceLayerUrl,
-        },
-        {
             id: 'marine_board_facilities_service_layer',
             type: "feature",
             name: "Marine Board Facilities",
@@ -140,10 +132,39 @@ const config = {
             getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
         },
         {
+            id: 'lake_points_service_layer',
+            type: "feature",
+            name: "Lake Points",
+            outFields: ["*"],
+            visible: false,
+            renderer: {
+              type: "simple",
+              symbol: {
+                //style: "circle",
+                type: 'simple-marker',
+                color: "yellow",
+                size: "6px",
+                outline: null
+              }
+            },
+            AGOLName: 'OR_Lake_Points_test',
+            getLayerUrl: getServiceLayerUrl,
+        },
+        {
             id:'lake_bbox_service_layer',
             type: "feature",
             name: "Lake Bounding Boxes",
-            visible: false,
+            visible: true,
+            outFields: ["*"],
+            renderer: {
+              type: "simple",
+              symbol: {
+                color: [0, 0, 0, 0.1], // currently transluscent for debug
+                type: "simple-fill",
+                style: "solid",
+                outline: null
+              },
+            },
             AGOLName: 'NHDH_bounding_selection_shp',
             getLayerUrl: getServiceLayerUrl,
         },

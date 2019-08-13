@@ -12,7 +12,8 @@ import config from '@/components/map/config';
 import {
   createNLCDTileLayer,
   createVectorTileLayers,
-  createFeatureServiceLayers
+  createFeatureServiceLayers,
+  createFeatureLayerViews
 } from '@/components/map/utils';
 
 export default {
@@ -64,7 +65,6 @@ export default {
             this.showSideBar(lake);
           }
           this.fitBounds({lake: lake})
-          //this.fitBounds({geom: features[0].graphic.geometry});
         }
       });
     },
@@ -72,12 +72,12 @@ export default {
       view.hitTest(event).then((response) => {
         let features = response.results.filter((r) => {
           if (r.graphic) {
-            return r.graphic.layer.id == 'lake_bbox_graphics_layer'
+            return r.graphic.layer.id == 'lake_bbox_service_layer'
           }
           return false
         })
         if (features.length) {
-          let reachcode = features[0].graphic.attributes.reachcode;
+          let reachcode = features[0].graphic.attributes.ReachCode;
           let lake = this.getLakeByReachcode(parseInt(reachcode));
           if (lake) {
             this.showSideBar(lake);
@@ -85,7 +85,7 @@ export default {
           this.fitBounds({geom: features[0].graphic.geometry});
         }
       })
-    },  
+    },
     loadLayers (map, view) {
       return new Promise ((resolve) => {
         // TODO: The following utilities load layers which are hosted
@@ -94,6 +94,7 @@ export default {
         createNLCDTileLayer(map);
         createVectorTileLayers(map);
         createFeatureServiceLayers(map, this);
+        createFeatureLayerViews(map);
 
         view.when().then(()=> {
           // we might not need the point handler
