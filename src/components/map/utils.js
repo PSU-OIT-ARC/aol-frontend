@@ -73,6 +73,7 @@ const createVectorTileLayers = (map) => {
 
 const createFeatureServiceLayers = (map, component) => {
     return new Promise ((resolve, reject) => {
+        let lake_point_layer;
         try {
             loadModules(['esri/layers/FeatureLayer'],
                         config.dojo_options).then(([FeatureLayer]) => {
@@ -84,12 +85,21 @@ const createFeatureServiceLayers = (map, component) => {
                                 url: layer.getLayerUrl(),
                                 id: layer.id,
                                 visible: layer.visible,
+                                outFields: layer.outFields != undefined ? layer.outFields : null,
+                                renderer: layer.renderer != undefined ? layer.renderer : null,
                                 minScale: layer.minScale != undefined ? layer.minScale : 0,
                                 maxScale: layer.maxScale != undefined ? layer.maxScale : 0,
                                 popupTemplate: layer.popupTemplate != undefined ? layer.popupTemplate : false,
+                                popupEnabled: layer.popupTemplate != undefined ? true : false,
                             });
-                            console.info("Adding feature layer "+layer.name);
-                            map.add(feature_layer);
+                            // See special handling of lake_points_service_layer below
+                            if (layer.id == 'lake_points_service_layer') {
+                              lake_point_layer = feature_layer;
+                            }
+                            else {
+                              console.info("Adding feature layer "+layer.name);
+                              map.add(feature_layer);
+                            }
                             res();
                         } catch (err) {
                             console.error(err);
@@ -97,34 +107,19 @@ const createFeatureServiceLayers = (map, component) => {
                         }
                     });
                 })
-
+                // Special handling of lake_points_service_layer
                 job.then(() => {
+                    map.add(lake_point_layer);
                     let reachcodesLimitStmt = "(" + component.reachcodes.join(',') + ")";
                     getFeaturesFromServiceLayer(map,
                                                 'lake_points_service_layer',
                                                 "REACHCODE IN "+reachcodesLimitStmt).then(
                         (features) => {
-                            // Add lake points without clustering
-                            createLakePointGraphicLayer(map, features);
-
                             // Add lake points with clustering
-                            // createClusterLayer(map, features);
-                        }
-                    );
-
-                    // Add lake bounding boxes
-                    getFeaturesFromServiceLayer(map,
-                                                'lake_bbox_service_layer',
-                                                "ReachCode IN "+reachcodesLimitStmt).then(
-                        (features) => {
-                            // Assign geometry of feature to lake record
-                            features.forEach((feature) => {
-                                let reachcode = parseInt(feature.attributes.ReachCode);
-                                let lake = component.getLakeByReachcode(reachcode);
-                                if (lake != null) {lake.geom = feature.geometry;}
-                            })
-                            // Add feature as layer to map to support interaction
-                            createBoundingBoxGraphicLayer(map, features);
+                            createClusterLayer(map, features);
+                            let exp = `REACHCODE IN (${component.reachcodes.join()})`
+                            lake_point_layer.definitionExpression = exp;
+                            //createLakePointGraphicLayer(map, features);
                         }
                     );
                 });
@@ -137,59 +132,23 @@ const createFeatureServiceLayers = (map, component) => {
     });
 };
 
-const createBoundingBoxGraphicLayer = (map, features) => {
-    return new Promise ((resolve, reject) => {
-        try {
-            loadModules(['esri/layers/FeatureLayer'],
-                        config.dojo_options).then(([FeatureLayer]) => {
-
-                let feature_layer = new FeatureLayer({
-                    source: features,
-                    id: 'lake_bbox_graphics_layer',
-                    fields: config.lake_marker_fields,
-                });
-
-                feature_layer.when().then((l) => {
-                    l.renderer.symbol.color.a = 0.0;
-                    l.renderer.symbol.outline.color.a = 0.0;
-                })
-                console.info("Adding bounding box graphic layer")
-                map.add(feature_layer)
-            });
-            resolve();
-        } catch (err) {
-            console.error(err);
-            reject(err)
-        }
-    });
-};
-
-const createLakePointGraphicLayer = (map, features) => {
-    return new Promise ((resolve, reject) => {
-        try {
-            loadModules(['esri/layers/FeatureLayer'],
-                        config.dojo_options).then(([FeatureLayer]) => {
-
-                let feature_layer = new FeatureLayer({
-                    source: features,
-                    id: 'lake_points_service_layer',
-                    fields: config.lake_marker_fields,
-                });
-
-                feature_layer.when().then((l) => {
-                    l.renderer.symbol.color.a = 0.75;
-                    l.renderer.symbol.outline.color.a = 0.75;
-                })
-                console.info("Adding lake point feature layer")
-                map.add(feature_layer)
-            });
-            resolve();
-        } catch (err) {
-            console.error(err);
-            reject(err)
-        }
-    });
-};
+const createFeatureLayerViews = (map) => {
+  return new Promise ((resolve, reject) => {
+    try {
+      loadModules(['esri/views/layers/FeatureLayerView'],
+                  config.dojo_options).then((
+                    [FeatureLayerView]) => {
+        const points_layer_view = new FeatureLayerView({
+            layer: map.findLayerById('lake_points_service_layer')
+        });
+      }); //end loadModules
+      resolve();
+    } catch (err) {
+      console.error(err);
+      reject(err)
+    }
+  }); //end promise
+}
 
 const createClusterLayer = (map, features) => {
     return new Promise ((resolve, reject) => {
@@ -293,5 +252,6 @@ const createClusterLayer = (map, features) => {
 export {
     createNLCDTileLayer,
     createVectorTileLayers,
-    createFeatureServiceLayers
+    createFeatureServiceLayers,
+    createFeatureLayerViews
 }
