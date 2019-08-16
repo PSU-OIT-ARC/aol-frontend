@@ -79,7 +79,9 @@ const createFeatureServiceLayers = (map, component) => {
                         config.dojo_options).then(([FeatureLayer]) => {
 
                 let job = new Promise ((res, rej) => {
-                    config.layers.filter((l) => {return l.type == "feature"}).forEach((layer) => {
+                    config.layers.filter((l) => {
+                        return l.type == "feature"
+                    }).forEach((layer) => {
                         try {
                             let feature_layer = new FeatureLayer({
                                 url: layer.getLayerUrl(),
@@ -117,8 +119,8 @@ const createFeatureServiceLayers = (map, component) => {
                         (features) => {
                             // Add lake points with clustering
                             createClusterLayer(map, features);
-                            let exp = `REACHCODE IN (${component.reachcodes.join()})`
-                            lake_point_layer.definitionExpression = exp;
+                    //        let exp = `REACHCODE IN (${component.reachcodes.join()})`
+                    //        lake_point_layer.definitionExpression = exp;
                             //createLakePointGraphicLayer(map, features);
                         }
                     );
@@ -150,6 +152,103 @@ const createFeatureLayerViews = (map) => {
   }); //end promise
 }
 
+
+const createClusterLayer = (map, features) => {
+    return new Promise ((resolve, reject) => {
+        try {
+            loadModules([
+                "esri/symbols/SimpleMarkerSymbol",
+                 "esri/symbols/SimpleLineSymbol",
+                 "esri/symbols/SimpleFillSymbol",
+                 "esri/renderers/ClassBreaksRenderer",
+                 "esri/layers/FeatureLayer"
+            ], config.dojo_options).then(([
+                SimpleMarkerSymbol,
+                SimpleLineSymbol,
+                SimpleFillSymbol,
+                ClassBreaksRenderer,
+                FeatureLayer
+            ]) => {
+
+                let data = features.map((f) => {
+                    f.x = f.geometry.longitude;
+                    f.y = f.geometry.latitude;
+                    return f;
+                });
+
+                let defaultSym = new SimpleMarkerSymbol({
+                    size: 6,
+                    color: "#FF0000",
+                    outline: null
+                });
+
+                let clusterRenderer = new ClassBreaksRenderer({
+                    defaultSymbol: defaultSym
+                });
+                clusterRenderer.field = "";
+
+                let smSymbol = new SimpleMarkerSymbol({
+                    size: 22,
+                    color: [255, 204, 102, 0.9],
+                    outline: new SimpleLineSymbol({
+                        color: [221, 159, 34, 0.9]
+                    }),
+                });
+
+                let mdSymbol = new SimpleMarkerSymbol({
+                    size: 24,
+                    color: [102, 204, 255, 0.9],
+                    outline: new SimpleLineSymbol({
+                        color: [82, 163, 204, 0.9]
+                    }),
+                });
+
+                let lgSymbol = new SimpleMarkerSymbol({
+                    size: 28,
+                    color: [51, 204, 51, 0.9],
+                    outline: new SimpleLineSymbol({
+                        color: [41, 163, 41, 0.9]
+                    }),
+                });
+
+                let xlSymbol = new SimpleMarkerSymbol({
+                    size: 32,
+                    color: [250, 65, 74, 0.9],
+                    outline: new SimpleLineSymbol({
+                        color: [200, 52, 59, 0.9]
+                    }),
+                });
+
+                clusterRenderer.addClassBreakInfo(0, 19, smSymbol);
+                clusterRenderer.addClassBreakInfo(20, 150, mdSymbol);
+                clusterRenderer.addClassBreakInfo(151, 1000, lgSymbol);
+                clusterRenderer.addClassBreakInfo(1001, Infinity, xlSymbol);
+
+                let lake_cluster_layer = new FeatureLayer({
+                    source: features,
+                    renderer: clusterRenderer,
+                    fields: config.lake_marker_fields,
+                    outFields: ["*"],
+                    id: 'cluster_layer'
+                });
+                map.add(lake_cluster_layer);
+                lake_cluster_layer.when(updateClusters(map))
+            });
+            resolve()
+        }
+        catch (e) {
+            console.log(e)
+            reject()
+        }
+    })
+}
+
+const updateClusters = (map) => {
+    const clusterLayer = map.findLayerById('cluster_layer')
+    console.log(clusterLayer)
+}
+
+/*
 const createClusterLayer = (map, features) => {
     return new Promise ((resolve, reject) => {
         try {
@@ -248,10 +347,11 @@ const createClusterLayer = (map, features) => {
         }
     });
 };
-
+*/
 export {
     createNLCDTileLayer,
     createVectorTileLayers,
     createFeatureServiceLayers,
-    createFeatureLayerViews
+    createFeatureLayerViews,
+    updateClusters
 }

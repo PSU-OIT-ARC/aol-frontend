@@ -13,7 +13,8 @@ import {
   createNLCDTileLayer,
   createVectorTileLayers,
   createFeatureServiceLayers,
-  createFeatureLayerViews
+  createFeatureLayerViews,
+  updateClusters
 } from '@/components/map/utils';
 
 export default {
@@ -105,6 +106,9 @@ export default {
           view.on('click', (event) =>
             this.selectLakeFromBBoxClick (event, view)
           );
+          view.watch('zoom', function (event) {
+            updateClusters(map)
+          })
           console.info("All layers loaded...")
           resolve();
         });
@@ -130,6 +134,7 @@ export default {
         ], config.dojo_options).then(([
             EsriMap, MapView, Locate, IdentityManager
         ]) => {
+
 
           this.getAuthToken().then((data) => {
             let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
