@@ -61,11 +61,11 @@
       <label :for="bathymetryLayer.id">{{ bathymetryLayer.name }}</label>
       <br><br>
       <input type="checkbox"
-             :name="clustering"
-             :checked="true"
-             :id="clustering"
+             name="clustering"
+             id="clustering"
+             checked="true"
              @change="enableClustering" />
-      <label :for="clustering">Enable point clustering</label>
+      <label for="clustering">Enable point clustering</label>
     </div>
   </div>
 </template>
