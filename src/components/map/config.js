@@ -1,6 +1,6 @@
 
 
-const backend_url = process.env.VUE_APP_BACKEND_URL;
+const backend_url = process.env.VUE_APP_API_URL;
 const max_search_results = 5
 const LOADING = 'loading';
 
