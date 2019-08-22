@@ -92,26 +92,28 @@ export default {
         // TODO: The following utilities load layers which are hosted
         //       as secure (i.e., private) data sources. Such data sources
         //       are incompatible with app-based logins.
-        createNLCDTileLayer(map);
-        createVectorTileLayers(map);
-        createFeatureServiceLayers(map, this);
-        createFeatureLayerViews(map);
-
-        view.when().then(()=> {
-          // we might not need the point handler
-          // if the bounding boxes are accurate enough?
-          view.on('click', (event) =>
-            this.selectLakeFromPointClick(event, view)
-          );
-          view.on('click', (event) =>
-            this.selectLakeFromBBoxClick (event, view)
-          );
-          view.watch('zoom', function (event) {
-            updateClusters(map)
-          })
-          console.info("All layers loaded...")
+        Promise.all([
+            createNLCDTileLayer(map),
+            createVectorTileLayers(map),
+            createFeatureServiceLayers(map, view, this)
+        ]).then(() => {
+          view.when().then(()=> {
+            // we might not need the point handler
+            // if the bounding boxes are accurate enough?
+            view.on('click', (event) =>
+              this.selectLakeFromPointClick(event, view)
+            );
+            view.on('click', (event) =>
+              this.selectLakeFromBBoxClick (event, view)
+            );
+            view.watch('zoom', function (zoom) {
+              updateClusters(map, view)
+            })
+          });
           resolve();
-        });
+        }).catch((e) => {
+            console.log(e)
+        })
       }); // end promise
     },
     initMetadata () {
@@ -201,6 +203,7 @@ export default {
             this.selectLakeFromUrl();
             // load layers utilizing lake dataset
             this.loadLayers(map, view).then(()=> {
+              console.info("All layers loaded...")
               if(this.getCurrentFocus) {
                 this.fitBounds({lake: this.getCurrentFocus});
               }
