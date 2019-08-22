@@ -13,7 +13,6 @@ import {
   createNLCDTileLayer,
   createVectorTileLayers,
   createFeatureServiceLayers,
-  createFeatureLayerViews,
   updateClusters
 } from '@/components/map/utils';
 

@@ -178,7 +178,11 @@ const createClusterIndex = (map, layer, features) => {
                radius: 150,
                //maxZoom: 18
             }).load(features_as_geojson);
-            layer.cluster_index = index; // stash it for retrieval
+            // stash for retrieval
+            layer.cluster_index = index;
+            if (!layer.featureStore) {
+                layer.featureStore = features;
+            }
             resolve(index);
         }
         catch (e) {
@@ -336,5 +340,6 @@ export {
     createNLCDTileLayer,
     createVectorTileLayers,
     createFeatureServiceLayers,
+    createClusterIndex,
     updateClusters
 }
