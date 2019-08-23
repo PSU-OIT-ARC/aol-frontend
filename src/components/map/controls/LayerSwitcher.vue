@@ -59,13 +59,6 @@
              :id="bathymetryLayer.id"
              @change="selectVectorTileLayer" />
       <label :for="bathymetryLayer.id">{{ bathymetryLayer.name }}</label>
-      <br><br>
-      <input type="checkbox"
-             name="clustering"
-             id="clustering"
-             checked="true"
-             @change="enableClustering" />
-      <label for="clustering">Enable point clustering</label>
     </div>
   </div>
 </template>
@@ -136,17 +129,6 @@ export default {
               }
           }
       });
-    },
-    enableClustering (event) {
-      let map = this.$store.state.map_object;
-      if (event.target.checked) {
-        map.findLayerById('lake_clusters').visible = true;
-        map.findLayerById('lake_points_service_layer').visible = false;
-      }
-      else {
-        map.findLayerById('lake_points_service_layer').visible = true;
-        map.findLayerById('lake_clusters').visible = false;
-      }
     },
     emitFilterVisibility () {
       this.$emit('show_filters', false);

@@ -73,39 +73,14 @@ const MarineBoardTemplate = {
 const config = {
     dojo_options:  {
         dojoConfig: {
-            async: true,
-            packages: [
-                {
-                    location: '/amd',
-                    name: 'fcl'
-                }]
-            }
+            async: true
+        }
     },
     backend_url: backend_url,
     max_search_results: max_search_results,
 
     map_center: [-122.841856, 44.002925],
     zoom: 9,
-    clusterRatio: 130,
-    clusterToScale: 53672,
-    clusterMinCount: 4,
-    lake_marker_fields: [
-        {
-            name: "ObjectID",
-            alias: "id",
-            type: "oid"
-        },
-        {
-            name: "name",
-            alias: "name",
-            type: "string"
-        },
-        {
-            name: "reachcode",
-            alias: "reachcode",
-            type: "string"
-        }
-    ],
 
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
