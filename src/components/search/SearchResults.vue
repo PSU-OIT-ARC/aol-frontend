@@ -7,7 +7,14 @@
     </div>
     <div v-else>
       <li v-for="result in results" :key="result.reachcode">
-        <lake-card :lake="result"></lake-card>
+        <router-link :to="href(result)">
+          <div v-if="result.is_major">
+            <lake-card :lake="result"></lake-card>
+          </div>
+          <div v-else>
+            <minor-lake-card :lake="result"></minor-lake-card>
+          </div>
+        </router-link>
       </li>
       <li class="show-all" v-if="all_results.length">
         <a href="#">Show all results</a> ({{all_results.length}})
@@ -18,12 +25,19 @@
 
 <script>
 import LakeCard from '@/components/lake/LakeCard';
+import MinorLakeCard from '@/components/lake/MinorLakeCard';
 
 export default {
   name: 'search-results',
   props: ["query", "results", "all_results"],
   components: {
-    LakeCard
+    LakeCard,
+    MinorLakeCard
+  },
+  methods: {
+    href (lake) {
+      return {name: 'home', query: {'lake': lake.reachcode}};
+    }
   },
   computed: {
     loading () {
@@ -35,6 +49,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+/* Styles in lakecard.scss */
+
+a:link, a:visited {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+
+a:hover, a:focus {
+  background-color: transparent;
+}
+
+</style>
 
 <style scoped lang="scss">
   #search-results-wrapper {

@@ -2,54 +2,96 @@
   <div class="lake-sidebar" v-if="lake">
 
     <div class="sidebar-photo-wrapper">
-      <div class="sidebar-photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
-      </div>
+      <div class="sidebar-photo" :style="photo_style"></div>
     </div>
-
 
     <div class="sidebar-content">
 
       <div class="sidebar__nav">
-        <p><a href="#" @click="close">&larr; Back to Search</a></p>
+        <router-link :to="search_href" @click.native="close">
+          <p>&larr; Back to Search</p>
+        </router-link>
         <div class="close-sidebar" @click="close">╳</div>
       </div>
 
-      <lake-card :lake='lake' :to_detail="true"></lake-card>
+      <div v-if="lake.is_major">
+        <router-link :to="lake_href(lake)">
+          <lake-card :lake='lake'></lake-card>
+        </router-link>
 
+        <div class="lake-summary">
+          <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
+
+          <p v-for="(line, index) in lake.body"
+             v-bind:index="index"
+             v-bind:key="index">
+           {{ line }}<br />
+          </p>
+        </div>
+      </div>
+      <div v-else>
+        <minor-lake-card :lake='lake'></minor-lake-card>
+      </div>
       <div class="lake-summary">
-        <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
-
-        <p v-for="(line, index) in lake.body"
-           v-bind:index="index"
-           v-bind:key="index">
-         {{ line }}<br />
-        </p>
+        <p>Minor lake text here.</p>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+
 import LakeCard from '@/components/lake/LakeCard';
+import MinorLakeCard from '@/components/lake/MinorLakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 
 export default {
   name: 'lake-sidebar',
   props: ['lake'],
+  components: {
+    LakeCard,
+    MinorLakeCard,
+    DataTabs
+  },
   methods: {
-    ...mapActions(['setCurrentFocus', 'fitBounds']),
+    ...mapActions(['setCurrentFocus']),
+    lake_href (lake) {
+      return {name: 'lake', params: {'reachcode': lake.reachcode}};
+    },
     close () {
       this.setCurrentFocus();
       this.$router.push({name: 'home'});
     }
   },
-  components: {
-    LakeCard,
-    DataTabs
+  computed: {
+    search_href () {
+      return {name: 'home'}
+    },
+    photo_style () {
+      let photo = require('@/assets/intro-umpqua-lake.png');
+      return {'background-image': 'url(' + photo + ')'}
+    }
   }
 }
 </script>
+
+<style scoped>
+
+/* Styles in lakecard.scss */
+
+a:link, a:visited {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+
+a:hover, a:focus {
+  background-color: transparent;
+}
+
+</style>
 
 <style scoped lang='scss'>
 

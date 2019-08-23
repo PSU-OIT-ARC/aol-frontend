@@ -22,12 +22,6 @@ const getters = {
         }
     },
 
-    getReachcodes (state) {
-        return state.lakes.map((lake) => {
-            return parseInt(lake.reachcode);
-        })
-    },
-
     getLakeByReachcode (state) {
         return (reachcode) => {
             return state.lakes.find((lake) => {
@@ -37,7 +31,17 @@ const getters = {
     },
 
     getLakes (state) {
-      return state.lakes;
+      return state.lakes.filter((lake) => {
+          return lake.is_major;
+      })
+    },
+
+    getReachcodes (state) {
+        return state.lakes.filter((lake) => {
+            return lake.is_major;
+        }).map((lake) => {
+            return parseInt(lake.reachcode);
+        })
     },
 
     getCurrentFocus (state) {
