@@ -101,6 +101,7 @@ a:hover, a:focus {
     grid-template-rows: 160px 1fr;
     width: $sidebar_width;
     z-index: 9999;
+    height: 96%; /* controls whether you get page scroll after sidebar scroll is complete. Needs higher or dynamic value when window.height is > */
     background-color: #fff;
 
     @include respond-to(handheld) {
@@ -156,7 +157,7 @@ a:hover, a:focus {
 
   .close-sidebar {
     cursor: pointer;
-    font-size: 1em;
+    font-size: 24px;
     color: white;
     text-align: right;
     margin-top: 8px;
@@ -172,8 +173,8 @@ a:hover, a:focus {
     grid-template-rows: auto auto auto;
     align-content: start;
     overflow-y: scroll;
-    padding: 65px 15px 50px 15px;
-    height: calc(100vh - 365px);
+    padding: 35px 15px 50px 15px;
+    height: calc(100vh - 335px);
 
     @include respond-to(handheld) {
       width: calc(100vw - 30px);

@@ -39,17 +39,22 @@ export default {
     margin: 0px;
     color: $primary_color;
     font-size: 26px;
-    margin-left: 10px;
+    margin-left: 20px;
     @include respond-to(handheld) {
-      margin-left: -10px;
+      margin-left: 15px;
     }
   }
 
   .nav-links {
     text-align: right;
-    margin-right: 30px;
+    margin-right: 15px;
     margin-top: 8px;
     font-size: 1em;
+
+    a {
+      margin-left: 25px;
+    }
+
     @include respond-to(handheld) {
       font-size: .8em;
       margin-right: 10px;
@@ -67,7 +72,7 @@ a:link, a:visited {
   color: $primary_color;
   padding-bottom: 6px;
   text-decoration: none;
-  margin-left: 25px;
+  margin-left: 0px;
 
   @include respond-to(handheld) {
     padding-bottom: 10px;

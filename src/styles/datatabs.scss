@@ -32,13 +32,11 @@
 
   li {
     width: 110px;
-    padding: 0px;
-    background-color: #E7E7E7;
     overflow: hidden;
+    background-color: #E7E7E7;
     @include respond-to(handheld) {
       width: 33.333%;
     }
-
   }
 
   a:link, a:visited {
@@ -50,6 +48,7 @@
     padding: 50px 10px 10px 10px;
     text-align: center;
     font-size: .8em;
+    opacity: .75;
     @include respond-to(handheld) {
       font-size: .7em;
     }
@@ -58,6 +57,7 @@
     &:hover, &:focus {
       background-color: $primary_color;
       color: white;
+      opacity: 1;
     }
 
     &.active {
@@ -65,6 +65,7 @@
       font-weight: 700;
       background-color: #fff;
       color: $primary_color;
+      opacity: 1;
     }
   }
 }

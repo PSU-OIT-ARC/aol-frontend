@@ -33,11 +33,11 @@
           <legend-svg/>
         </a>
 
-        <a role="button" href="#"
+        <!-- <a role="button" href="#"
            class="map-button map-button--locate"
            @click="locate">
            &#8982;
-        </a>
+        </a> -->
       </div>
     </div>
 

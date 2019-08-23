@@ -2,29 +2,32 @@
   <div class='layer-switcher--container'>
     <h4>Map Layers</h4>
     <div class="close-filters" @click="emitFilterVisibility()">╳</div>
+
     <div class="layer base">
-      <fieldset>
-        <legend>Basemap</legend>
+
         <input type="radio"
                name="basemap"
                id="topo_basemap"
                :checked="topo_basemap"
                @change="selectBaseMap" />
-        <label for="topo_basemap">Topo</label>
+        <label for="topo_basemap">Topolgoy</label>
+
         <input type="radio"
                name="basemap"
                id="osm_basemap"
                :checked="osm_basemap"
                @change="selectBaseMap" />
-        <label for="osm_basemap">OSM</label>
+        <label for="osm_basemap">Open Street Map</label>
+
         <input type="radio"
                name="basemap"
                id="gray_basemap"
                :checked="gray_basemap"
                @change="selectBaseMap" />
-        <label for="gray_basemap">Gray</label>
-      </fieldset>
-      <fieldset>
+        <label for="gray_basemap">Simple Gray</label>
+
+
+      <!--<fieldset>
         <legend>Lands</legend>
         <input type="radio"
                name="lands"
@@ -58,7 +61,7 @@
              :checked="bathymetryLayer.visible"
              :id="bathymetryLayer.id"
              @change="selectVectorTileLayer" />
-      <label :for="bathymetryLayer.id">{{ bathymetryLayer.name }}</label>
+      <label :for="bathymetryLayer.id">{{ bathymetryLayer.name }}</label> -->
     </div>
   </div>
 </template>
@@ -144,6 +147,10 @@ export default {
 
       label {
         margin-left: 5px;
+        line-height: 2em;
+        padding-left: 5px;
+        width: 88%;
       }
   }
+
 </style>
