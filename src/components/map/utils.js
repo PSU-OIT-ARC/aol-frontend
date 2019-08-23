@@ -1,6 +1,8 @@
 import config from '@/components/map/config';
 import { loadModules } from 'esri-loader';
+import Supercluster from 'supercluster';
 
+let clusterIndex, clusterLayer;
 
 const getFeaturesFromServiceLayer = (map, layer_id, where) => {
     return new Promise ((resolve, reject) => {
@@ -36,8 +38,8 @@ const createNLCDTileLayer = (map) => {
                 });
                 console.info("Adding tile layer "+configLayer.name);
                 map.add(nlcd_layer);
+                resolve();
             });
-            resolve();
         } catch (err) {
             console.error(err);
             reject(err)
@@ -62,8 +64,8 @@ const createVectorTileLayers = (map) => {
                     console.info("Adding vector tile layer "+layer.name);
                     map.add(vector_tile_layer);
                 });
+                resolve();
             });
-            resolve();
         } catch (err) {
             console.error(err);
             reject(err)
@@ -71,15 +73,18 @@ const createVectorTileLayers = (map) => {
     });
 };
 
-const createFeatureServiceLayers = (map, component) => {
+const createFeatureServiceLayers = (map, view, component) => {
     return new Promise ((resolve, reject) => {
         let lake_point_layer;
         try {
             loadModules(['esri/layers/FeatureLayer'],
-                        config.dojo_options).then(([FeatureLayer]) => {
+                config.dojo_options).then(([FeatureLayer]) => {
 
                 let job = new Promise ((res, rej) => {
-                    config.layers.filter((l) => {return l.type == "feature"}).forEach((layer) => {
+                    config.layers.filter((l) => {
+                        // See special handling of lake_points_service_layer below
+                        return l.type == "feature"
+                    }).forEach((layer) => {
                         try {
                             let feature_layer = new FeatureLayer({
                                 url: layer.getLayerUrl(),
@@ -92,14 +97,8 @@ const createFeatureServiceLayers = (map, component) => {
                                 popupTemplate: layer.popupTemplate != undefined ? layer.popupTemplate : false,
                                 popupEnabled: layer.popupTemplate != undefined ? true : false,
                             });
-                            // See special handling of lake_points_service_layer below
-                            if (layer.id == 'lake_points_service_layer') {
-                              lake_point_layer = feature_layer;
-                            }
-                            else {
-                              console.info("Adding feature layer "+layer.name);
-                              map.add(feature_layer);
-                            }
+                             console.info("Adding feature layer " + layer.name);
+                             map.add(feature_layer);
                             res();
                         } catch (err) {
                             console.error(err);
@@ -109,22 +108,23 @@ const createFeatureServiceLayers = (map, component) => {
                 })
                 // Special handling of lake_points_service_layer
                 job.then(() => {
-                    map.add(lake_point_layer);
-                    let reachcodesLimitStmt = "(" + component.reachcodes.join(',') + ")";
-                    getFeaturesFromServiceLayer(map,
-                                                'lake_points_service_layer',
-                                                "REACHCODE IN "+reachcodesLimitStmt).then(
-                        (features) => {
-                            // Add lake points with clustering
-                            createClusterLayer(map, features);
-                            let exp = `REACHCODE IN (${component.reachcodes.join()})`
-                            lake_point_layer.definitionExpression = exp;
-                            //createLakePointGraphicLayer(map, features);
-                        }
-                    );
+                    // get features in order to create cluster layer
+                    let reachcode_exp = `REACHCODE IN (${component.reachcodes.join()})`
+                    getFeaturesFromServiceLayer(
+                        map,
+                        'lake_points_service_layer',
+                        reachcode_exp
+                    ).then((features) => {
+                        // Add lake points with clustering
+                        createClusterLayer(map, features).then((layer) => {
+                            createClusterIndex(map, layer, features).then(()=> {
+                                updateClusters(map, view)
+                                resolve();
+                            })
+                        })
+                    });
                 });
             }); // end loadModules
-            resolve();
         } catch (err) {
             console.error(err);
             reject(err)
@@ -132,126 +132,223 @@ const createFeatureServiceLayers = (map, component) => {
     });
 };
 
-const createFeatureLayerViews = (map) => {
-  return new Promise ((resolve, reject) => {
-    try {
-      loadModules(['esri/views/layers/FeatureLayerView'],
-                  config.dojo_options).then((
-                    [FeatureLayerView]) => {
-        const points_layer_view = new FeatureLayerView({
-            layer: map.findLayerById('lake_points_service_layer')
-        });
-      }); //end loadModules
-      resolve();
-    } catch (err) {
-      console.error(err);
-      reject(err)
-    }
-  }); //end promise
-}
-
+/*
+A lot of this was based on work in:
+https://github.com/highered-esricanada/clusterlayer
+*/
 const createClusterLayer = (map, features) => {
+    console.log('creating cluster layer')
     return new Promise ((resolve, reject) => {
         try {
-            loadModules(["esri/symbols/SimpleMarkerSymbol",
-                         "esri/symbols/SimpleLineSymbol",
-                         "esri/symbols/SimpleFillSymbol",
-                         "esri/renderers/ClassBreaksRenderer",
-                         "fcl/FlareClusterLayer_v4"
-                        ], config.dojo_options).then(([
-                            SimpleMarkerSymbol,
-                            SimpleLineSymbol,
-                            SimpleFillSymbol,
-                            ClassBreaksRenderer,
-                            fcl
-                        ]) => {
-
-                // transform features objects to graphics objects
-                let data = features.map((f) => {
-                    f.x = f.geometry.longitude;
-                    f.y = f.geometry.latitude;
-                    return f;
-                });
-
-                let defaultSym = new SimpleMarkerSymbol({
-                    size: 6,
-                    color: "#FF0000",
-                    outline: null
-                });
-
-                let clusterRenderer = new ClassBreaksRenderer({
-                    defaultSymbol: defaultSym
-                });
-                clusterRenderer.field = "clusterCount";
-
-                let smSymbol = new SimpleMarkerSymbol({
-                    size: 22,
-                    color: [255, 204, 102, 0.9],
-                    outline: new SimpleLineSymbol({
-                        color: [221, 159, 34, 0.9]
-                    }),
-                });
-
-                let mdSymbol = new SimpleMarkerSymbol({
-                    size: 24,
-                    color: [102, 204, 255, 0.9],
-                    outline: new SimpleLineSymbol({
-                        color: [82, 163, 204, 0.9]
-                    }),
-                });
-
-                let lgSymbol = new SimpleMarkerSymbol({
-                    size: 28,
-                    color: [51, 204, 51, 0.9],
-                    outline: new SimpleLineSymbol({
-                        color: [41, 163, 41, 0.9]
-                    }),
-                });
-
-                let xlSymbol = new SimpleMarkerSymbol({
-                    size: 32,
-                    color: [250, 65, 74, 0.9],
-                    outline: new SimpleLineSymbol({
-                        color: [200, 52, 59, 0.9]
-                    }),
-                });
-
-                clusterRenderer.addClassBreakInfo(0, 19, smSymbol);
-                clusterRenderer.addClassBreakInfo(20, 150, mdSymbol);
-                clusterRenderer.addClassBreakInfo(151, 1000, lgSymbol);
-                clusterRenderer.addClassBreakInfo(1001, Infinity, xlSymbol);
-
-                let options = {
-                    id: "lake_clusters",
-                    clusterRenderer: clusterRenderer,
-                    displayFlares: false,
-                    clusterRatio: config.clusterRatio,
-                    clusterToScale: config.clusterToScale,
-                    clusterMinCount: config.clusterMinCount,
-                    data: data
+            loadModules([
+                 "esri/layers/GraphicsLayer",
+            ], config.dojo_options).then(([
+                GraphicsLayer,
+            ]) => {
+                let lake_cluster_layer = new GraphicsLayer({
+                    graphics: [],
+                    id: 'lake_clusters'
+                })
+                map.add(lake_cluster_layer);
+                clusterLayer = lake_cluster_layer;
+                if (!clusterLayer.featureStore) {
+                    clusterLayer.featureStore = features;
                 }
+                resolve(lake_cluster_layer)
+            })
+        }
+        catch (e) {
+            console.log(e)
+            reject()
+        }
+    })
+}
 
-                let clusterLayer = new fcl.FlareClusterLayer(options);
-                map.add(clusterLayer);
-                clusterLayer.when().then(()=> {
-                    console.info("Loaded cluster layer");
-                    //resolve(clusterLayer);
-                }).catch((e)=> {
-                    console.error(e.message)
-                    //reject();
-                });
-            }); //end loadModules
-            resolve();
-        } catch (err) {
-            console.error(err);
-            reject(err)
+const createClusterIndex = (map, layer, features) => {
+    console.log('creating cluster index')
+    return new Promise ((resolve, reject) => {
+        try {
+            let features_as_geojson = features.map((f)=> {
+                let feature = {};
+                feature['geometry'] = {
+                    'type': 'point',
+                    'coordinates': [f.geometry.longitude, f.geometry.latitude],
+                }
+                feature['properties'] = f.attributes;
+                return feature
+            });
+            const index = new Supercluster({
+               radius: 150,
+            }).load(features_as_geojson);
+            clusterIndex = index;
+            resolve(index);
+        }
+        catch (e) {
+            console.log(e)
+            reject();
         }
     });
+}
+
+const updateClusters = (map, view) => {
+    console.log('update clusters called')
+    return new Promise ((resolve, reject) => {
+        loadModules(["esri/geometry/support/webMercatorUtils"],
+            config.dojo_options).then(([webMercatorUtils,
+        ]) => {
+            //const clusterLayer =
+            //const clusterLayer = //map.findLayerById('lake_clusters')
+            //console.log(clusterLayer)
+            if (clusterLayer == undefined ) {
+                throw new Error("layer not ready")
+            }
+            if (clusterIndex == undefined) {
+                throw new Error("index not ready")
+            }
+            let extent = webMercatorUtils.webMercatorToGeographic(view.extent);
+
+            let bbox = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
+            let zoom = Math.floor(view.zoom);
+
+            //let clusters = clusterLayer.cluster_index.getClusters(bbox, zoom);
+            let clusters = clusterIndex.getClusters(bbox, zoom);
+            let labels = [...clusters];
+            // This is a little hard to read, sorry.
+            Promise.all(clusters.map(convertGeoJsonToEsriFeature)).then(
+                (clusters) => {
+                    clusters = clusters.filter(c => c);
+                    clusterLayer.graphics.removeAll();
+                    clusterLayer.graphics.addMany(clusters);
+                    Promise.all(labels.map(getLabelForCluster)).then(
+                        labels => {
+                            labels = labels.filter(l => l);
+                            clusterLayer.graphics.addMany(labels);
+                            resolve()
+                    });
+            });
+
+        }).catch((e) => {
+            reject(e)
+        });
+    })
 };
+
+const getLabelForCluster = (cluster) => {
+    return new Promise ((resolve, reject) => {
+        try {
+            loadModules(["esri/Graphic"],config.dojo_options).then(([Graphic]) => {
+                if (cluster.properties.point_count == undefined) resolve(); // no label needed
+                let textLabel = {
+                  type: "text",
+                  color: "#333",
+                  text: `${cluster.properties.point_count}`,
+                  xoffset: 0,
+                  yoffset: -2,
+                  font: {
+                    size: 10,
+                  }
+                }
+                let label = new Graphic({
+                    geometry: {
+                        type: "point",
+                        longitude: cluster.geometry.coordinates[0],
+                        latitude: cluster.geometry.coordinates[1],
+                    },
+                    symbol: textLabel
+                });
+                resolve(label)
+            });
+        } catch (e) {
+          console.log(e);
+          reject()
+        }
+    });
+}
+
+const convertGeoJsonToEsriFeature = (geoJson) => {
+    return new Promise ((resolve, reject) => {
+        try {
+            loadModules([
+                "esri/Graphic"
+            ],config.dojo_options).then(([
+                Graphic
+            ]) => {
+                let size = geoJson.properties.point_count != undefined ? geoJson.properties.point_count : 1;
+                let clusterGraphic = new Graphic({
+                    geometry: {
+                        type: "point",
+                        longitude: geoJson.geometry.coordinates[0],
+                        latitude: geoJson.geometry.coordinates[1]
+                    },
+                    attributes: geoJson.properties,
+                    symbol: {
+                        type: 'simple-marker',
+                        color: 'yellow',
+                        size: size,
+                        outline: null
+                    }
+                });
+                let attrs = getClusterGraphicStyles(size);
+                for (let key in attrs) {
+                    clusterGraphic.symbol[key] = attrs[key];
+                }
+                resolve(clusterGraphic)
+            })
+        }
+        catch (e) {
+            console.log(e)
+            reject()
+        }
+    })
+}
+
+// colors can be hex strings or arrays of [r,g,b,a]
+const getClusterGraphicStyles = (size) => {
+    if (size <= 1) {
+        return {
+            size: 5,
+            color: [237, 27, 199, 0.7] // pink
+        }
+    }
+    if (1 < size && size <= 2) {
+        return {
+            size: 10,
+            color: [65, 27, 237, 0.4] // purple
+        }
+    }
+    if (2 < size && size <= 5) {
+        return {
+            size: 15,
+            color: [27, 237, 171, 0.7] // blue-green
+        }
+    }
+    if (5 < size && size <= 10) {
+        return {
+            size: 21,
+            color: [246, 136, 27, 0.5]// orange
+        }
+    }
+    if (10 < size && size <= 25) {
+        return {
+            size: 30,
+            color: [237, 27, 199, 0.4] // pink
+        }
+    }
+    if (size > 25) {
+        return {
+            size: 45,
+            color: [27, 94, 237, 0.4] // blue
+        }
+    }
+}
 
 export {
     createNLCDTileLayer,
     createVectorTileLayers,
     createFeatureServiceLayers,
-    createFeatureLayerViews
+    createClusterIndex,
+    updateClusters,
+    convertGeoJsonToEsriFeature,
+    clusterIndex,
+    clusterLayer
 }
