@@ -50,33 +50,34 @@
             <p>The online Atlas of Oregon Lakes is organized into two platforms: text and map-based Lakes Pages similar to those included in the print Atlas of Oregon Lakes, and an Interactive Map interface. The interactive map contains links to watershed, lake basin, and water quality plots and statistics as well as links to individual pdfs of 1985 Atlas of Oregon Lakes pages and the new text-based online atlas pages. The text-based online atlas pages contain the same information that is available on the interactive map, but with context to guide users through the information.</p>
 
             <h3>Contributors</h3>
-            <p>The online Atlas of Oregon Lakes was developed by... <a href="/contributors">Read more</a></p>
-
-            <h3>Contact</h3>
-            <p>The Center for Lakes and Reservoirs at Portland State University invites viewers... <a href="/contact">Read more</a></p>
-
+            <p>The online Atlas of Oregon Lakes is developed by Portland State University's Center for Lakes and Reservoirs.</p>
+            <p><router-link :to="{name: 'flatpage', params: {slug: 'contributors'}}">Read more</router-link></p>
           </div>
 
           <div class="body-sidebar">
 
               <div class="sidebar__shade">
-
                 <h3>Contact </h3>
-                <p>The Center for Lakes and Reservoirs at Portland State University invites viewers of this website to submit information for possible correction of errors in the data reported or interpretations of data on this website. Other information about the conditions in Oregon lakes, such as observing invasive plant or animal life, would be welcomed.</p>
+                <p>
+                  The Center for Lakes and Reservoirs at Portland State University invites viewers of this website to submit
+                  information for possible correction of errors in the data reported or interpretations of data on this website.
+                </p>
+                <p>
+                  Other information about the conditions in Oregon lakes such as observing invasive plant or animal life is welcomed.
+                </p>
 
-              <p>For further information or to provide feedback, please contact OregonLakesAtlas@pdx.edu.</p>
+              <p>For further information or to provide feedback, please contact <a href="mailto:OregonLakesAtlas@pdx.edu">OregonLakesAtlas@pdx.edu</a>.</p>
 
               <hr />
 
-              <p>If you would like your photos of Oregon lakes featured in the online atlas, click here for submission criteria.</p>
-
+              <p>
+                If you would like your photos of Oregon lakes featured in the online atlas, please
+                review the
+                <router-link :to="{name: 'flatpage', params: {slug: 'photo-submissions'}}">submission criteria</router-link>.
+              </p>
             </div>
 
           </div>
-
-
-
-
 
         </div> <!-- end content-body -->
 
@@ -87,8 +88,9 @@
             <a href="http://www.pdx.edu/cupa/">College of Urban &amp; Public Affairs</a> |
             <a href="http://www.pdx.edu/arc/">Academic &amp; Research Computing</a> |
             <a href="http://www.oregon.gov/DEQ/Pages/index.aspx">Oregon Department of Environmental Quality</a>
-            <br>© 1985-2019 Atlas of Oregon Lakes. For technical support <a href="/contact">contact us</a>. <a href="/accounts/login/" title="Log in">Log in</a>
           </p>
+
+          &copy; 1985-2019 Atlas of Oregon Lakes
         </footer>
 
 
