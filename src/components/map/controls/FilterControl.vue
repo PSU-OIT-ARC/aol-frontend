@@ -16,7 +16,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import config from '@/components/map/config';
-import { createClusterIndex, updateClusters } from '@/components/map/utils';
+import { createClusterIndex, updateClusters, clusterLayer } from '@/components/map/utils';
 
 export default {
   name: 'filter-control',
@@ -50,8 +50,6 @@ export default {
       const map = this.$store.state.map_object;
       const view = this.$store.state.map_view;
 
-      const cluster_layer = map.findLayerById('lake_clusters');
-
       let filter = this.selectedFilters;
       let filtered_lakes = [];
 
@@ -66,10 +64,10 @@ export default {
       let filtered_reachcodes = filtered_lakes.map((l) => {
           return l.reachcode
       });
-      let filtered_features = cluster_layer.featureStore.filter((f) => {
+      let filtered_features = clusterLayer.featureStore.filter((f) => {
           return filtered_reachcodes.indexOf(f.attributes.REACHCODE) > -1
       });
-      createClusterIndex(map, cluster_layer, filtered_features).then(() => {
+      createClusterIndex(map, clusterLayer, filtered_features).then(() => {
           updateClusters(map, view)
       });
     },

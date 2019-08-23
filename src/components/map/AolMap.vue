@@ -13,7 +13,9 @@ import {
   createNLCDTileLayer,
   createVectorTileLayers,
   createFeatureServiceLayers,
-  updateClusters
+  updateClusters,
+  convertGeoJsonToEsriFeature,
+  clusterIndex
 } from '@/components/map/utils';
 
 export default {
@@ -49,40 +51,41 @@ export default {
       this.setCurrentFocus(lake);
       this.searchLakes(null); // reset search
     },
-    selectLakeFromPointClick (event, view) {
-      view.hitTest(event).then((response) => {
-        let features = response.results.filter((r) => {
-          if (r.graphic) {
-            let is_a_marker = 'lake_clusters' && r.graphic.symbol.type == 'simple-marker';
-            return r.graphic.layer.id == is_a_marker;
-          }
-          return false
-        })
-        if (features.length) {
-          let reachcode = features[0].graphic.attributes.attributes.REACHCODE;
-          let lake = this.getLakeByReachcode(parseInt(reachcode));
-          if (lake) {
-            this.showSideBar(lake);
-          }
-          this.fitBounds({lake: lake})
-        }
-      });
+    zoomToCluser (cluster_id, view) {
+        console.log('zoo to clustre)')
+        let points = clusterIndex.getLeaves(cluster_id)
+        Promise.all(points.map(convertGeoJsonToEsriFeature)).then(
+          (points) => {
+          view.goTo(points)
+        });
     },
-    selectLakeFromBBoxClick (event, view) {
+    selectFeatureFromClick(event, view) {
       view.hitTest(event).then((response) => {
-        let features = response.results.filter((r) => {
-          if (r.graphic) {
-            return r.graphic.layer.id == 'lake_bbox_service_layer'
-          }
-          return false
-        })
+        let features = response.results;
         if (features.length) {
-          let reachcode = features[0].graphic.attributes.ReachCode;
-          let lake = this.getLakeByReachcode(parseInt(reachcode));
-          if (lake) {
-            this.showSideBar(lake);
-          }
-          this.fitBounds({geom: features[0].graphic.geometry});
+          for (let f of features) {
+            if (f.graphic.attributes.hasOwnProperty('cluster')) {
+               this.zoomToCluser(f.graphic.attributes.cluster_id, view)
+               break;
+            }
+            else { // lake polyygon or lake point
+              let reachcode = null;
+              if (f.graphic.attributes.hasOwnProperty('ReachCode')) {
+                reachcode = f.graphic.attributes.ReachCode
+              }
+              else if (f.graphic.attributes.hasOwnProperty('REACHCODE')) {
+                reachcode = f.graphic.attributes.REACHCODE
+              }
+              let lake = this.getLakeByReachcode(parseInt(reachcode));
+              if (lake) {
+                this.showSideBar(lake);
+                this.fitBounds({lake: lake});
+              }
+              else {
+                this.fitBounds({geom: f.graphic.geometry});
+              }
+            }
+          };
         }
       })
     },
@@ -96,17 +99,16 @@ export default {
             createVectorTileLayers(map),
             createFeatureServiceLayers(map, view, this)
         ]).then(() => {
-          view.when().then(()=> {
+          view.when(()=> {
             // we might not need the point handler
             // if the bounding boxes are accurate enough?
             view.on('click', (event) =>
-              this.selectLakeFromPointClick(event, view)
-            );
-            view.on('click', (event) =>
-              this.selectLakeFromBBoxClick (event, view)
+              this.selectFeatureFromClick(event, view)
             );
             view.watch('zoom', function (zoom) {
-              updateClusters(map, view)
+              updateClusters(map, view).catch((e) => {
+                console.log(e)
+              })
             })
           });
           resolve();
