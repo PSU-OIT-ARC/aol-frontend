@@ -95,8 +95,9 @@ export default {
         //       as secure (i.e., private) data sources. Such data sources
         //       are incompatible with app-based logins.
         Promise.all([
-            createNLCDTileLayer(map),
-            createVectorTileLayers(map),
+          // NOTE: temporarily remove custom baselayers
+            //createNLCDTileLayer(map),
+            //createVectorTileLayers(map),
             createFeatureServiceLayers(map, view, this)
         ]).then(() => {
           view.when(()=> {
