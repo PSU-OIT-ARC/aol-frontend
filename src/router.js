@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 
 Vue.use(Router)
 
+
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -28,6 +29,13 @@ export default new Router({
             reachcode: route.params.reachcode,
         }),
         component: () => import(/* webpackChunkName: "lake" */ './views/Lake.vue')
+    },
+    {
+        path: '/login',
+        name: 'login',
+        beforeEnter: (to, from, next) => {
+            window.location = process.env.VUE_APP_BACKEND_URL;
+        }
     },
     {
         path: '/:slug',
