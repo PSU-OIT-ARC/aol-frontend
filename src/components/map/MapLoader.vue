@@ -18,12 +18,12 @@ export default {
 <style scoped lang='scss'>
 .map-loader {
   position: absolute;
-  top: 0;
+  top: 20;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 3;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(222, 222, 222, 0.3);
   font-weight: bold;
 
   div {

@@ -206,6 +206,7 @@ export default {
             // load layers utilizing lake dataset
             this.loadLayers(map, view).then(()=> {
               console.info("All layers loaded...")
+              this.setLoading(false);
               if(this.getCurrentFocus) {
                 this.fitBounds({lake: this.getCurrentFocus});
               }
@@ -215,7 +216,6 @@ export default {
         });
       }
 
-      this.setLoading(false);
 
     });
   }, // end mounted
