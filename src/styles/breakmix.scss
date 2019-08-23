@@ -31,7 +31,6 @@ $primary_color: #06186A;
 @font-face {
   font-family: 'Lato-Regular';
   font-weight: 400;
-  /* local('Lato Regular'), uncomment for prod */
   src: url('~@/assets/fonts/Lato-Regular.woff2') format('woff2'), url('~@/assets/fonts/Lato-Regular.woff') format('woff');
   font-display: swap;
 }
@@ -40,22 +39,20 @@ $primary_color: #06186A;
   font-family: 'Lato-Bold';
   font-weight: 700;
   src:
-  /* local('Lato Bold'), */
   url('~@/assets/fonts/Lato-Bold.woff2') format('woff2'),
   url('~@/assets/fonts/Lato-Bold.woff') format('woff');
   font-display: swap;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'Gentium';
   font-weight: 400;
   src:
-  /* local('Lato Bold'), */
   url('~@/assets/fonts/Gentium-Basic.woff2') format('woff2'),
   url('~@/assets/fonts/Gentium-Basic.woff') format('woff');
   font-display: swap;
 }
-
+*/
 
 //Animations
 

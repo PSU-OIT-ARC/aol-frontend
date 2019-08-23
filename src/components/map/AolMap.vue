@@ -135,7 +135,8 @@ export default {
             let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
             IdentityManager.registerToken({
               'server': config.ArcGisOnlineTilesUrl,
-              'token': data.access_token,
+              //'token': data.access_token
+              'token': `IrIj0-sn0OfqSp6CxA5Scg4PtjlkYt3u6YojY9OyNFGu2JwN3hzrKzxh5Hgndn6kfunAl3SbBWW7V9V73MbJNVzvZyLan3_LL0QKNp7ktxPSc9M_DUCJZ6dejtA8aPYou75Z_fnK-7vOS5vyVR6IVkvq1FPL9JxsEEecyxHpQJvdPUlwKk8DSWX3DGqsGGhv5EmHcsL7nSA-OrpDClJCaQ..`,
               'expires': timeout
             });
             IdentityManager.registerToken({

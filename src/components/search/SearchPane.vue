@@ -112,7 +112,7 @@ export default {
     top: 10px;
     right: 10px;
     color: white;
-    font-size: 1em;
+    font-size: 24px;
     cursor: pointer;
   }
 

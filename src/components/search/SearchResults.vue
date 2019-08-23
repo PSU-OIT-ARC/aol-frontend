@@ -1,7 +1,7 @@
 <template>
   <ul id="search-results-wrapper" v-if="query">
     <!-- <p v-if="loading">Loading...</p> -->
-    <p v-if="loading">Loading...</p> 
+    <p v-if="loading">Loading...</p>
     <div v-else-if="!loading && query && !results.length">
       <div class="no-results">Sorry, no results</div>
     </div>
@@ -79,11 +79,19 @@ a:hover, a:focus {
   }
 
   #search-results-wrapper li {
+    opacity: 0;
     animation: drop-in 200ms forwards;
   }
-  #search-results-wrapper li:nth-child(2n) {
-    animation-delay: 100ms;
-  }
+  #search-results-wrapper li:nth-child(1) { animation-delay: .08s;}
+  #search-results-wrapper li:nth-child(2) { animation-delay: .10s;}
+  #search-results-wrapper li:nth-child(3) { animation-delay: .12s;}
+  #search-results-wrapper li:nth-child(4) { animation-delay: .14s;}
+  #search-results-wrapper li:nth-child(5) { animation-delay: .16s;}
+  #search-results-wrapper li:nth-child(6) { animation-delay: .18s;}
+  #search-results-wrapper li:nth-child(7) { animation-delay: .20s;}
+  #search-results-wrapper li:nth-child(8) { animation-delay: .22s;}
+  #search-results-wrapper li:nth-child(9) { animation-delay: .24s;}
+  #search-results-wrapper li:nth-child(10) { animation-delay: .26s;}
 
   .no-results {
     padding: 20px;

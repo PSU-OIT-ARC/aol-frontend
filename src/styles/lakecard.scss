@@ -66,6 +66,8 @@
   margin: 0px 15px;
   padding: 0px;
   box-shadow: 1px 1px 3px #777;
+  position: relative;
+  top: -30px;
 
   animation: drop-in 200ms forwards;
   animation-fill-mode: both;
