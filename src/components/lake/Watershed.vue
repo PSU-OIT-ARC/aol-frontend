@@ -15,12 +15,19 @@
 <script>
   import AolMap from '@/components/map/AolMap';
   import MapLoader from '@/components/map/MapLoader';
+  import { mapActions } from 'vuex';
 
   export default {
     props: ['lake'],
     name: 'watershed',
     title: 'Watershed',
     components: { AolMap, MapLoader },
+    methods: {
+      ...mapActions(['setCurrentFocus'])
+    },
+    created () {
+      this.setCurrentFocus(this.lake);
+    }
   }
 </script>
 

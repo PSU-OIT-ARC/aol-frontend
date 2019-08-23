@@ -143,8 +143,7 @@ export default {
             let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
             IdentityManager.registerToken({
               'server': config.ArcGisOnlineTilesUrl,
-              //'token': data.access_token
-              'token': `IrIj0-sn0OfqSp6CxA5Scg4PtjlkYt3u6YojY9OyNFGu2JwN3hzrKzxh5Hgndn6kfunAl3SbBWW7V9V73MbJNVzvZyLan3_LL0QKNp7ktxPSc9M_DUCJZ6dejtA8aPYou75Z_fnK-7vOS5vyVR6IVkvq1FPL9JxsEEecyxHpQJvdPUlwKk8DSWX3DGqsGGhv5EmHcsL7nSA-OrpDClJCaQ..`,
+              'token': data.access_token,
               'expires': timeout
             });
             IdentityManager.registerToken({
@@ -195,7 +194,9 @@ export default {
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
         document.querySelector('#map').classList.toggle('small', this.small)
-        this.fitBounds({lake: this.getCurrentFocus});
+        if(this.getCurrentFocus) {
+          this.fitBounds({lake: this.getCurrentFocus});
+        }
       } else {
         // initialize map context
         this.initMap().then(([map, view])=> {
@@ -203,7 +204,6 @@ export default {
           this.initMetadata().then(()=> {
             // set current context
             this.selectLakeFromUrl();
-            // load layers utilizing lake dataset
             this.loadLayers(map, view).then(()=> {
               console.info("All layers loaded...")
               this.setLoading(false);
