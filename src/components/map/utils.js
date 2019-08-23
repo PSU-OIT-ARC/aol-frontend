@@ -91,13 +91,16 @@ const createFeatureServiceLayers = (map, view, component) => {
                                 id: layer.id,
                                 visible: layer.visible,
                                 outFields: layer.outFields != undefined ? layer.outFields : null,
-                                renderer: layer.renderer != undefined ? layer.renderer : null,
                                 minScale: layer.minScale != undefined ? layer.minScale : 0,
                                 maxScale: layer.maxScale != undefined ? layer.maxScale : 0,
                                 popupTemplate: layer.popupTemplate != undefined ? layer.popupTemplate : false,
                                 popupEnabled: layer.popupTemplate != undefined ? true : false,
                             });
+
                              console.info("Adding feature layer " + layer.name);
+                             if (layer.renderer != undefined) {
+                                 feature_layer.renderer = layer.renderer
+                             }
                              map.add(feature_layer);
                             res();
                         } catch (err) {
