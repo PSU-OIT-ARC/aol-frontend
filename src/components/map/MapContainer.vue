@@ -33,6 +33,12 @@
           <legend-svg/>
         </a>
 
+        <a role="button" href="#" class="map-button map-button--extent"
+           @click="goToInitialExtent">
+          <initial-extent/>
+        </a>
+
+
         <!-- <a role="button" href="#"
            class="map-button map-button--locate"
            @click="locate">
@@ -60,8 +66,10 @@ import LayerSVG from '@/components/map/controls/LayerSVG';
 import LegendSVG from '@/components/map/controls/LegendSVG';
 import ZoomInSVG from '@/components/map/controls/ZoomInSVG';
 import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
+import InitialExtent from '@/components/map/controls/InitialExtent';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
+import config from '@/components/map/config';
 
 export default {
   name: 'map-container',
@@ -79,6 +87,7 @@ export default {
     'legend-svg': LegendSVG,
     'zoom-in-svg': ZoomInSVG,
     'zoom-out-svg': ZoomOutSVG,
+    InitialExtent,
     LayerSwitcher,
     FilterControl,
     AolMap,
@@ -103,6 +112,12 @@ export default {
         i => i.declaredClass == 'aol-locate-widget')
       locate.goToLocationEnabled = true;
       locate.locate()
+    },
+    goToInitialExtent () {
+        const view = this.$store.state.map_view;
+        view.goTo(config.map_center).then(()=> {
+          view.set('zoom', config.zoom);
+        })
     }
   }
 }
