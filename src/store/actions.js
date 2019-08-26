@@ -55,6 +55,15 @@ const actions = {
         context.commit('setSearchResults', search);
     },
 
+    resetSearchResults (context) {
+        let search = {}
+        search.query = null;
+        search.results = config.LOADING;
+        search.all_results = [];
+
+        context.commit('setSearchResults', search);
+    },
+
     fitBounds (context, options) {
         /*
         Zoom/pan to lake bounds.
