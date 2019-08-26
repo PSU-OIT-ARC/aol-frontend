@@ -60,7 +60,6 @@ export default {
       this.setCurrentFocus(null);
     },
     zoomToCluser (cluster_id, view) {
-        console.log('zoo to clustre)')
         let points = clusterIndex.getLeaves(cluster_id)
         Promise.all(points.map(convertGeoJsonToEsriFeature)).then(
           (points) => {
@@ -125,7 +124,7 @@ export default {
           });
           resolve();
         }).catch((e) => {
-            console.log(e)
+            console.error(e)
         })
       }); // end promise
     },

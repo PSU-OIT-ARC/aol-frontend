@@ -140,7 +140,6 @@ A lot of this was based on work in:
 https://github.com/highered-esricanada/clusterlayer
 */
 const createClusterLayer = (map, features) => {
-    console.log('creating cluster layer')
     return new Promise ((resolve, reject) => {
         try {
             loadModules([
@@ -161,14 +160,13 @@ const createClusterLayer = (map, features) => {
             })
         }
         catch (e) {
-            console.log(e)
+            console.error(e)
             reject()
         }
     })
 }
 
 const createClusterIndex = (map, layer, features) => {
-    console.log('creating cluster index')
     return new Promise ((resolve, reject) => {
         try {
             let features_as_geojson = features.map((f)=> {
@@ -187,14 +185,13 @@ const createClusterIndex = (map, layer, features) => {
             resolve(index);
         }
         catch (e) {
-            console.log(e)
+            console.error(e)
             reject();
         }
     });
 }
 
 const updateClusters = (map, view) => {
-    console.log('update clusters called')
     return new Promise ((resolve, reject) => {
         loadModules(["esri/geometry/support/webMercatorUtils"],
             config.dojo_options).then(([webMercatorUtils,
@@ -262,7 +259,7 @@ const getLabelForCluster = (cluster) => {
                 resolve(label)
             });
         } catch (e) {
-          console.log(e);
+          console.error(e);
           reject()
         }
     });
@@ -299,7 +296,7 @@ const convertGeoJsonToEsriFeature = (geoJson) => {
             })
         }
         catch (e) {
-            console.log(e)
+            console.error(e)
             reject()
         }
     })
