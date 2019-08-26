@@ -2,7 +2,7 @@
   <div class="lake-card">
     <div class="photo" :style="photo_style"></div>
     <div class="info">
-      <h3>{{ lake.title }} <i>({{lake.county_set}})</i></h3>
+      <h3>{{ lake.title }}</h3>
       <p>{{lake.reachcode}}</p>
 
       <div class="fast-stats">

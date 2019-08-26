@@ -31,9 +31,11 @@
       </div>
       <div v-else>
         <minor-lake-card :lake='lake'></minor-lake-card>
-      </div>
-      <div class="lake-summary">
-        <p>Minor lake text here.</p>
+        <div class="lake-summary">
+          <p>
+            {{lake.title}} is a {{lake.waterbody_type}}.
+          </p>
+        </div>
       </div>
     </div>
 
