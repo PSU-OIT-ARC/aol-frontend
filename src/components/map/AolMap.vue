@@ -119,7 +119,7 @@ export default {
     },
     initMetadata () {
       if (!this.lakes.length) {
-        return this.fetchLakes();
+          return this.fetchLakes('major');
       } else {
         return new Promise ((resolve) => {
           console.warn('I already have the lakes.');
@@ -207,6 +207,15 @@ export default {
             this.loadLayers(map, view).then(()=> {
               console.info("All layers loaded...")
               this.setLoading(false);
+              if(this.getCurrentFocus) {
+                this.fitBounds({lake: this.getCurrentFocus});
+              }
+            });
+            // de-prioritize loading of minor lakes.
+            // re-select lake from URL and focus in the case
+            // that it is a minor lake.
+            this.fetchLakes('minor').then (()=> {
+              this.selectLakeFromUrl();
               if(this.getCurrentFocus) {
                 this.fitBounds({lake: this.getCurrentFocus});
               }
