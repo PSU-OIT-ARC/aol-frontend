@@ -44,12 +44,6 @@ const getters = {
         })
     },
 
-    getMajorLakes (state) {
-        return state.lakes.filter((l) => {
-            return l.is_major
-        });
-    },
-
     getCurrentFocus (state) {
       return state.current_focus;
     },

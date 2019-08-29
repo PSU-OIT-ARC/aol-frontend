@@ -40,7 +40,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getLakeByReachcode', 'getMajorLakes'])
+    ...mapGetters(['getLakeByReachcode', 'getLakes'])
   },
   methods: {
     emitFilterChange () {
@@ -54,10 +54,10 @@ export default {
       let filtered_lakes = [];
 
       if (filter == 'all_lakes') {
-        filtered_lakes = this.getMajorLakes;
+        filtered_lakes = this.getLakes;
       }
       else {
-        filtered_lakes = this.getMajorLakes.filter((lake)=> {
+        filtered_lakes = this.getLakes.filter((lake)=> {
             return lake[filter] == true;
         })
       }

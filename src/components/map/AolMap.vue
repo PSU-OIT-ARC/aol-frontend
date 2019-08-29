@@ -36,7 +36,7 @@ export default {
   methods: {
     ...mapActions(['getAuthToken',
                    'setMapObject', 'setMapNode', 'setMapView',
-                   'setLoading', 'setCurrentFocus', 'fitBounds',
+                   'setLoading', 'setCurrentFocus', 'resetSearchResults', 'fitBounds',
                    'fetchLakes', 'searchLakes']),
 
     selectLakeFromUrl () {
@@ -48,11 +48,18 @@ export default {
     },
     showSideBar (lake) {
       this.$router.push({name: 'home', query: {'lake': lake.reachcode}})
+      this.resetSearchResults(); // reset search
       this.setCurrentFocus(lake);
-      this.searchLakes(null); // reset search
+    },
+    hideSideBar (lake) {
+      let current = this.$router.history.current;
+      if (current.name != "home" || current.query != {}) {
+        this.$router.push({'name': 'home', query: {}})
+      }
+      this.resetSearchResults(); // reset search
+      this.setCurrentFocus(null);
     },
     zoomToCluser (cluster_id, view) {
-        console.log('zoo to clustre)')
         let points = clusterIndex.getLeaves(cluster_id)
         Promise.all(points.map(convertGeoJsonToEsriFeature)).then(
           (points) => {
@@ -62,30 +69,34 @@ export default {
     selectFeatureFromClick(event, view) {
       view.hitTest(event).then((response) => {
         let features = response.results;
-        if (features.length) {
-          for (let f of features) {
-            if (f.graphic.attributes.hasOwnProperty('cluster')) {
-               this.zoomToCluser(f.graphic.attributes.cluster_id, view)
-               break;
+        if (!features.length) {
+          this.hideSideBar();
+          return;
+        }
+        for (let f of features) {
+          if (f.graphic.attributes.hasOwnProperty('cluster')) {
+             this.zoomToCluser(f.graphic.attributes.cluster_id, view)
+             break;
+          }
+          else { // lake polyygon or lake point
+            let reachcode = null;
+            if (f.graphic.attributes.hasOwnProperty('ReachCode')) {
+              reachcode = f.graphic.attributes.ReachCode
             }
-            else { // lake polyygon or lake point
-              let reachcode = null;
-              if (f.graphic.attributes.hasOwnProperty('ReachCode')) {
-                reachcode = f.graphic.attributes.ReachCode
-              }
-              else if (f.graphic.attributes.hasOwnProperty('REACHCODE')) {
-                reachcode = f.graphic.attributes.REACHCODE
-              }
-              let lake = this.getLakeByReachcode(parseInt(reachcode));
-              if (lake) {
-                this.showSideBar(lake);
-                this.fitBounds({lake: lake});
-              }
-              else {
-                this.fitBounds({geom: f.graphic.geometry});
-              }
+            else if (f.graphic.attributes.hasOwnProperty('REACHCODE')) {
+              reachcode = f.graphic.attributes.REACHCODE
             }
-          };
+
+            let lake = this.getLakeByReachcode(parseInt(reachcode));
+            if (lake === undefined || lake == null) {
+              this.hideSideBar();
+              this.fitBounds({geom: f.graphic.geometry});
+            }
+            else {
+              this.showSideBar(lake);
+              this.fitBounds({lake: lake});
+            }
+          }
         }
       })
     },
@@ -114,13 +125,13 @@ export default {
           });
           resolve();
         }).catch((e) => {
-            console.log(e)
+            console.error(e)
         })
       }); // end promise
     },
     initMetadata () {
       if (!this.lakes.length) {
-        return this.fetchLakes();
+          return this.fetchLakes('major');
       } else {
         return new Promise ((resolve) => {
           console.warn('I already have the lakes.');
@@ -208,6 +219,15 @@ export default {
             this.loadLayers(map, view).then(()=> {
               console.info("All layers loaded...")
               this.setLoading(false);
+              if(this.getCurrentFocus) {
+                this.fitBounds({lake: this.getCurrentFocus});
+              }
+            });
+            // de-prioritize loading of minor lakes.
+            // re-select lake from URL and focus in the case
+            // that it is a minor lake.
+            this.fetchLakes('minor').then (()=> {
+              this.selectLakeFromUrl();
               if(this.getCurrentFocus) {
                 this.fitBounds({lake: this.getCurrentFocus});
               }

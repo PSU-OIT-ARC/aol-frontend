@@ -55,6 +55,15 @@ const actions = {
         context.commit('setSearchResults', search);
     },
 
+    resetSearchResults (context) {
+        let search = {}
+        search.query = null;
+        search.results = config.LOADING;
+        search.all_results = [];
+
+        context.commit('setSearchResults', search);
+    },
+
     fitBounds (context, options) {
         /*
         Zoom/pan to lake bounds.
@@ -106,18 +115,22 @@ const actions = {
         }
     },
 
-    fetchLakes (context) {
+    fetchLakes (context, status) {
+        let url = `${API_URL}/lake/?format=json`+`&status=`+status;
         return new Promise((resolve, reject) => {
-            fetch(
-                `${API_URL}/lake/?format=json`
-            ).then(
+            fetch(url).then(
                 response => {
                     return response.json();
                 }
             ).then(
                 data => {
-                    console.info("Fetched " + data.length + " lakes");
-                    context.commit("setLakes", data);
+                    if (status == 'major') {
+                        console.info("Fetched " + data.length + " major lakes");
+                        context.commit("setLakes", data);
+                    } else {
+                        console.info("Fetched " + data.length + " minor lakes");
+                        context.commit("addLakes", data);
+                    }
                     resolve();
                 }
             ).catch(

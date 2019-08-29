@@ -9,7 +9,12 @@
 
       <div class="sidebar__nav">
         <router-link :to="search_href" @click.native="close">
-          <p>&larr; Back to Search</p>
+          <div v-if="has_results">
+            <p>&larr; Back to Search</p>
+          </div>
+          <div v-else>
+            <p>&larr; Back to Map</p>
+          </div>
         </router-link>
         <div class="close-sidebar" @click="close">╳</div>
       </div>
@@ -31,9 +36,11 @@
       </div>
       <div v-else>
         <minor-lake-card :lake='lake'></minor-lake-card>
-      </div>
-      <div class="lake-summary">
-        <p>Minor lake text here.</p>
+        <div class="lake-summary">
+          <p>
+            {{lake.title}} is a {{lake.waterbody_type}}.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -41,7 +48,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import LakeCard from '@/components/lake/LakeCard';
 import MinorLakeCard from '@/components/lake/MinorLakeCard';
@@ -66,6 +73,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['searchResults']),
+    has_results () {
+      return this.searchResults != null && this.searchResults.length;
+    },
     search_href () {
       return {name: 'home'}
     },
