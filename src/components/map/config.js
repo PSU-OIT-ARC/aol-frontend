@@ -79,9 +79,10 @@ const config = {
     backend_url: backend_url,
     max_search_results: max_search_results,
 
-    map_center: [-122.841856, 44.002925],
-    zoom: 9,
-
+    //map_center: [-122.841856, 44.002925],
+    map_center: [-121.7, 44.1],
+    zoom: 8,
+    maxZoom: 15,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [
@@ -97,15 +98,7 @@ const config = {
             input_type: "checkbox",
             input_group: "hillshade",
         },
-        {
-            id: 'marine_board_facilities_service_layer',
-            type: "feature",
-            name: "Marine Board Facilities",
-            visible: true,
-            minScale: 288447,
-            popupTemplate: MarineBoardTemplate,
-            getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
-        },
+
         {
             id: 'lake_points_service_layer',
             type: "feature",
@@ -134,7 +127,7 @@ const config = {
             renderer: {
               type: "simple",
               symbol: {
-                color: [0, 0, 0, 0.1], // currently transluscent for debug
+                color: [100, 100, 100, 0.1], // currently transluscent for debug
                 type: "simple-fill",
                 style: "solid",
                 outline: null
@@ -142,6 +135,15 @@ const config = {
             },
             AGOLName: 'NHDH_bounding_selection_shp',
             getLayerUrl: getServiceLayerUrl,
+        },
+        {
+            id: 'marine_board_facilities_service_layer',
+            type: "feature",
+            name: "Marine Board Facilities",
+            visible: true,
+            minScale: 288447,
+            popupTemplate: MarineBoardTemplate,
+            getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
         },
         {
             id: 'publand',
