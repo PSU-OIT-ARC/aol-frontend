@@ -53,7 +53,10 @@ const createVectorTileLayers = (map) => {
             loadModules(['esri/layers/VectorTileLayer'],
                         config.dojo_options).then(([VectorTileLayer]) => {
 
-                config.layers.filter((l) => {return l.type == "vector"}).forEach((layer) => {
+                config.layers.filter((l) => {
+                    // only loading bathymetry right now
+                    return l.type == "vector" && l.id == 'bathymetry'
+                }).forEach((layer) => {
 
                     let vector_tile_layer = new VectorTileLayer({
                         url: layer.getLayerUrl(),
@@ -127,6 +130,7 @@ const createFeatureServiceLayers = (map, view, component) => {
                         })
                     });
                 });
+
             }); // end loadModules
         } catch (err) {
             console.error(err);

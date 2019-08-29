@@ -108,7 +108,7 @@ export default {
         Promise.all([
           // NOTE: temporarily remove custom baselayers
             //createNLCDTileLayer(map),
-            //createVectorTileLayers(map),
+            createVectorTileLayers(map),
             createFeatureServiceLayers(map, view, this)
         ]).then(() => {
           view.when(()=> {

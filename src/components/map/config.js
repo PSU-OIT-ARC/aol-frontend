@@ -169,7 +169,7 @@ const config = {
             id: 'bathymetry',
             type: "vector",
             name: 'Bathymetry',
-            visible: false,
+            visible: true,
             zIndex: 8,
             minScale: 577790.5542885,
             AGOLName: 'Vector_Bath_Test_2',
