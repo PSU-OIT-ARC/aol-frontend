@@ -5,7 +5,10 @@
       v-model="query" @input="search(query)" autofocus="true" />
 
       <div class="search-clear" @click="clear">
-        <img src="~@/assets/icon_search.svg" height="20" />
+
+        <img v-if="this.query==''" src="~@/assets/icon_search.svg" height="20" />
+        <img v-else src="~@/assets/icon_clear.svg" height="20" />
+
       </div>
 
   </div>
