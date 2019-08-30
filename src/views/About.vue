@@ -20,7 +20,6 @@
             </router-link>
           </div>
 
-          <div class="close-sidebar" @click="close">╳</div>
 
           <div class="lake-card">
             <div class="photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">

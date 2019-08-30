@@ -4,10 +4,9 @@
       <a name="watershed" id="watershed"></a>
       <map-loader/>
       <aol-map :small='true' id='map'></aol-map>
-      <!--img src="~@/assets/generic_thumb_square.png"-->
     </div>
     <p class="caption">
-      <a href="#">Lake</a>|<a href="#">Watershed</a>
+      <!-- <a href="#">Lake</a>|<a href="#">Watershed</a> -->
     </p>
   </div>
 </template>
@@ -42,6 +41,8 @@
 }
 
 .caption {
+  display: inline-block;
+  margin-bottom: 20px;
   text-align: center;
   a {
     padding: 5px;

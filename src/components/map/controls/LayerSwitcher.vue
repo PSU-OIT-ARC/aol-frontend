@@ -10,7 +10,7 @@
                id="topo_basemap"
                :checked="topo_basemap"
                @change="selectBaseMap" />
-        <label for="topo_basemap">Topolgoy</label>
+        <label for="topo_basemap">Topology</label>
 
         <input type="radio"
                name="basemap"

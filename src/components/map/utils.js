@@ -244,10 +244,10 @@ const getLabelForCluster = (cluster) => {
                 if (cluster.properties.point_count == undefined) resolve(); // no label needed
                 let textLabel = {
                   type: "text",
-                  color: "#333",
+                  color: "#fff",
                   text: `${cluster.properties.point_count}`,
                   xoffset: 0,
-                  yoffset: -2,
+                  yoffset: -4,
                   font: {
                     size: 10,
                   }
@@ -287,9 +287,12 @@ const convertGeoJsonToEsriFeature = (geoJson) => {
                     attributes: geoJson.properties,
                     symbol: {
                         type: 'simple-marker',
-                        color: 'yellow',
+                        color: [6, 24, 206, .9], // same blue for all sizes
                         size: size,
-                        outline: null
+                        outline: {
+                          color: [ 128, 128, 128, 0.5 ],
+                          width: "8px"
+                        }
                     }
                 });
                 let attrs = getClusterGraphicStyles(size);
@@ -311,37 +314,31 @@ const getClusterGraphicStyles = (size) => {
     if (size <= 1) {
         return {
             size: 5,
-            color: [237, 27, 199, 0.7] // pink
         }
     }
     if (1 < size && size <= 2) {
         return {
             size: 10,
-            color: [65, 27, 237, 0.4] // purple
         }
     }
     if (2 < size && size <= 5) {
         return {
             size: 15,
-            color: [27, 237, 171, 0.7] // blue-green
         }
     }
     if (5 < size && size <= 10) {
         return {
             size: 21,
-            color: [246, 136, 27, 0.5]// orange
         }
     }
     if (10 < size && size <= 25) {
         return {
             size: 30,
-            color: [237, 27, 199, 0.4] // pink
         }
     }
     if (size > 25) {
         return {
             size: 45,
-            color: [27, 94, 237, 0.4] // blue
         }
     }
 }
