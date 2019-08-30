@@ -2,11 +2,11 @@
   <ul id="search-results-wrapper" v-if="query">
     <!-- <p v-if="loading">Loading...</p> -->
     <p v-if="loading">Loading...</p>
-    <div v-else-if="!loading && query && !results.length">
+    <div v-else-if="!loading && query && !all_results.length">
       <div class="no-results">Sorry, no results</div>
     </div>
     <div v-else>
-      <li v-for="result in results" :key="result.reachcode">
+      <li v-for="result in all_results" :key="result.reachcode">
         <router-link :to="href(result)">
           <div v-if="result.is_major">
             <lake-card :lake="result"></lake-card>
@@ -16,9 +16,9 @@
           </div>
         </router-link>
       </li>
-      <li class="show-all" v-if="all_results.length">
+      <!-- <li class="show-all" v-if="all_results.length">
         <a href="#">Show all results</a> ({{all_results.length}})
-      </li>
+      </li>-->
     </div>
   </ul>
 </template>
@@ -71,11 +71,15 @@ a:hover, a:focus {
     position: relative;
     z-index: 99999;
     min-height: auto;
-    overflow: hidden;
+    max-height: 500px;
+    overflow: scroll;
     margin-top: 14px;
     padding: 0px 0px;
     color: #333;
     background-color: white;
+    @include respond-to(handheld) {
+      max-height: 85vh;
+    }
   }
 
   #search-results-wrapper li {

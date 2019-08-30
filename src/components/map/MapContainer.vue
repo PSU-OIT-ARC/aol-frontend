@@ -21,22 +21,23 @@
            <zoom-out-svg/>
         </a>
 
+        <a role="button" href="#" class="map-button map-button--extent"
+           @click="goToInitialExtent">
+          <initial-extent/>
+        </a>
+
         <a role="button" href="#" class="map-button map-button--layers"
            v-bind:class="{ selected: show_filters}"
            @click="show_filters = !show_filters; show_legend = false">
           <layer-svg/>
         </a>
 
-        <a role="button" href="#" class="map-button map-button--legend"
+        <!-- <a role="button" href="#" class="map-button map-button--legend"
            v-bind:class="{ selected: show_legend}"
            @click="show_legend = !show_legend; show_filters = false">
           <legend-svg/>
-        </a>
+        </a> -->
 
-        <a role="button" href="#" class="map-button map-button--extent"
-           @click="goToInitialExtent">
-          <initial-extent/>
-        </a>
 
 
         <!-- <a role="button" href="#"

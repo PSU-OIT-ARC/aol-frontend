@@ -16,7 +16,11 @@
             <p>&larr; Back to Map</p>
           </div>
         </router-link>
-        <div class="close-sidebar" @click="close">╳</div>
+        <div class="close-sidebar" @click="close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="982" height="982" viewBox="0 0 982 982">
+            <path fill-rule="evenodd" d="M576.8,491 L962.7,105.1 C987.2,80.6 987.2,43.8 962.7,19.3 C938.2,-5.2 901.4,-5.2 876.9,19.3 L491,405.3 L105.1,19.4 C80.6,-5.1 43.9,-5.1 19.3,19.4 C-5.2,43.9 -5.2,80.7 19.3,105.2 L402.2,491 L19.4,876.9 C-5.1,901.4 -5.1,938.2 19.4,962.7 C28.6,975 47,981.1 62.3,981.1 C77.6,981.1 92.9,975 105.2,962.7 L491,576.8 L876.9,962.7 C889.2,975 904.5,981.1 919.8,981.1 C935.1,981.1 950.4,975 962.7,962.7 C987.2,938.2 987.2,901.4 962.7,876.9 L576.8,491 Z"/>
+          </svg>
+        </div>
       </div>
 
       <div v-if="lake.is_major">
@@ -82,9 +86,14 @@ export default {
     },
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
-      return {'background-image': 'url(' + photo + ')'}
+      if (this.lake.photo) {
+        photo = this.lake.photo;
+      } else if (this.lake.photos && this.lake.photos.length) {
+        photo = this.lake.photos[0].href;
+      }
+      return {'backgroundImage': 'url(' + photo + ')'}
     }
-  }
+  },
 }
 </script>
 
@@ -153,7 +162,7 @@ a:hover, a:focus {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
-    filter: blur(9px);
+    filter: blur(9px) brightness(80%);
     transform: scale(1.1);
   }
 
@@ -168,10 +177,15 @@ a:hover, a:focus {
 
   .close-sidebar {
     cursor: pointer;
-    font-size: 24px;
-    color: white;
     text-align: right;
     margin-top: 8px;
+
+    svg {
+      fill: #fff;
+      width: 15px;
+      height: 15px;
+    }
+
   }
 
   p {

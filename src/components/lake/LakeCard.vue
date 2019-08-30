@@ -46,7 +46,7 @@ export default {
       } else if (this.lake.photos && this.lake.photos.length) {
         photo = this.lake.photos[0].href;
       }
-      return {'background-image': 'url(' + photo + ')'}
+      return {'backgroundImage': 'url(' + photo + ')'}
     }
   }
 }
