@@ -40,7 +40,7 @@
             <div class="body-sidebar">
 
               <watershed v-if="!mobile_mode" :lake="lake"></watershed>
-              <documents :lake="lake"></documents>
+              <documents v-if="docs" :lake="lake"></documents>
 
             </div>
 
