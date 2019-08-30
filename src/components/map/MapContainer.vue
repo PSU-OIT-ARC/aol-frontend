@@ -70,6 +70,7 @@ import InitialExtent from '@/components/map/controls/InitialExtent';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
 import config from '@/components/map/config';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'map-container',
@@ -94,6 +95,7 @@ export default {
     MapLoader
   },
   methods: {
+    ...mapActions(['setCurrentFocus', 'resetSearchResults']),
     zoomIn () {
       const view = this.$store.state.map_view;
       view.zoom += 1;
@@ -114,6 +116,11 @@ export default {
       locate.locate()
     },
     goToInitialExtent () {
+        // clear context
+        this.setCurrentFocus(null);
+        this.resetSearchResults();
+        this.$router.push({name: 'home', query: {}});
+
         const view = this.$store.state.map_view;
         view.goTo(config.map_center).then(()=> {
           view.set('zoom', config.zoom);
