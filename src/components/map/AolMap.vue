@@ -59,6 +59,19 @@ export default {
       this.resetSearchResults(); // reset search
       this.setCurrentFocus(null);
     },
+    adjustMapViewForViewPort (view, Extent) {
+      let laptopBreakPoint = 1280;
+      let mobileBreakPoint = 600;
+      let appEl = document.querySelector('#app');
+      if (appEl.offsetWidth <= laptopBreakPoint) {
+        let extent = new Extent(config.smaller_extent)
+        view.extent = extent;
+        view.center = config.laptop_center;
+      }
+      if (appEl.offsetWidth <= mobileBreakPoint) {
+        view.center = config.mobile_center;
+      }
+    },
     zoomToCluser (cluster_id, view) {
         let points = clusterIndex.getLeaves(cluster_id)
         Promise.all(points.map(convertGeoJsonToEsriFeature)).then(
@@ -143,11 +156,12 @@ export default {
       return new Promise ((resolve) => {
         loadModules([
           "esri/Map",
+          "esri/geometry/Extent",
           "esri/views/MapView",
           "esri/widgets/Locate",
           "esri/identity/IdentityManager",
         ], config.dojo_options).then(([
-            EsriMap, MapView, Locate, IdentityManager
+            EsriMap, Extent, MapView, Locate, IdentityManager
         ]) => {
 
 
@@ -188,6 +202,7 @@ export default {
 
             view.ui.components = [locateWidget];
             view.when().then(()=> {
+              this.adjustMapViewForViewPort(view, Extent);
               this.setMapObject(map);
               this.setMapNode(this.$refs.map);
               this.setMapView(view);

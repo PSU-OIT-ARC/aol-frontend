@@ -79,71 +79,30 @@ const config = {
     backend_url: backend_url,
     max_search_results: max_search_results,
 
-    //map_center: [-122.841856, 44.002925],
-    map_center: [-121.7, 44.1],
     zoom: 8,
+    map_center: [-121.7, 44.1],
+    laptop_center: [-122.8, 44.1],
+    mobile_center: [-117.6, 44.1],
+    smaller_extent: {
+      xmax: -12764866.859901167,
+      xmin: -14330297.199181162,
+      ymax: 5872288.062318979,
+      ymin: 5089572.892678982,
+      spatialReference: 102100
+    },
     maxZoom: 15,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [
+        // custom base layers
         {
             id: "nlcd",
             type: "base",
             name: "Hillshade",
             visible: false,
             url: `${ArcGisOnlineTilesUrl}/Hillshade_NLCD/MapServer`,
-                  //tile/{z}/{y}/{x}?token=${token}`,
-            extent: [-13847487.234310532, 5367239.26625923,
-                     -13539022.354823876, 5532200.785834997],
             input_type: "checkbox",
             input_group: "hillshade",
-        },
-
-        {
-            id: 'lake_points_service_layer',
-            type: "feature",
-            name: "Lake Points",
-            outFields: ["*"],
-            visible: false,
-            renderer: {
-              type: "simple",
-              symbol: {
-                //style: "circle",
-                type: 'simple-marker',
-                color: "yellow",
-                size: "6px",
-                outline: null
-              }
-            },
-            AGOLName: 'OR_Lake_Points_test',
-            getLayerUrl: getServiceLayerUrl,
-        },
-        {
-            id:'lake_bbox_service_layer',
-            type: "feature",
-            name: "Lake Bounding Boxes",
-            visible: true,
-            outFields: ["*"],
-            renderer: {
-              type: "simple",
-              symbol: {
-                color: [100, 100, 100, 0.1], // currently transluscent for debug
-                type: "simple-fill",
-                style: "solid",
-                outline: null
-              },
-            },
-            AGOLName: 'NHDH_bounding_selection_shp',
-            getLayerUrl: getServiceLayerUrl,
-        },
-        {
-            id: 'marine_board_facilities_service_layer',
-            type: "feature",
-            name: "Marine Board Facilities",
-            visible: true,
-            minScale: 288447,
-            popupTemplate: MarineBoardTemplate,
-            getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
         },
         {
             id: 'publand',
@@ -167,18 +126,64 @@ const config = {
             input_type: 'radio',
             input_group: 'lands',
         },
+        // feature layers
         {
             id: 'bathymetry',
             type: "vector",
             name: 'Bathymetry',
             visible: true,
-            zIndex: 8,
             minScale: 577790.5542885,
             AGOLName: 'Vector_Bath_Test_2',
             getLayerUrl: getVectorTileLayerUrl,
             input_type: 'checkbox',
             input_group: 'bathymetry',
-        }
+        },
+        {
+            id:'lake_bbox_service_layer',
+            type: "feature",
+            name: "Lake Bounding Boxes",
+            visible: true,
+            outFields: ["*"],
+            renderer: {
+              type: "simple",
+              symbol: {
+                color: [100, 100, 100, 0.1], // currently transluscent for debug
+                type: "simple-fill",
+                style: "solid",
+                outline: null
+              },
+            },
+            AGOLName: 'NHDH_bounding_selection_shp',
+            getLayerUrl: getServiceLayerUrl,
+        },
+        {
+            id: 'lake_points_service_layer',
+            type: "feature",
+            name: "Lake Points",
+            outFields: ["*"],
+            visible: false,
+            renderer: {
+              type: "simple",
+              symbol: {
+                //style: "circle",
+                type: 'simple-marker',
+                color: "yellow",
+                size: "6px",
+                outline: null
+              }
+            },
+            AGOLName: 'OR_Lake_Points_test',
+            getLayerUrl: getServiceLayerUrl,
+        },
+        {
+            id: 'marine_board_facilities_service_layer',
+            type: "feature",
+            name: "Marine Board Facilities",
+            visible: true,
+            minScale: 288447,
+            popupTemplate: MarineBoardTemplate,
+            getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
+        },
     ]
 }
 
