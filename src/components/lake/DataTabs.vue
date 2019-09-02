@@ -4,15 +4,17 @@
 
         <ul class='tabs'>
           <tab :class='section.name'
-            v-for="section in rendered_tabs" :key="section.name"
+            v-for="section in sections" :key="section.name"
             :section="section" :lake="lake"
             :active="currentSectionName === section.name">
           </tab>
         </ul>
 
-        <keep-alive v-if='!tabs_only && show_section'>
-          <component :class="currentSection.name"
-            class='data-section' :lake='lake' v-bind:is="currentSection">
+        <keep-alive v-if='!tabs_only'>
+          <component :class="currentSectionName"
+                     :lake='lake'
+                     v-bind:is="currentSection"
+                     class='data-section'>
           </component>
         </keep-alive>
       </div>
@@ -20,12 +22,15 @@
 </template>
 
 <script>
-import { PlantData, MusselData, TextSection } from '@/components/lake/metadata';
 import Tab from '@/components/lake/Tab';
-import Watershed from '@/components/lake/Watershed';
-import Documents from '@/components/lake/Documents';
-import Photos from '@/components/lake/Photos';
+import {TextSection,
+        Watershed,
+        PlantData,
+        MusselData,
+        Photos,
+        Documents} from '@/components/lake/metadata';
 
+import config from '@/config';
 
 export default {
   props: ['lake', 'tabs_only'],
@@ -43,81 +48,76 @@ export default {
       allSections: [
         TextSection,
         Watershed,
-        Documents,
         PlantData,
         MusselData,
-        Photos
+        Photos,
+        Documents
       ],
       sidebarSectionKeys: [
         'body',
-        true,
-        'has_docs',
+        false,
         'has_plants',
         'has_mussels',
-        'has_photos'
+        'has_photos',
+        'has_docs'
       ],
       detailSectionKeys: [
         'body',
-        true,
-        'documents',
+        false,  // temporarily disabled pending review
         'plants',
         'mussels',
-        'photos'
+        'photos',
+        config.is_mobile(window)
       ],
-      mobile_only: [Watershed, Documents],
-      currentSection: TextSection,
-      currentSectionName: TextSection.name
+      currentSection: null,
+      currentSectionName: ''
     }
   },
   computed: {
     mobile_mode () {
-      return window.innerWidth < 600;
+      return config.is_mobile(window);
     },
-    rendered_tabs () {
-      var self = this;
-      var sections = this.allSections.filter(function(el, idx) {
-          var key = self.detailSectionKeys[idx];
-          if (self.tabs_only ) {
-            key = self.sidebarSectionKeys[idx];
-          }
+    sections () {
+      let self = this;
+      let sections = this.allSections.filter(function(el, idx) {
+        var key = self.detailSectionKeys[idx];
+        if (self.tabs_only ) {
+          key = self.sidebarSectionKeys[idx];
+        }
 
-          if (key === true) {
-              return true
-          } else if (self.lake[key]) {
-              if (Array.isArray(self.lake[key])) {
-                return self.lake[key].length;
-              }
-              return true
+        if (key === true) {
+          return true
+        } else if (key == 'has_docs') {
+          return config.is_mobile(window) && self.lake[key];
+        } else if (self.lake[key]) {
+          if (key != 'body' && Array.isArray(self.lake[key])) {
+            return self.lake[key].length;
           }
-          return false
+          return true
+        }
+        return false
       });
 
-      return sections.filter(i => !this.mobile_only.includes(i))
+      return sections.filter((i) => {
+        if (!this.lake.is_major) {
+           return false;
+        }
+
+        return true;
+      });
     },
-    show_section () {
-      let show_for_all = !this.mobile_only.includes(this.currentSection);
-      if (show_for_all || this.mobile_mode) {
-        return true
-      }
-      return false
-    }
   },
   methods: {
     setCurrentSection () {
-      let hash = this.$route.hash;
-      hash = hash.replace(/#/g,'');
-      if (hash) {
-        let component = this.allSections.find(
-            i => i.name == hash
-        );
-        if (!this.mobile_only.includes(component) || this.mobile_mode) {
-          this.currentSection = component;
-          this.currentSectionName = component.name
-        }
-        else {
-          this.currentSection = this.all_sections[0];
-          this.currentSectionName = this.all_sections[0].name
-        }
+      let hash = this.$route.hash.replace(/#/g,'');
+      let component = this.sections.find(i => i.name == hash);
+
+      if (component != undefined && component != null) {
+        this.currentSection = component;
+        this.currentSectionname = component.name;
+      } else {
+        this.currentSection = TextSection;
+        this.currentSectionName = TextSection.name;
       }
     }
   },

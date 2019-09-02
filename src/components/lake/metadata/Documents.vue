@@ -5,11 +5,11 @@
     <h3>Documents</h3>
 
     <ul class="documents-wrapper">
-      <li v-for="(doc, index) in docs"
+      <li v-for="(doc, index) in lake.documents"
           v-bind:item="doc"
           v-bind:index="index"
           v-bind:key="doc.file">
-        <a :href="doc.file">{{ doc.name }}</a>
+        <a :href="doc.file" target="_">{{ doc.name }}</a>
       </li>
     </ul>
   </div>
@@ -17,17 +17,11 @@
 </template>
 
 <script>
-  export default {
-    props: ['lake'],
-    name: 'documents',
-    title: 'Documents',
-
-    data () {
-      return {
-        docs: this.lake.documents
-      }
-    }
-  }
+export default {
+  props: ['lake'],
+  name: 'documents',
+  title: 'Documents',
+}
 </script>
 
 <style scoped>

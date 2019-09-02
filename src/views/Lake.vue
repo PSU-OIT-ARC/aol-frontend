@@ -27,21 +27,19 @@
               </svg>
            </div>
 
-            <lake-card class="card" :lake="lake"></lake-card>
 
           </div>
+           <lake-card class="card" :lake="lake"></lake-card>
 
           <div class="content-body">
 
             <div class="body-main">
-              <data-tabs :lake='lake' :with_sections='true'></data-tabs>
+              <data-tabs :lake='lake'></data-tabs>
             </div>
 
-            <div class="body-sidebar">
-
-              <watershed v-if="!mobile_mode" :lake="lake"></watershed>
-              <documents v-if="docs" :lake="lake"></documents>
-
+            <div class="body-sidebar" v-if="!mobile_mode">
+              <watershed></watershed>
+              <documents v-if="lake.documents" :lake="lake"></documents>
             </div>
 
           </div> <!-- end content-body -->
@@ -61,8 +59,9 @@ import { mapGetters, mapActions } from 'vuex';
 
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
-import Watershed from '@/components/lake/Watershed';
-import Documents from '@/components/lake/Documents';
+import {Watershed, Documents} from '@/components/lake/metadata';
+
+import config from '@/config';
 
 export default {
   name: 'lake',
@@ -88,7 +87,7 @@ export default {
       return query
     },
     mobile_mode () {
-      return window.innerWidth < 600;
+      return config.is_mobile(window);
     },
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');

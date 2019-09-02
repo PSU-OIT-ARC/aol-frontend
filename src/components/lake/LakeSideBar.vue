@@ -57,6 +57,7 @@ import { mapActions, mapGetters } from 'vuex';
 import LakeCard from '@/components/lake/LakeCard';
 import MinorLakeCard from '@/components/lake/MinorLakeCard';
 import DataTabs from '@/components/lake/DataTabs';
+import TextSection from '@/components/lake/metadata/TextSection';
 
 export default {
   name: 'lake-sidebar',
@@ -65,6 +66,7 @@ export default {
     LakeCard,
     MinorLakeCard,
     DataTabs
+    TextSection
   },
   methods: {
     ...mapActions(['setCurrentFocus']),
