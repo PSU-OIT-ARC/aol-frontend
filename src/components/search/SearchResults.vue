@@ -7,14 +7,10 @@
     </div>
     <div v-else>
       <li v-for="result in all_results" :key="result.reachcode">
-        <router-link :to="href(result)">
-          <div v-if="result.is_major">
-            <lake-card :lake="result"></lake-card>
-          </div>
-          <div v-else>
-            <minor-lake-card :lake="result"></minor-lake-card>
-          </div>
+        <router-link v-if="result.is_major" :to="href(result)">
+          <lake-card :lake="result"></lake-card>
         </router-link>
+        <lake-card v-if="!result.is_major" :lake="result"></lake-card>
       </li>
       <!-- <li class="show-all" v-if="all_results.length">
         <a href="#">Show all results</a> ({{all_results.length}})
@@ -25,14 +21,12 @@
 
 <script>
 import LakeCard from '@/components/lake/LakeCard';
-import MinorLakeCard from '@/components/lake/MinorLakeCard';
 
 export default {
   name: 'search-results',
   props: ["query", "results", "all_results"],
   components: {
-    LakeCard,
-    MinorLakeCard
+    LakeCard
   },
   methods: {
     href (lake) {

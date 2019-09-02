@@ -23,30 +23,14 @@
         </div>
       </div>
 
-      <div v-if="lake.is_major">
-        <router-link :to="lake_href(lake)">
-          <lake-card :lake='lake'></lake-card>
-        </router-link>
-
-        <div class="lake-summary">
-          <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
-
-          <p v-for="(line, index) in lake.body"
-             v-bind:index="index"
-             v-bind:key="index">
-           {{ line }}<br />
-          </p>
-        </div>
+      <router-link v-if="lake.is_major" :to="lake_href">
+        <lake-card :lake='lake'></lake-card>
+      </router-link>
+      <lake-card v-if="!lake.is_major" :lake='lake'></lake-card>
+      <div class="lake-summary">
+        <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
+        <text-section :lake='lake'></text-section>
       </div>
-      <div v-else>
-        <minor-lake-card :lake='lake'></minor-lake-card>
-        <div class="lake-summary">
-          <p>
-            {{lake.title}} is a {{lake.waterbody_type}}.
-          </p>
-        </div>
-      </div>
-    </div>
 
   </div>
 </template>
@@ -55,7 +39,6 @@
 import { mapActions, mapGetters } from 'vuex';
 
 import LakeCard from '@/components/lake/LakeCard';
-import MinorLakeCard from '@/components/lake/MinorLakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 import TextSection from '@/components/lake/metadata/TextSection';
 
@@ -64,8 +47,7 @@ export default {
   props: ['lake'],
   components: {
     LakeCard,
-    MinorLakeCard,
-    DataTabs
+    DataTabs,
     TextSection
   },
   methods: {
