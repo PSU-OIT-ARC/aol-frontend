@@ -119,7 +119,7 @@ export default {
             );
             view.watch('zoom', function (zoom) {
               updateClusters(map, view).catch((e) => {
-                console.log(e)
+                console.error(e)
               })
             })
           });
