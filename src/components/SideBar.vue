@@ -14,9 +14,6 @@ import SearchPane from '@/components/search/SearchPane';
 
 export default {
   name: 'sidebar',
-  methods: {
-    ...mapActions(['setCurrentFocus']),
-  },
   computed: {
     ...mapGetters(['getCurrentFocus']),
   },

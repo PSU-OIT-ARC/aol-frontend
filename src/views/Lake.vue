@@ -100,17 +100,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchLake', 'searchLakes']),
-    close () {
-      this.$router.push({name: 'home'});
-    }
+    ...mapActions(['fetchLake', 'resetSearchResults']),
   },
   created () {
     // clear out any search SearchResults
-    this.searchLakes(null);
+    this.resetSearchResults();
 
-    //
-    this.fetchLake(this.reachcode);
+    // fetch the non-indexed lake object
+    this.fetchLake(parseInt(this.reachcode))
   }
 }
 </script>

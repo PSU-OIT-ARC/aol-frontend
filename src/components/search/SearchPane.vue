@@ -2,10 +2,10 @@
   <div>
     <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
       <search-bar></search-bar>
-      <search-results v-if="results!=''" :query="query" :results="results" :all_results="all_results"></search-results>
+      <search-results v-if="results.length" :query="query" :results="results"></search-results>
     </div>
 
-    <div v-if="results==''">
+    <div v-if="!results.length">
       <div v-if="introDismissed == false" class="site-intro">
         <div class="close-intro" @click="close">
           <svg xmlns="http://www.w3.org/2000/svg" width="982" height="982" viewBox="0 0 982 982">
@@ -41,7 +41,6 @@ export default {
       introDismissed: 'getIsIntroDismissed',
       query: 'searchQuery',
       results: 'searchResults',
-      all_results: 'searchResultsAll'
     }),
     hide_results() {
       if (this.$route.query['lake']) {

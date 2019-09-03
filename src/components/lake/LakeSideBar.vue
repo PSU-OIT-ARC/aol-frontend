@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
