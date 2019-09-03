@@ -21,14 +21,6 @@ import {
 export default {
   name: 'aol-map',
   props: {'small': { default: false }},
-  data () {
-    return {
-      ...config,
-      selectedAttributes: [],
-      show_filters: false,
-      show_legend: false,
-    }
-  },
   computed: {
     ...mapGetters({map: 'getMapObject',
                    lakes: 'getLakes',
