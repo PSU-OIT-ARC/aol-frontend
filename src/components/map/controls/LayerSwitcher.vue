@@ -25,15 +25,15 @@ export default {
       base_maps: [
         {
           name: 'topo',
-          label: 'Topology'
+          label: 'Topographic'
         },
         {
           name: 'osm',
-          label: 'Open Street Map'
+          label: 'Streets'
         },
         {
           name: 'gray',
-          label: 'Simple Gray'
+          label: 'Simple'
         },
       ],
       selectedBaseMap: 'topo'
