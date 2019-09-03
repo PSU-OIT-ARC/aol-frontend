@@ -457,8 +457,10 @@
 .esri-popup__pagination-next-icon::after {
   content: '>';
 }
+
 .esri-popup__icon.esri-icon-close::after {
-  content: '╳';
+  /* content: '╳'; */
+  content: 'X';
   font-size: 24px;
 }
 

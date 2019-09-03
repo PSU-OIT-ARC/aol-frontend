@@ -4,7 +4,9 @@
     <aol-map></aol-map>
 
     <div v-show="active_state.legend" class="map-legend-wrapper">
-      <a class="close-filters" @click="toggleVisibility('legend')">╳</a>
+      <a class="close-filters" @click="toggleVisibility('legend')">
+        <close-button-svg/>
+      </a>
       <h4>Map Legend</h4>
       <img src="~@/assets/temp_legend.png" />
     </div>
@@ -41,7 +43,9 @@
     </div>
 
     <div class="map-filter-wrapper" v-show="active_state.filters">
-      <a class="close-filters" @click="toggleVisibility('filters')">╳</a>
+      <a class="close-filters" @click="toggleVisibility('filters')">
+        <close-button-svg/>
+      </a>
       <layer-switcher/>
       <filter-control/>
     </div>
@@ -53,6 +57,7 @@
 <script>
 import { mapActions } from 'vuex';
 
+import CloseButtonSVG from '@/components/CloseButtonSVG';
 import AolMap from '@/components/map/AolMap';
 import MapLoader from '@/components/map/MapLoader'
 import LayerSVG from '@/components/map/controls/LayerSVG';
@@ -77,6 +82,7 @@ export default {
     }
   },
   components: {
+    'close-button-svg': CloseButtonSVG,
     'layer-svg': LayerSVG,
     'legend-svg': LegendSVG,
     'zoom-in-svg': ZoomInSVG,

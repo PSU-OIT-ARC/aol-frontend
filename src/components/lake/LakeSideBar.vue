@@ -15,9 +15,7 @@
         </div>
         <div class="close-sidebar">
           <router-link :to="back_href">
-          <svg xmlns="http://www.w3.org/2000/svg" width="982" height="982" viewBox="0 0 982 982">
-            <path fill-rule="evenodd" d="M576.8,491 L962.7,105.1 C987.2,80.6 987.2,43.8 962.7,19.3 C938.2,-5.2 901.4,-5.2 876.9,19.3 L491,405.3 L105.1,19.4 C80.6,-5.1 43.9,-5.1 19.3,19.4 C-5.2,43.9 -5.2,80.7 19.3,105.2 L402.2,491 L19.4,876.9 C-5.1,901.4 -5.1,938.2 19.4,962.7 C28.6,975 47,981.1 62.3,981.1 C77.6,981.1 92.9,975 105.2,962.7 L491,576.8 L876.9,962.7 C889.2,975 904.5,981.1 919.8,981.1 C935.1,981.1 950.4,975 962.7,962.7 C987.2,938.2 987.2,901.4 962.7,876.9 L576.8,491 Z"/>
-          </svg>
+            <close-button-svg />
           </router-link>
         </div>
       </div>
@@ -38,6 +36,7 @@
 <script>
 import { mapGetters } from 'vuex';
 
+import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 import TextSection from '@/components/lake/metadata/TextSection';
@@ -46,6 +45,7 @@ export default {
   name: 'lake-sidebar',
   props: ['lake'],
   components: {
+    'close-button-svg': CloseButtonSVG,
     LakeCard,
     DataTabs,
     TextSection
@@ -148,18 +148,6 @@ a:hover, a:focus {
     @include respond-to(handheld) {
       height: 70vh;  // keep sidebar text scrollable on mobile
     }
-  }
-
-  .close-sidebar {
-    cursor: pointer;
-    text-align: right;
-
-    svg {
-      fill: #fff;
-      width: 15px;
-      height: 15px;
-    }
-
   }
 
   p {
