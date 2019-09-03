@@ -208,7 +208,11 @@ export default {
       let map_node = this.$store.state.map_node;
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
-        document.querySelector('#map').classList.toggle('small', this.small);
+        if (document.querySelector('#map') != null) {
+          document.querySelector('#map').classList.toggle('small', this.small);
+        } else {
+          console.warn("Cannot toggle display class on map. Element unavailable.")
+        }
 
         if (this.getCurrentFocus() != null) {
           this.fitBounds({lake: this.getCurrentFocus()});
@@ -221,7 +225,11 @@ export default {
         this.initMap().then(([map, view])=> {
           this.loadLayers(map, view).then(()=> {
             this.setLoading(false);
-            document.querySelector('#map').classList.toggle('small', this.small);
+            if (document.querySelector('#map') != null) {
+              document.querySelector('#map').classList.toggle('small', this.small);
+            } else {
+              console.warn("Cannot toggle display class on map. Element unavailable.")
+            }
 
             if (this.getCurrentFocus() != null) {
               this.fitBounds({lake: this.getCurrentFocus()});
