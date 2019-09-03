@@ -4,26 +4,6 @@
       <search-bar></search-bar>
       <search-results :query="query" :results="results"></search-results>
     </div>
-
-    <div v-if="!query && !introDismissed" class="site-intro">
-      <div class="close-intro" @click="close">
-        <close-button-svg/>
-      </div>
-      <div class="intro__photo">
-      </div>
-      <div class="intro__copy">
-        <h3>Atlas of Oregon Lakes</h3>
-        <p>
-          Oregon has a rich diversity of lakes and reservoirs ranging from some of the clearest
-          lakes in the world, to extremely productive fisheries, to lakes in trouble from pollution.
-          Lakes and reservoirs are very important to the citizens of Oregon as they provide drinking
-          water, flood control, irrigation, power generation, and recreational opportunities such
-          as swimming, boating, fishing, and relaxation.
-        </p>
-        <p><router-link to="/about">Read More ...</router-link></p>
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -43,7 +23,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      introDismissed: 'getIsIntroDismissed',
       query: 'searchQuery',
       results: 'searchResults',
     }),
@@ -52,12 +31,6 @@ export default {
         return true
       }
       return false;
-    }
-  },
-  methods: {
-    ...mapActions(['setIntroDismissed']),
-    close () {
-      this.setIntroDismissed(true);
     }
   }
 }
@@ -82,50 +55,4 @@ export default {
       height: auto;
     }
   }
-
-  .site-intro {
-    display:grid;
-    grid-template-rows: 140px auto;
-
-    position: absolute;
-    z-index: 3001;
-    left: 15px;
-
-    background-color: white;
-    min-height: 300px;
-    margin-top: 65px;
-    box-shadow: 2px 2px 3px #ccc;
-    width: 390px;
-
-    @include respond-to(handheld) {
-      width: calc(100vw - 30px); //30 internal padding
-      top: 0vh;
-    }
-
-    .intro__photo {
-      height: 140px;
-      background-image: url('~@/assets/intro-umpqua-lake.png');
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center center;
-    }
-
-    .intro__copy {
-      padding: 20px;
-    }
-  }
-
-  .close-intro {
-    position: absolute;
-    top: 6px;
-    right: 10px;
-    cursor: pointer;
-
-    svg {
-      fill: white;
-      width: 16px;
-      height: 16px;
-    }
-  }
-
 </style>
