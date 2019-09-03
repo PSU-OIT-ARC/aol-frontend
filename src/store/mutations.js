@@ -16,6 +16,14 @@ const mutations = {
         state.map_view = view;
     },
 
+    setMapBasemap (state, basemap) {
+        state.map_basemap = basemap;
+    },
+
+    setMapFilter (state, filter) {
+        state.map_filter = filter;
+    },
+
     setSearchResults (state, data) {
         state.search.query = data.query;
         state.search.results = data.results;

@@ -8,6 +8,14 @@ const getters = {
         }
     },
 
+    getMapBasemap (state) {
+        return state.map_basemap;
+    },
+
+    getMapFilter (state) {
+        return state.map_filter;
+    },
+
     searchQuery (state) {
         return state.search.query;
     },

@@ -8,6 +8,8 @@ const state = {
     map_object: null,
     map_node: null,
     map_view: null,
+    map_basemap: 'topo',
+    map_filter: 'all_lakes',
 
     // lake state
     lakes: [],

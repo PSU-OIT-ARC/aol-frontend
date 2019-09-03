@@ -35,6 +35,19 @@ const actions = {
         context.commit('setMapView', view);
     },
 
+    setMapBasemap (context, basemap) {
+        let map =  context.rootState.map_object;
+        if (map != null) {
+            console.debug("Using " + basemap + " base map");
+            map.basemap = basemap;
+            context.commit('setMapBasemap', basemap);
+        }
+    },
+
+    setMapFilter (context, filter) {
+        context.commit('setMapFilter', filter);
+    },
+
     searchLakes (context, query) {
         let search = {};
         search.query = query;

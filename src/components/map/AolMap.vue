@@ -29,7 +29,6 @@ export default {
       show_legend: false,
     }
   },
-  
   computed: {
     ...mapGetters({map: 'getMapObject',
                    lakes: 'getLakes',
@@ -40,6 +39,7 @@ export default {
   methods: {
     ...mapGetters(['getTimeElapsed',
                    'getIsLoading',
+                   'getMapBasemap',
                    'getLakeByReachcode',
                    'getCurrentFocus',
                    'getCurrentLake']),
@@ -161,7 +161,7 @@ export default {
             let center = config.map_center;
 
             let map = new EsriMap({
-              basemap: 'topo'
+              basemap: this.getMapBasemap()
             });
             let view = new MapView({
               map: map,
