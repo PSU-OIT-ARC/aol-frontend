@@ -43,8 +43,6 @@ export default {
       let photo = require('@/assets/intro-umpqua-lake.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
-      } else if (this.lake.photos && this.lake.photos.length) {
-        photo = this.lake.photos[0].href;
       }
       return {'backgroundImage': 'url(' + photo + ')'}
     }

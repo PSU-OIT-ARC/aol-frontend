@@ -3,9 +3,7 @@
   <div v-if='lake' class="lake-detail-wrapper">
 
     <div class="blur-image-wrapper">
-      <div class="blur-image" :style="photo_style">
-        <!-- These inline images should either be the first photo of what is available for the lake, or default to this intro-upmpqua-lake.png -->
-      </div>
+      <div class="blur-image" :style="photo_style"></div>
     </div>
 
     <div class="lake-detail">
@@ -16,23 +14,25 @@
         <div class="content-wrapper">
 
           <div class="content-header">
-            <div class='back'>
-              <router-link :to="{ name: 'home', query: back }">
-                &larr; Back to Map
-              </router-link>
+            <div class="content__nav">
+              <div class='back-to-sidebar'>
+                <router-link :to="sidebar_href">
+                  &larr; Back
+                </router-link>
+              </div>
+              <div class="close-sidebar">
+                <router-link :to="back_href">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="982" height="982" viewBox="0 0 982 982">
+                    <path fill-rule="evenodd" d="M576.8,491 L962.7,105.1 C987.2,80.6 987.2,43.8 962.7,19.3 C938.2,-5.2 901.4,-5.2 876.9,19.3 L491,405.3 L105.1,19.4 C80.6,-5.1 43.9,-5.1 19.3,19.4 C-5.2,43.9 -5.2,80.7 19.3,105.2 L402.2,491 L19.4,876.9 C-5.1,901.4 -5.1,938.2 19.4,962.7 C28.6,975 47,981.1 62.3,981.1 C77.6,981.1 92.9,975 105.2,962.7 L491,576.8 L876.9,962.7 C889.2,975 904.5,981.1 919.8,981.1 C935.1,981.1 950.4,975 962.7,962.7 C987.2,938.2 987.2,901.4 962.7,876.9 L576.8,491 Z"/>
+                  </svg>
+                </router-link>
+              </div>
             </div>
-            <div class="close-sidebar" @click="close">
-              <svg xmlns="http://www.w3.org/2000/svg" width="982" height="982" viewBox="0 0 982 982">
-                <path fill-rule="evenodd" d="M576.8,491 L962.7,105.1 C987.2,80.6 987.2,43.8 962.7,19.3 C938.2,-5.2 901.4,-5.2 876.9,19.3 L491,405.3 L105.1,19.4 C80.6,-5.1 43.9,-5.1 19.3,19.4 C-5.2,43.9 -5.2,80.7 19.3,105.2 L402.2,491 L19.4,876.9 C-5.1,901.4 -5.1,938.2 19.4,962.7 C28.6,975 47,981.1 62.3,981.1 C77.6,981.1 92.9,975 105.2,962.7 L491,576.8 L876.9,962.7 C889.2,975 904.5,981.1 919.8,981.1 C935.1,981.1 950.4,975 962.7,962.7 C987.2,938.2 987.2,901.4 962.7,876.9 L576.8,491 Z"/>
-              </svg>
-           </div>
 
-
-          </div>
            <lake-card class="card" :lake="lake"></lake-card>
+          </div> <!-- end content-nav -->
 
           <div class="content-body">
-
             <div class="body-main">
               <data-tabs :lake='lake'></data-tabs>
             </div>
@@ -41,11 +41,9 @@
               <watershed></watershed>
               <documents v-if="lake.documents" :lake="lake"></documents>
             </div>
-
           </div> <!-- end content-body -->
 
-
-        </div>
+        </div> <!-- end content-header -->
 
         <div class="gutter gutter--right"></div>
 
@@ -79,12 +77,11 @@ export default {
     lake () {
       return this.getCurrentLake;
     },
-    back () {
-      let query = {}
-      if (this.lake) {
-        query["lake"] = this.lake.reachcode;
-      }
-      return query
+    sidebar_href () {
+      return {name: 'home', query: {lake: this.lake.reachcode}};
+    },
+    back_href () {
+      return {name: 'home', query: {}};
     },
     mobile_mode () {
       return config.is_mobile(window);
@@ -93,8 +90,6 @@ export default {
       let photo = require('@/assets/intro-umpqua-lake.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
-      } else if (this.lake.photos && this.lake.photos.length) {
-        photo = this.lake.photos[0].href;
       }
       return {'backgroundImage': 'url(' + photo + ')'}
     }
@@ -152,6 +147,10 @@ export default {
     transform: scale(1.1);
   }
 
+  .back-to-sidebar {
+    text-align: left;
+  }
+
   .close-sidebar {
     position: absolute;
     top: 5px;
@@ -184,14 +183,19 @@ export default {
     @include respond-to(handheld) {
       padding: 0px 15px;
     }
-    .back {
-      margin: 10px 0;
-    }
-    .back a {
+  }
+
+  .content__nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px 0px;
+    position: relative;
+    top: 0px;
+
+    a {
       color:white;
     }
   }
-
 
   .content-body {
     display: grid;

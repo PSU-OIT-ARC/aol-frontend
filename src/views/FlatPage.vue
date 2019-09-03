@@ -2,27 +2,16 @@
   <div class="page-wrapper">
 
     <div class="blur-image-wrapper">
-      <div class="blur-image" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
-      </div>
+      <div class="blur-image" :style="photo_style"></div>
     </div>
 
     <div class="page-detail">
-
       <div class="gutter gutter--left"></div>
-
       <div class="content-wrapper">
 
         <div class="content-header">
-          <div class='back'>
-            <router-link :to="{ name: 'home', query: back }">
-              &larr; Back to Map
-            </router-link>
-          </div>
-
-
           <div class="lake-card">
-            <div class="photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
-            </div>
+            <div class="photo" :style="photo_style"></div>
             <div class="info">
               <h4>A Public Resource Since 1985</h4>
               <h2>{{ page.title }}</h2>
@@ -31,8 +20,7 @@
         </div>
 
         <div class="content-body">
-          <div class="body-main"
-               v-html="page.content"></div>
+          <div class="body-main" v-html="page.content"></div>
         </div>
 
       </div>
@@ -55,18 +43,16 @@ export default {
     page () {
       return this.getCurrentPage;
     },
-    back () {
-      return {};
+    photo_style () {
+      let photo = require('@/assets/intro-umpqua-lake.png');
+      return {'backgroundImage': 'url(' + photo + ')'}
     }
   },
   methods: {
-    ...mapActions(['fetchPage']),
-    close () {
-      this.$router.push({name: 'home'});
-    }
+    ...mapActions(['fetchPage'])
   },
   created () {
-    //
+    // fetch the flatpage object
     this.fetchPage(this.slug);
   }
 }

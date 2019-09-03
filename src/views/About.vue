@@ -2,33 +2,20 @@
   <div class="about-wrapper">
 
     <div class="blur-image-wrapper">
-      <div class="blur-image" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
-      </div>
+      <div class="blur-image" :style="photo_style"></div>
     </div>
 
     <div class="about-detail">
-
-      <div class="gutter gutter--left">
-      </div>
-
-        <div class="content-wrapper">
+      <div class="gutter gutter--left"></div>
+      <div class="content-wrapper">
 
         <div class="content-header">
-          <div class='back'>
-            <router-link :to="{ name: 'home', query: back }">
-              &larr; Back to Map
-            </router-link>
-          </div>
-
-
           <div class="lake-card">
-            <div class="photo" :style="{'background-image': 'url(' + require('@/assets/intro-umpqua-lake.png') + ')'}">
-            </div>
+            <div class="photo" :style="photo_style"></div>
             <div class="info">
               <h4>A Public Resource Since 1985</h4>
               <h2>About the Atlas of Oregon Lakes</h2>
             </div>
-
           </div>
 
         </div>
@@ -106,13 +93,9 @@
 export default {
   name: 'about',
   computed: {
-    back () {
-      return {};
-    }
-  },
-  methods: {
-    close () {
-      this.$router.push({name: 'home'});
+    photo_style () {
+      let photo = require('@/assets/intro-umpqua-lake.png');
+      return {'backgroundImage': 'url(' + photo + ')'}
     }
   },
 }
