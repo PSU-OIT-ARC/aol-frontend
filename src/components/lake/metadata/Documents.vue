@@ -1,10 +1,20 @@
 <template>
 
-  <div class="documents-wrapper">
+  <div v-if="!mobile_mode" class="documents-wrapper">
     <a name="documents" id="documents"></a>
     <h3>Documents</h3>
-
     <ul class="documents-wrapper">
+      <li v-for="(doc, index) in lake.documents"
+          v-bind:item="doc"
+          v-bind:index="index"
+          v-bind:key="doc.file">
+        <a :href="doc.file" target="_">{{ doc.name }}</a>
+      </li>
+    </ul>
+  </div>
+  <div v-else>
+    <h3>Documents</h3>
+    <ul>
       <li v-for="(doc, index) in lake.documents"
           v-bind:item="doc"
           v-bind:index="index"
@@ -17,10 +27,17 @@
 </template>
 
 <script>
+import config from '@/config';
+
 export default {
   props: ['lake'],
   name: 'documents',
   title: 'Documents',
+  computed: {
+    mobile_mode () {
+      return config.is_mobile(window);
+    }
+  }
 }
 </script>
 
