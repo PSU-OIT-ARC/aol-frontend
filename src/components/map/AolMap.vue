@@ -15,7 +15,8 @@ import {
   createFeatureServiceLayers,
   updateClusters,
   convertGeoJsonToEsriFeature,
-  clusterIndex
+  clusterIndex,
+  checkExtent
 } from '@/components/map/utils';
 
 export default {
@@ -161,7 +162,7 @@ export default {
               zoom: zoom,
               center: center
             });
-            view.constraints = { maxZoom: 15 };
+
             // we're using custom controls
             let locateWidget = new Locate({
               viewModel: {
@@ -172,12 +173,34 @@ export default {
             });
 
             view.ui.components = [locateWidget];
+
+            view.constraints = {
+                minZoom: config.minZoom,
+                maxZoom: config.maxZoom,
+                snapToZoom: false,
+                rotationEnabled: false
+            }; 
+
             view.when().then(()=> {
+
+              let initialExtent = view.extent;
               this.setMapObject(map);
               this.setMapNode(this.$refs.map);
               this.setMapView(view);
+
+              view.on('drag', () => {
+                checkExtent(view, initialExtent);
+              });
+              view.on('key-down', (e) => {
+                const arrow_keys = [
+                    'ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'];
+                if (arrow_keys.indexOf(e.key > -1)) {
+                  checkExtent(view, initialExtent);
+                }
+              });
               resolve([map, view])
             });
+
           }); // end getAuthToken
         }); // end loadModules
       }); // end Promise

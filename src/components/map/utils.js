@@ -343,6 +343,30 @@ const getClusterGraphicStyles = (size) => {
     }
 }
 
+const checkExtent = (view, initialExtent) => {
+// thanks to:
+// https://community.esri.com/thread/229431-getting-mapview-to-stay-within-bounds
+  let currentCenter = view.extent.center;
+  if (!initialExtent.contains(currentCenter)) {
+
+    let newCenter = view.extent.center;
+
+    if (currentCenter.x < initialExtent.xmin) {
+      newCenter.x = initialExtent.xmin;
+    }
+    if (currentCenter.x > initialExtent.xmax) {
+      newCenter.x = initialExtent.xmax;
+    }
+    if (currentCenter.y < initialExtent.ymin) {
+      newCenter.y = initialExtent.ymin;
+    }
+    if (currentCenter.y > initialExtent.ymax) {
+      newCenter.y = initialExtent.ymax;
+    }
+    view.goTo(newCenter, {duration: 20});
+  }
+}
+
 export {
     createNLCDTileLayer,
     createVectorTileLayers,
@@ -351,5 +375,6 @@ export {
     updateClusters,
     convertGeoJsonToEsriFeature,
     clusterIndex,
-    clusterLayer
+    clusterLayer,
+    checkExtent
 }
