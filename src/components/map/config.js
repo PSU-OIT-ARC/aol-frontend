@@ -71,7 +71,8 @@ const config = {
     },
     map_center: [-121.7, 44.1],
     zoom: 8,
-    maxZoom: 15,
+    minZoom: 7,
+    maxZoom: 16,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [

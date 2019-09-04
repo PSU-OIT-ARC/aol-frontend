@@ -173,6 +173,14 @@ export default {
             });
 
             view.ui.components = [locateWidget];
+
+            view.constraints = {
+                minZoom: config.minZoom,
+                maxZoom: config.maxZoom,
+                snapToZoom: false,
+                rotationEnabled: false
+            }; 
+
             view.when().then(()=> {
 
               let initialExtent = view.extent;
