@@ -1,5 +1,9 @@
 const mutations = {
 
+    setTimestamp (state, options) {
+        state.timestamp[options.label] = options.timestamp;
+    },
+
     setMap (state, map) {
         state.map_object = map;
     },
@@ -12,10 +16,17 @@ const mutations = {
         state.map_view = view;
     },
 
+    setMapBasemap (state, basemap) {
+        state.map_basemap = basemap;
+    },
+
+    setMapFilter (state, filter) {
+        state.map_filter = filter;
+    },
+
     setSearchResults (state, data) {
         state.search.query = data.query;
         state.search.results = data.results;
-        state.search.all_results = data.all_results;
     },
 
     setLakes (state, data) {

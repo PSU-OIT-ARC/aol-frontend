@@ -2,6 +2,20 @@
 
 const getters = {
 
+    getTimeElapsed (state) {
+        return (label) => {
+            return Date.now() - state.timestamp[label];
+        }
+    },
+
+    getMapBasemap (state) {
+        return state.map_basemap;
+    },
+
+    getMapFilter (state) {
+        return state.map_filter;
+    },
+
     searchQuery (state) {
         return state.search.query;
     },
@@ -10,16 +24,18 @@ const getters = {
         return state.search.results;
     },
 
-    searchResultsAll (state) {
-        return state.search.all_results;
+    getIsLoading (state) {
+      return state.is_loading;
     },
 
-    getLakeBySlug (state) {
-        return (slug) => {
-            return state.lakes.find((lake) => {
-                return lake.slug === slug
-            });
-        }
+    getIsIntroDismissed (state) {
+      return state.intro_dismissed;
+    },
+
+    getLakes (state) {
+      return state.lakes.filter((lake) => {
+          return lake.is_major;
+      })
     },
 
     getLakeByReachcode (state) {
@@ -28,12 +44,6 @@ const getters = {
                 return parseInt(lake.reachcode) === reachcode;
             });
         }
-    },
-
-    getLakes (state) {
-      return state.lakes.filter((lake) => {
-          return lake.is_major;
-      })
     },
 
     getReachcodes (state) {
@@ -50,14 +60,6 @@ const getters = {
 
     getCurrentLake (state) {
       return state.current_lake;
-    },
-
-    getIsLoading (state) {
-      return state.is_loading;
-    },
-
-    getIsIntroDismissed (state) {
-      return state.intro_dismissed;
     },
 
     getCurrentPage (state) {

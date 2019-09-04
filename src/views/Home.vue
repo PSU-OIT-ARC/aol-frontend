@@ -1,7 +1,7 @@
 <template>
-  <div v-bind:class="[getCurrentFocus ? 'sidebar_active' : '', 'home']">
+  <div v-bind:class="[focus ? 'sidebar_active' : '', 'home']">
     <side-bar class='sidebar-wrapper'
-      v-bind:class="[getCurrentFocus ? 'sidebar_active' : '']">
+      v-bind:class="[focus ? 'sidebar_active' : '']">
     </side-bar>
     <map-container class='map-wrapper'></map-container>
   </div>
@@ -20,33 +20,26 @@ export default {
     MapContainer,
     SideBar
   },
-  methods: {
-    ...mapActions(['setCurrentFocus', 'fitBounds']),
-    ...mapGetters(['getLakeByReachcode']),
-    activateLake (lake) {
-      this.setCurrentFocus(lake);
-      this.fitBounds({lake: lake });
-      this.$router.push({name: 'home', query: {'lake': lake.reachcode}});
-    },
-    deactivateLake () {
-      this.setCurrentFocus();
-      this.fitBounds({});
-      this.$router.push({name: 'home', query: {}});
-    },
-  },
   computed: {
-    ...mapGetters(['getCurrentFocus']),
+    ...mapGetters({lakes: 'getLakes', focus: 'getCurrentFocus'}),
+  },
+  methods: {
+    ...mapActions(['resetBounds', 'focusLake']),
   },
   watch: {
     '$route': function (to) {
       if (to.name == "home" && to.query && Object.keys(to.query).includes("lake")) {
-        let gl = this.getLakeByReachcode();
-        let lake = gl(parseInt(to.query.lake));
-        this.activateLake(lake);
+        this.focusLake(to.query.lake);
       } else if (to.name == "home" && to.query && !Object.keys(to.query).length) {
-        this.deactivateLake();
+        this.focusLake(null);
       }
+    },
+    lakes: function() {
+      this.focusLake(this.$route.query.lake);
     }
+  },
+  created () {
+    this.focusLake(this.$route.query.lake);
   }
 
 }

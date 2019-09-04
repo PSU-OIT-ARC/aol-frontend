@@ -3,9 +3,11 @@
     <map-loader/>
     <aol-map></aol-map>
 
-    <div v-if="show_legend == true" class="map-legend-wrapper">
+    <div v-show="active_state.legend" class="map-legend-wrapper">
+      <a class="close-filters" @click="toggleVisibility('legend')">
+        <close-button-svg/>
+      </a>
       <h4>Map Legend</h4>
-      <div class="close-filters" @click="show_legend = false">╳</div>
       <img src="~@/assets/temp_legend.png" />
     </div>
 
@@ -21,24 +23,16 @@
            <zoom-out-svg/>
         </a>
 
-        <a role="button" href="#" class="map-button map-button--extent"
+        <a role="button" class="map-button map-button--extent"
            @click="goToInitialExtent">
           <initial-extent/>
         </a>
 
         <a role="button" href="#" class="map-button map-button--layers"
-           v-bind:class="{ selected: show_filters}"
-           @click="show_filters = !show_filters; show_legend = false">
+           v-bind:class="{ selected: active_state.filters}"
+           @click="toggleVisibility('filters')">
           <layer-svg/>
         </a>
-
-        <!-- <a role="button" href="#" class="map-button map-button--legend"
-           v-bind:class="{ selected: show_legend}"
-           @click="show_legend = !show_legend; show_filters = false">
-          <legend-svg/>
-        </a> -->
-
-
 
         <!-- <a role="button" href="#"
            class="map-button map-button--locate"
@@ -48,12 +42,12 @@
       </div>
     </div>
 
-    <div class="map-filter-wrapper" v-show="show_filters == true">
-
-      <layer-switcher @show_filters="toggleFilters" />
-
+    <div class="map-filter-wrapper" v-show="active_state.filters">
+      <a class="close-filters" @click="toggleVisibility('filters')">
+        <close-button-svg/>
+      </a>
+      <layer-switcher/>
       <filter-control/>
-
     </div>
 
   </div>
@@ -61,6 +55,9 @@
 
 
 <script>
+import { mapActions } from 'vuex';
+
+import CloseButtonSVG from '@/components/CloseButtonSVG';
 import AolMap from '@/components/map/AolMap';
 import MapLoader from '@/components/map/MapLoader'
 import LayerSVG from '@/components/map/controls/LayerSVG';
@@ -70,21 +67,22 @@ import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
 import InitialExtent from '@/components/map/controls/InitialExtent';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
-import config from '@/components/map/config';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'map-container',
   data () {
     return {
       selectedAttributes: [],
-      show_filters: false,
-      show_legend: false,
       lake_markers: [],
-      lake_markers_layer: null
+      lake_markers_layer: null,
+      active_state: {
+        filters: false,
+        legend: false,
+      }
     }
   },
   components: {
+    'close-button-svg': CloseButtonSVG,
     'layer-svg': LayerSVG,
     'legend-svg': LegendSVG,
     'zoom-in-svg': ZoomInSVG,
@@ -95,8 +93,9 @@ export default {
     AolMap,
     MapLoader
   },
+
   methods: {
-    ...mapActions(['setCurrentFocus', 'resetSearchResults']),
+    ...mapActions(['resetSearchResults', 'resetBounds']),
     zoomIn () {
       const view = this.$store.state.map_view;
       view.zoom += 1;
@@ -105,9 +104,8 @@ export default {
       const view = this.$store.state.map_view;
       view.zoom -= 1;
     },
-    toggleFilters (toggle_filters) {
-      this.show_filters = toggle_filters;
-      this.show_legend = false;
+    toggleVisibility (attr) {
+      this.active_state[attr] = !this.active_state[attr];
     },
     locate () {
       const view = this.$store.state.map_view;
@@ -117,15 +115,9 @@ export default {
       locate.locate()
     },
     goToInitialExtent () {
-        // clear context
-        this.setCurrentFocus(null);
-        this.resetSearchResults();
         this.$router.push({name: 'home', query: {}});
-
-        const view = this.$store.state.map_view;
-        view.goTo(config.map_center).then(()=> {
-          view.set('zoom', config.zoom);
-        })
+        this.resetSearchResults();
+        this.resetBounds();
     }
   }
 }

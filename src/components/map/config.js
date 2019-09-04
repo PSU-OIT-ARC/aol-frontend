@@ -1,9 +1,4 @@
 
-
-const backend_url = process.env.VUE_APP_API_URL;
-const max_search_results = 5
-const LOADING = 'loading';
-
 const AGOL_GROUP_ID = '6Miy5NqQWjMYTGFY';
 const REST_PATH = "arcgis/rest/services";
 const ArcGisOnlineServicesBaseUrl = `https://services2.arcgis.com/${AGOL_GROUP_ID}`;
@@ -11,8 +6,6 @@ const ArcGisOnlineTilesBaseUrl = `https://tiles.arcgis.com/tiles/${AGOL_GROUP_ID
 
 const ArcGisOnlineServicesUrl = `${ArcGisOnlineServicesBaseUrl}/${REST_PATH}`;
 const ArcGisOnlineTilesUrl = `${ArcGisOnlineTilesBaseUrl}/${REST_PATH}`;
-
-
 
 const getVectorTileLayerUrl = function () {
     return `${ArcGisOnlineTilesUrl}/${this.AGOLName}/`+
@@ -76,10 +69,6 @@ const config = {
             async: true
         }
     },
-    backend_url: backend_url,
-    max_search_results: max_search_results,
-
-    //map_center: [-122.841856, 44.002925],
     map_center: [-121.7, 44.1],
     zoom: 8,
     maxZoom: 15,

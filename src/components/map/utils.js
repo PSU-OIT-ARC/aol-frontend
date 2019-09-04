@@ -36,7 +36,7 @@ const createNLCDTileLayer = (map) => {
                     visible: configLayer.visible,
                     minScale: configLayer.minScale
                 });
-                console.info("Adding tile layer "+configLayer.name);
+                console.debug("Adding tile layer "+configLayer.name);
                 map.add(nlcd_layer);
                 resolve();
             });
@@ -64,7 +64,7 @@ const createVectorTileLayers = (map) => {
                         visible: layer.visible,
                         minScale: layer.minScale
                     })
-                    console.info("Adding vector tile layer "+layer.name);
+                    console.debug("Adding vector tile layer "+layer.name);
                     map.add(vector_tile_layer);
                 });
                 resolve();
@@ -100,7 +100,7 @@ const createFeatureServiceLayers = (map, view, component) => {
                                 popupEnabled: layer.popupTemplate != undefined ? true : false,
                             });
 
-                             console.info("Adding feature layer " + layer.name);
+                             console.debug("Adding feature layer " + layer.name);
                              if (layer.renderer != undefined) {
                                  feature_layer.renderer = layer.renderer
                              }

@@ -232,15 +232,34 @@ a:link, a:visited {
   }
 }
 
+.close-sidebar,
 .close-filters {
+  text-align: right;
   cursor: pointer;
-  font-size: 24px;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.close-filters {
+  text-align: right;
   position: absolute;
   top: 15px;
   right: 15px;
 
+  svg {
+    fill: #000;
+  }
   &:hover, &:focus {
     color: black;
+  }
+}
+
+.close-sidebar {
+  svg {
+    fill: #fff;
   }
 }
 

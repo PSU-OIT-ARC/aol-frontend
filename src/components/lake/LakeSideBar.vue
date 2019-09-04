@@ -1,5 +1,5 @@
 <template>
-  <div class="lake-sidebar" v-if="lake">
+  <div class="lake-sidebar">
 
     <div class="sidebar-photo-wrapper">
       <div class="sidebar-photo" :style="photo_style"></div>
@@ -8,92 +8,67 @@
     <div class="sidebar-content">
 
       <div class="sidebar__nav">
-        <router-link :to="search_href" @click.native="close">
-          <div v-if="has_results">
-            <p>&larr; Back to Search</p>
-          </div>
-          <div v-else>
-            <p>&larr; Back to Map</p>
-          </div>
-        </router-link>
-        <div class="close-sidebar" @click="close">
-          <svg xmlns="http://www.w3.org/2000/svg" width="982" height="982" viewBox="0 0 982 982">
-            <path fill-rule="evenodd" d="M576.8,491 L962.7,105.1 C987.2,80.6 987.2,43.8 962.7,19.3 C938.2,-5.2 901.4,-5.2 876.9,19.3 L491,405.3 L105.1,19.4 C80.6,-5.1 43.9,-5.1 19.3,19.4 C-5.2,43.9 -5.2,80.7 19.3,105.2 L402.2,491 L19.4,876.9 C-5.1,901.4 -5.1,938.2 19.4,962.7 C28.6,975 47,981.1 62.3,981.1 C77.6,981.1 92.9,975 105.2,962.7 L491,576.8 L876.9,962.7 C889.2,975 904.5,981.1 919.8,981.1 C935.1,981.1 950.4,975 962.7,962.7 C987.2,938.2 987.2,901.4 962.7,876.9 L576.8,491 Z"/>
-          </svg>
+        <div class="back-to-search">
+          <router-link v-if="has_results" :to="back_href">
+            &larr; Back to Search
+          </router-link>
+        </div>
+        <div class="close-sidebar">
+          <router-link :to="back_href">
+            <close-button-svg />
+          </router-link>
         </div>
       </div>
 
-      <div v-if="lake.is_major">
-        <router-link :to="lake_href(lake)">
-          <lake-card :lake='lake'></lake-card>
-        </router-link>
-
-        <div class="lake-summary">
-          <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
-
-          <p v-for="(line, index) in lake.body"
-             v-bind:index="index"
-             v-bind:key="index">
-           {{ line }}<br />
-          </p>
-        </div>
+      <router-link v-if="lake.is_major" :to="lake_href">
+        <lake-card :lake='lake'></lake-card>
+      </router-link>
+      <lake-card v-if="!lake.is_major" :lake='lake'></lake-card>
+      <div class="lake-summary">
+        <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
+        <text-section :lake='lake'></text-section>
       </div>
-      <div v-else>
-        <minor-lake-card :lake='lake'></minor-lake-card>
-        <div class="lake-summary">
-          <p>
-            {{lake.title}} is a {{lake.waterbody_type}}.
-          </p>
-        </div>
-      </div>
+
     </div>
-
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
+import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LakeCard from '@/components/lake/LakeCard';
-import MinorLakeCard from '@/components/lake/MinorLakeCard';
 import DataTabs from '@/components/lake/DataTabs';
+import TextSection from '@/components/lake/metadata/TextSection';
 
 export default {
   name: 'lake-sidebar',
   props: ['lake'],
   components: {
+    'close-button-svg': CloseButtonSVG,
     LakeCard,
-    MinorLakeCard,
-    DataTabs
-  },
-  methods: {
-    ...mapActions(['setCurrentFocus']),
-    lake_href (lake) {
-      return {name: 'lake', params: {'reachcode': lake.reachcode}};
-    },
-    close () {
-      this.setCurrentFocus();
-      this.$router.push({name: 'home'});
-    }
+    DataTabs,
+    TextSection
   },
   computed: {
     ...mapGetters(['searchResults']),
     has_results () {
       return this.searchResults != null && this.searchResults.length;
     },
-    search_href () {
-      return {name: 'home'}
+    back_href () {
+      return {name: 'home', query: {}};
+    },
+    lake_href () {
+      return {name: 'lake', params: {'reachcode': this.lake.reachcode}};
     },
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
-      } else if (this.lake.photos && this.lake.photos.length) {
-        photo = this.lake.photos[0].href;
       }
       return {'backgroundImage': 'url(' + photo + ')'}
     }
-  },
+  }
 }
 </script>
 
@@ -133,7 +108,7 @@ a:hover, a:focus {
   .sidebar__nav {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 0px 15px;
+    padding: 15px 15px;
     position: relative;
     top: -30px;
 
@@ -173,19 +148,6 @@ a:hover, a:focus {
     @include respond-to(handheld) {
       height: 70vh;  // keep sidebar text scrollable on mobile
     }
-  }
-
-  .close-sidebar {
-    cursor: pointer;
-    text-align: right;
-    margin-top: 8px;
-
-    svg {
-      fill: #fff;
-      width: 15px;
-      height: 15px;
-    }
-
   }
 
   p {

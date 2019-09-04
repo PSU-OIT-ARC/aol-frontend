@@ -2,39 +2,31 @@
   <div id="search-bar">
     <input
       placeholder="Search for Oregon lakes" type="text"
-      v-model="query" @input="search(query)" autofocus="true" />
+      :value="query" @input="search" autofocus="true" />
 
       <div class="search-clear" @click="clear">
-
         <img v-if="this.query==''" src="~@/assets/icon_search.svg" height="20" />
         <img v-else src="~@/assets/icon_clear.svg" height="20" />
-
       </div>
 
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'search-bar',
-  data () {
-    return {
-      query: null,
-    }
+  computed: {
+    ...mapGetters({query: 'searchQuery'})
   },
   methods: {
-    ...mapActions(['searchLakes', 'setCurrentFocus', 'fitBounds']),
-    search (query) {
-      this.setCurrentFocus();
-      this.searchLakes(query);
+    ...mapActions(['searchLakes', 'resetSearchResults']),
+    search (e) {
+      this.searchLakes(e.target.value);
     },
     clear () {
-      this.query = '';
-      this.searchLakes();
-      this.$router.push({name: 'home'});
-      this.fitBounds({geom: null, buffer: undefined});
+      this.resetSearchResults();
     }
   }
 }

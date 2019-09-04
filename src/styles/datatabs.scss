@@ -97,8 +97,8 @@
 .tab-icon--plants:focus { background-image: url(~@/assets/plants-white.svg);}
 .tab-icon--mussels:hover,
 .tab-icon--mussels:focus { background-image: url(~@/assets/clam-white.svg);}
-.tab-icon--atlas_text:hover,
-.tab-icon--atlas_text:focus { background-image: url(~@/assets/book-open-white.svg); }
+.tab-icon--text-section:hover,
+.tab-icon--text-section:focus { background-image: url(~@/assets/book-open-white.svg); }
 .tab-icon--watershed:hover,
 .tab-icon--watershed:focus { background-image: url(~@/assets/water-white.svg);}
 .tab-icon--photos:hover,
@@ -112,9 +112,9 @@
 .tab-icon--mussels,
 .active.tab-icon--mussels:hover,
 .active.tab-icon--mussels:focus { background-image: url(~@/assets/clam.svg); }
-.tab-icon--atlas_text,
-.active.tab-icon--atlas_text:hover,
-.active.tab-icon--atlas_text:focus { background-image: url(~@/assets/book-open.svg);}
+.tab-icon--text-section,
+.active.tab-icon--text-section:hover,
+.active.tab-icon--text-section:focus { background-image: url(~@/assets/book-open.svg);}
 .tab-icon--watershed,
 .active.tab-icon--watershed:hover,
 .active.tab-icon--watershed:focus { background-image: url(~@/assets/water.svg);}

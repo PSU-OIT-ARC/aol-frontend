@@ -1,95 +1,46 @@
 <template>
   <div class='layer-switcher--container'>
-    <h4>Map Layers</h4>
-    <div class="close-filters" @click="emitFilterVisibility()">╳</div>
-
-    <div class="layer base">
-
-        <input type="radio"
-               name="basemap"
-               id="topo_basemap"
-               :checked="topo_basemap"
-               @change="selectBaseMap" />
-        <label for="topo_basemap">Topology</label>
-
-        <input type="radio"
-               name="basemap"
-               id="osm_basemap"
-               :checked="osm_basemap"
-               @change="selectBaseMap" />
-        <label for="osm_basemap">Open Street Map</label>
-
-        <input type="radio"
-               name="basemap"
-               id="gray_basemap"
-               :checked="gray_basemap"
-               @change="selectBaseMap" />
-        <label for="gray_basemap">Simple Gray</label>
-
-
-      <!--<fieldset>
-        <legend>Lands</legend>
-        <input type="radio"
-               name="lands"
-               checked="checked"
-               id="disablepublands"
-               @change="selectVectorTileLayer" />
-        <label for="disablepublands">None</label>
-        <br />
-        <input :type="ownershipLayer.input_type"
-               :name="ownershipLayer.input_group"
-               :checked="ownershipLayer.visible"
-               :id="ownershipLayer.id"
-               @change="selectVectorTileLayer" />
-        <label :for="ownershipLayer.id">{{ ownershipLayer.name }}</label>
-        <br />
-        <input :type="naturalisticLayer.input_type"
-               :name="naturalisticLayer.input_group"
-               :checked="naturalisticLayer.visible"
-               :id="naturalisticLayer.id"
-               @change="selectVectorTileLayer" />
-        <label :for="naturalisticLayer.id">{{ naturalisticLayer.name }}</label>
-      </fieldset>
-      <input :type="hillshadeLayer.input_type"
-             :name="hillshadeLayer.input_group"
-             :checked="hillshadeLayer.visible"
-             :id="hillshadeLayer.id"
-             @change="selectVectorTileLayer" />
-      <label :for="hillshadeLayer.id">{{ hillshadeLayer.name }}</label>
-      <input :type="bathymetryLayer.input_type"
-             :name="bathymetryLayer.input_group"
-             :checked="bathymetryLayer.visible"
-             :id="bathymetryLayer.id"
-             @change="selectVectorTileLayer" />
-      <label :for="bathymetryLayer.id">{{ bathymetryLayer.name }}</label> -->
+    <h4>Map Base Layers</h4>
+    <div class='layer'>
+      <div v-for="layer in base_maps" :key='layer.name'>
+        <input type='radio'
+               :id="layer.name"
+               :value='layer.name'
+               :checked="getMapBasemap() == layer.name"
+               @change="selectBaseMap(layer)"/>
+        <label :for='layer.name'>{{ layer.label }}</label>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import config from '@/components/map/config';
 
 export default {
   name: 'layer-switcher',
+  data () {
+    return {
+      base_maps: [
+        {
+          name: 'topo',
+          label: 'Topographic'
+        },
+        {
+          name: 'osm',
+          label: 'Streets'
+        },
+        {
+          name: 'gray',
+          label: 'Simple'
+        },
+      ],
+      selectedBaseMap: 'topo'
+    }
+  },
   computed: {
-    topo_basemap () {
-      if (this.$store.state.map_object == null) {
-        return false;
-      }
-      return this.$store.state.map_object.basemap.id == "topo";
-    },
-    osm_basemap () {
-      if (this.$store.state.map_object == null) {
-        return false;
-      }
-      return this.$store.state.map_object.basemap.id == "osm";
-    },
-    gray_basemap () {
-      if (this.$store.state.map_object == null) {
-        return false;
-      }
-      return this.$store.state.map_object.basemap.id == "gray";
-    },
+    /*
     hillshadeLayer () {
       return config.layers.find((l) => {return "nlcd" == l.id})
     },
@@ -102,21 +53,15 @@ export default {
     bathymetryLayer () {
       return config.layers.find((l) => {return "bathymetry" == l.id})
     }
+    */
   },
   methods: {
-    selectBaseMap (event) {
-      let map = this.$store.state.map_object;
-
-      if (event.target.id == "topo_basemap") {
-        map.basemap = "topo";
-      }
-      else if (event.target.id == "osm_basemap") {
-        map.basemap = "osm";
-      }
-      else if (event.target.id == "gray_basemap") {
-        map.basemap = "gray";
-      }
+    ...mapActions(['setMapBasemap']),
+    ...mapGetters(['getMapBasemap']),
+    selectBaseMap (layer) {
+      this.setMapBasemap(layer.name);
     },
+    /*
     selectVectorTileLayer (event) {
       let map = this.$store.state.map_object;
       map.allLayers.forEach((layer) => {
@@ -132,25 +77,23 @@ export default {
               }
           }
       });
-    },
-    emitFilterVisibility () {
-      this.$emit('show_filters', false);
     }
+    */
   }
 }
 </script>
 
 <style scoped lang='scss'>
   div.layer {
-      padding: 5px;
-      display: inline-block;
+    padding: 5px;
+    display: inline-block;
 
-      label {
-        margin-left: 5px;
-        line-height: 2em;
-        padding-left: 5px;
-        width: 88%;
-      }
+    label {
+      margin-left: 5px;
+      line-height: 2em;
+      padding-left: 5px;
+      width: 88%;
+    }
   }
 
 </style>

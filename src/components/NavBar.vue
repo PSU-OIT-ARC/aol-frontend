@@ -12,13 +12,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
-export default {
-  methods: {
-    ...mapActions(['setCurrentLake'])
-  }
-}
+export default {}
 </script>
 
 <style scoped lang='scss'>

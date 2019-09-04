@@ -1,19 +1,29 @@
 const state = {
-    user: {},
-    current_lake: null,
-    current_focus: null,
-    lakes: [],
-    search: {
-        results: [],
-        all_results: null,
-        query: null
-    },
+    // generic state
+    is_loading: false,
+    intro_dismissed: false,
+    timestamp: {},
+
+    // map objects
     map_object: null,
     map_node: null,
     map_view: null,
-    is_loading: false,
-    intro_dismissed: false,
+    map_basemap: 'topo',
+    map_filter: 'all_lakes',
+
+    // lake state
+    lakes: [],
+    search: {
+        results: [],
+        query: null
+    },
+    current_lake: null,
+    current_focus: null,
+
+    // custom page state
     current_page: false
+
+    //user: {},
 }
 
 export default state;

@@ -1,12 +1,26 @@
-import config from '@/components/map/config';
+import map_config from '@/components/map/config';
+import config from '@/config';
+
 
 const API_URL = config.backend_url;
 const actions = {
 
-    getAuthToken (context) {
+    markTimestamp (context, label) {
+        context.commit("setTimestamp", {label: label, timestamp: Date.now()});
+    },
+
+    getAuthToken () {
         return fetch(`${API_URL}/token/?format=json`).then(response => {
             return response.json();
         });
+    },
+
+    setLoading (context, is_loading) {
+        context.commit("setLoading", is_loading);
+    },
+
+    setIntroDismissed (context, dismissed) {
+        context.commit("setIntroDismissed", dismissed);
     },
 
     setMapObject (context, map) {
@@ -21,11 +35,23 @@ const actions = {
         context.commit('setMapView', view);
     },
 
+    setMapBasemap (context, basemap) {
+        let map =  context.rootState.map_object;
+        if (map != null) {
+            console.debug("Using " + basemap + " base map");
+            map.basemap = basemap;
+            context.commit('setMapBasemap', basemap);
+        }
+    },
+
+    setMapFilter (context, filter) {
+        context.commit('setMapFilter', filter);
+    },
+
     searchLakes (context, query) {
         let search = {};
         search.query = query;
-        search.results = config.LOADING;
-        search.all_results = [];
+        search.results = [];
 
         context.commit('setSearchResults', search);
         if (query == null || query == '') {
@@ -56,12 +82,19 @@ const actions = {
     },
 
     resetSearchResults (context) {
-        let search = {}
-        search.query = null;
-        search.results = config.LOADING;
-        search.all_results = [];
+        console.debug("Resetting search results");
 
+        let search = {query: '', results: []}
         context.commit('setSearchResults', search);
+    },
+
+    resetBounds (context) {
+        console.debug("Resetting map bounds");
+
+        const view = context.rootState.map_view;
+        view.goTo(map_config.map_center).then(()=> {
+          view.set('zoom', map_config.zoom);
+        })
     },
 
     fitBounds (context, options) {
@@ -74,12 +107,13 @@ const actions = {
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
 
+        if (map == null) {
+            console.warn("Map is not loaded. Cannot fit bounds.");
+            return
+        }
+
         let lake = options['lake'];
         let geom = options['geom'] || undefined;
-
-        if (lake) {
-          geom = lake.geom || geom;
-        }
 
         if (geom == undefined && lake) {
             let lake_layer = map.findLayerById('lake_bbox_service_layer');
@@ -125,10 +159,10 @@ const actions = {
             ).then(
                 data => {
                     if (status == 'major') {
-                        console.info("Fetched " + data.length + " major lakes");
+                        console.debug("Fetched " + data.length + " major lakes");
                         context.commit("setLakes", data);
                     } else {
-                        console.info("Fetched " + data.length + " minor lakes");
+                        console.debug("Fetched " + data.length + " minor lakes");
                         context.commit("addLakes", data);
                     }
                     resolve();
@@ -142,8 +176,20 @@ const actions = {
         });
     },
 
-    setCurrentFocus (context, lake) {
-        context.commit("setCurrentFocus", lake);
+    focusLake (context, reachcode) {
+        let gl = context.getters.getLakeByReachcode;
+        let lake = gl(parseInt(reachcode));
+
+        if (lake != undefined && lake != null) {
+            console.debug("Committing focus " + lake.reachcode);
+            context.commit("setCurrentFocus", lake);
+        } else if (context.rootState.current_focus != null) {
+            console.debug("Removing focus " + context.rootState.current_focus.reachcode);
+            context.commit("setCurrentFocus", null);
+        }
+
+        console.debug("Depopulating current lake");
+        context.commit("setCurrentLake", null);
     },
 
     fetchLake (context, reachcode) {
@@ -156,9 +202,9 @@ const actions = {
                 }
             ).then(
                 data => {
-                    console.info("Fetched lake " + reachcode);
+                    console.debug("Fetched lake " + reachcode);
                     context.commit("setCurrentLake", data);
-                    resolve();
+                    resolve(data);
                 }
             ).catch(
                 e => {
@@ -169,18 +215,6 @@ const actions = {
         });
     },
 
-    setCurrentLake (context, lake) {
-        context.commit("setCurrentLake", lake);
-    },
-
-    setLoading (context, is_loading) {
-        context.commit("setLoading", is_loading);
-    },
-
-    setIntroDismissed (context, dismissed) {
-        context.commit("setIntroDismissed", dismissed);
-    },
-
     fetchPage (context, slug) {
         return new Promise((resolve, reject) => {
             fetch(`${API_URL}/flatpage/${slug}/?format=json`).then(
@@ -189,7 +223,7 @@ const actions = {
                 }
             ).then(
                 data => {
-                    console.info("Fetched page " + slug);
+                    console.debug("Fetched page " + slug);
                     context.commit("setCurrentPage", data);
                     resolve();
                 }

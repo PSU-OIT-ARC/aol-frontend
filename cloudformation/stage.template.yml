@@ -17,6 +17,6 @@ Resources:
         BucketName: aol
         BucketRealm: stage.wdt.pdx.edu
         BucketRegion: us-west-2
+        CorsAllowedDomains: aol.stage.wdt.pdx.edu
+        IamPrinicipleArn: !GetAtt AppRole.Outputs.RoleArn
         EnableStaticWebsite: true
-        IamPrinicipleArn: !GetAtt 'AppRole.Outputs.RoleArn'
-Parameters: {}
