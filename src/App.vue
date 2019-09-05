@@ -5,6 +5,7 @@
 <template>
   <div id="app">
     <nav-bar></nav-bar>
+    <offline-card/>
     <router-view/>
   </div>
 </template>
@@ -13,10 +14,11 @@
 import { mapActions, mapGetters } from 'vuex';
 
 import NavBar from '@/components/NavBar';
+import OfflineCard from '@/components/OfflineCard';
 
 export default {
   name: 'app',
-  components: { NavBar },
+  components: { NavBar, OfflineCard },
   methods: {
     ...mapActions(['markTimestamp', 'fetchLakes']),
     ...mapGetters(['getTimeElapsed', 'getLakes']),
@@ -43,7 +45,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>
