@@ -1,7 +1,6 @@
 import map_config from '@/components/map/config';
 import config from '@/config';
 
-
 const API_URL = config.backend_url;
 const actions = {
 
@@ -107,8 +106,16 @@ const actions = {
         If the lake object has a cached geom attribute, goTo that extent
         Otherwise, query feature service for lake geometry using reachcode.
         */
+        context.dispatch('setLoading', true)
+
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
+
+        const _massage_extent = (geom) => {
+            let extent = geom.extent.clone();
+            extent.expand(map_config.extent_buffer)
+            return extent
+        }
 
         if (map == null) {
             console.warn("Map is not loaded. Cannot fit bounds.");
@@ -131,7 +138,7 @@ const actions = {
                     let geom = response.features[0].geometry;
                     console.debug('Caching lake geom returned from ARCGIS online query by reachcode')
                     lake.cached_geom = geom;
-                    let extent = geom.extent;
+                    let extent = _massage_extent(geom)
                     view.goTo(extent).then(()=>{
                         context.dispatch('setLoading', false)
                    }).catch((e) => {
@@ -144,7 +151,7 @@ const actions = {
         }
         else {
             console.debug('fitBounds using cached geom')
-            let extent = lake.cached_geom.extent;
+            let extent = _massage_extent(lake.cached_geom);
             view.goTo(extent).then(()=>{
                 context.dispatch('setLoading', false)
             }).catch((e) => {

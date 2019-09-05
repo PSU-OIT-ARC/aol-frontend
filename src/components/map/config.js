@@ -73,6 +73,7 @@ const config = {
     zoom: 8,
     minZoom: 7,
     maxZoom: 16,
+    extent_buffer: 1.1,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [
@@ -162,7 +163,6 @@ const config = {
             type: "vector",
             name: 'Bathymetry',
             visible: true,
-            zIndex: 8,
             minScale: 577790.5542885,
             AGOLName: 'Vector_Bath_Test_2',
             getLayerUrl: getVectorTileLayerUrl,
