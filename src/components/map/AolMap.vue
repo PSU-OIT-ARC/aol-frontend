@@ -59,6 +59,12 @@ export default {
                     result.graphic.attributes.cluster);
         });
 
+        if (!features.length) {
+          // clear selection
+          this.$router.push({name: 'home'});
+          return
+        }
+
         for (let f of features) {
           if (f.graphic.attributes != null && f.graphic.attributes.cluster) {
              this.zoomToCluser(f.graphic.attributes.cluster_id, view)
@@ -75,7 +81,8 @@ export default {
 
           if (reachcode == null || reachcode == '') {
             console.debug("Selection does not provide a reachcode")
-          } else {
+          }
+          else {
             let gl = this.getLakeByReachcode();
             let lake = gl(parseInt(reachcode));
             if (lake != undefined && lake != null) {
@@ -88,8 +95,10 @@ export default {
             } else {
               console.debug("Waterbody " + reachcode + " not present in index");
             }
+            break;
           }
         }
+
       })
     },
     loadLayers (map, view) {
