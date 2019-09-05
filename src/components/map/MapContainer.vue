@@ -102,11 +102,11 @@ export default {
     ...mapGetters(['getCurrentZoom']),
     zoomIn () {
       const view = this.$store.state.map_view;
-      view.zoom += 1;
+      view.zoom += 0.5;
     },
     zoomOut () {
       const view = this.$store.state.map_view;
-      view.zoom -= 1;
+      view.zoom -= 0.5;
     },
     toggleVisibility (attr) {
       this.active_state[attr] = !this.active_state[attr];
