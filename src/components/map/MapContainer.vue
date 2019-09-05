@@ -15,10 +15,12 @@
       <div class="map-buttons">
 
         <a role="button" href="#" class="map-button map-button--zoom-in"
+           :class="zoomInDisabled ? 'disabled' : ''"
            @click="zoomIn">
            <zoom-in-svg/>
         </a>
         <a role="button" href="#" class="map-button map-button--zoom-out"
+           v-bind:class="zoomOutDisabled ? 'disabled' : ''"
            @click="zoomOut">
            <zoom-out-svg/>
         </a>
@@ -55,7 +57,8 @@
 
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import config from '@/components/map/config';
 
 import CloseButtonSVG from '@/components/CloseButtonSVG';
 import AolMap from '@/components/map/AolMap';
@@ -96,6 +99,7 @@ export default {
 
   methods: {
     ...mapActions(['resetSearchResults', 'resetBounds']),
+    ...mapGetters(['getCurrentZoom']),
     zoomIn () {
       const view = this.$store.state.map_view;
       view.zoom += 1;
@@ -119,8 +123,23 @@ export default {
         this.resetSearchResults();
         this.resetBounds();
     }
+  },
+  computed: {
+    zoomInDisabled () {
+      return this.getCurrentZoom() >= config.maxZoom;
+    },
+    zoomOutDisabled () {
+      return this.getCurrentZoom() <= config.minZoom;
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  a.map-button.disabled {
+    background: #ccc;
+    cursor: not-allowed;
+
+  }
+
+</style>
