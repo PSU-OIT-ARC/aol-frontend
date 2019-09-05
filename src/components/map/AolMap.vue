@@ -39,7 +39,7 @@ export default {
     ...mapActions(['markTimestamp',
                    'getAuthToken',
                    'setMapObject', 'setMapNode', 'setMapView',
-                   'setLoading',
+                   'setLoading', 'setZoom',
                    'resetBounds', 'fitBounds']),
 
 
@@ -110,7 +110,8 @@ export default {
             view.on('click', (event) =>
               this.selectFeatureFromClick(event, view)
             );
-            view.watch('zoom', function (zoom) {
+            view.watch('zoom', (zoom) => {
+              this.setZoom(zoom);
               updateClusters(map, view).catch((e) => {
                 console.error(e)
               })
@@ -179,7 +180,7 @@ export default {
                 maxZoom: config.maxZoom,
                 snapToZoom: false,
                 rotationEnabled: false
-            }; 
+            };
 
             view.when().then(()=> {
 
