@@ -101,11 +101,10 @@ const actions = {
         context.commit('setMapZoom', zoom);
     },
 
-    fitBounds (context, options) {
+    fitBounds (context, lake) {
         /*
         Zoom/pan to lake bounds.
-        If the geometry is supplied, goTo geom extent directly.
-        If the lake object is provided, and it has a geom attribute, goTo it
+        If the lake object has a cached geom attribute, goTo that extent
         Otherwise, query feature service for lake geometry using reachcode.
         */
         const map =  context.rootState.map_object;
@@ -116,40 +115,41 @@ const actions = {
             return
         }
 
-        let lake = options['lake'];
-        let geom = options['geom'] || undefined;
+        if (lake == undefined) {
+            console.debug('No lake provided to fitBounds:')
+            return
+        }
 
-        if (geom == undefined && lake) {
+        if (lake.cached_geom == undefined) {
+            console.debug('Fetching geometry from ArcGIS online')
             let lake_layer = map.findLayerById('lake_bbox_service_layer');
             let query = lake_layer.createQuery();
             query.where = `REACHCODE = ${lake.reachcode}`;
             query.maxRecordCountFactor = 4;
             lake_layer.queryFeatures(query).then((response) => {
                 if (response.features.length) {
-                    geom = response.features[0].geometry;
-                    lake.geom = geom;
+                    let geom = response.features[0].geometry;
+                    console.debug('Caching lake geom returned from ARCGIS online query by reachcode')
+                    lake.cached_geom = geom;
                     let extent = geom.extent;
-                    if (extent != null) {
-                        view.goTo(extent).then(()=>{
-                            context.dispatch('setLoading', false)
-                       })
-                    }
-                }
+                    view.goTo(extent).then(()=>{
+                        context.dispatch('setLoading', false)
+                   }).catch((e) => {
+                       console.error(e.message)
+                   });
+               }
+           }).catch((e) => {
+               console.error(e.message)
+           });
+        }
+        else {
+            console.debug('fitBounds using cached geom')
+            let extent = lake.cached_geom.extent;
+            view.goTo(extent).then(()=>{
+                context.dispatch('setLoading', false)
             }).catch((e) => {
                 console.error(e.message)
             });
-
-        }
-        else if (geom != null) {
-            let extent = geom.extent;
-            if (extent != null) {
-                view.goTo(extent).then(()=>{
-                    context.dispatch('setLoading', false)
-                })
-            }
-        }
-        else {
-            context.dispatch('setLoading', false);
         }
     },
 

@@ -80,6 +80,10 @@ export default {
             let lake = gl(parseInt(reachcode));
             if (lake != undefined && lake != null) {
               console.debug("Loading waterbody " + reachcode + " from index");
+              if (f.graphic.geometry.type == 'polygon') {
+                  console.debug("Caching geometry returned from hitTest query");
+                  lake.cached_geom = f.graphic.geometry;
+              }
               this.$router.push({name: 'home', query: {'lake': lake.reachcode}});
             } else {
               console.debug("Waterbody " + reachcode + " not present in index");
@@ -210,12 +214,12 @@ export default {
   watch: {
     currentFocus: function(val) {
       if (val != null && this.lakes.length) {
-        this.fitBounds({lake: val});
+        this.fitBounds(val);
       }
     },
     currentLake: function(val) {
       if (val != null && this.lakes.length) {
-        this.fitBounds({lake: val});
+        this.fitBounds(val);
       }
     }
   },
@@ -231,9 +235,9 @@ export default {
         }
 
         if (this.getCurrentFocus() != null) {
-          this.fitBounds({lake: this.getCurrentFocus()});
+          this.fitBounds(this.getCurrentFocus());
         } else if (this.getCurrentLake() != null) {
-          this.fitBounds({lake: this.getCurrentLake()});
+          this.fitBounds(this.getCurrentLake());
         }
       } else {
         // initialize map context
@@ -248,9 +252,9 @@ export default {
             }
 
             if (this.getCurrentFocus() != null) {
-              this.fitBounds({lake: this.getCurrentFocus()});
+              this.fitBounds(this.getCurrentFocus());
             } else if (this.getCurrentLake() != null) {
-              this.fitBounds({lake: this.getCurrentLake()});
+              this.fitBounds(this.getCurrentLake());
             }
           });
         });
