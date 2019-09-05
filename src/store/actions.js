@@ -97,6 +97,10 @@ const actions = {
         })
     },
 
+    setZoom (context, zoom) {
+        context.commit('setMapZoom', zoom);
+    },
+
     fitBounds (context, options) {
         /*
         Zoom/pan to lake bounds.

@@ -41,6 +41,10 @@ const mutations = {
       state.current_focus = data;
     },
 
+    setMapZoom (state, zoom) {
+        state.map_zoom = zoom;
+    },
+
     setCurrentLake (state, data) {
       state.current_lake = data;
     },
