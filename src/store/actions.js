@@ -60,23 +60,15 @@ const actions = {
             return;
         }
 
-        search.results = context.getters.getLakes.filter(lake => {
+        let starts_with = context.getters.getLakes.filter(lake => {
+            return lake.title.toLowerCase().startsWith(query.toLowerCase());
+        });
+        let includes = context.getters.getLakes.filter(lake => {
             return lake.title.toLowerCase().includes(query.toLowerCase());
         });
-        if (search.results.length > config.max_search_results) {
-            search.all_results = search.results;
-            let results = context.getters.getLakes.filter(lake => {
-                return lake.title.toLowerCase().startsWith(query.toLowerCase());
-            });
-
-            if (results.length == 0) {
-                search.results = search.all_results.slice(0, config.max_search_results);
-            } else if (results.length > config.max_search_results) {
-                search.results = results.slice(0, config.max_search_results);
-            } else {
-                search.results = results;
-            }
-        }
+        let all_results = starts_with.concat(includes);
+        let results = new Set(all_results);
+        search.results = Array.from(results);
 
         context.commit('setSearchResults', search);
     },
