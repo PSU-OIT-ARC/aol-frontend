@@ -94,17 +94,23 @@
 /* For the Data Tabs, there *should* be a way to just dynamically call a section-name.svg and then change the fill color of that svg on hover, focus and active state. Using <use> was useless. <object> calls a source by the data= attribute, which Vue thinks is ridiculous. So for now we have two sets of simple svg icons, and like animals, we swap them out. */
 
 .tab-icon--plants:hover,
-.tab-icon--plants:focus { background-image: url(~@/assets/plants-white.svg);}
+.tab-icon--plants:focus,
+.body-main .router-link-active.tab-icon--plants { background-image: url(~@/assets/plants-white.svg);}
 .tab-icon--mussels:hover,
-.tab-icon--mussels:focus { background-image: url(~@/assets/clam-white.svg);}
+.tab-icon--mussels:focus,
+.body-main .router-link-active.tab-icon--mussels { background-image: url(~@/assets/clam-white.svg);}
 .tab-icon--text-section:hover,
-.tab-icon--text-section:focus { background-image: url(~@/assets/book-open-white.svg); }
+.tab-icon--text-section:focus,
+.body-main .router-link-active.tab-icon--text-section { background-image: url(~@/assets/book-open-white.svg); }
 .tab-icon--watershed:hover,
-.tab-icon--watershed:focus { background-image: url(~@/assets/water-white.svg);}
+.tab-icon--watershed:focus,
+.body-main .router-link-active.tab-icon--watershed { background-image: url(~@/assets/water-white.svg);}
 .tab-icon--photos:hover,
-.tab-icon--photos:focus { background-image: url(~@/assets/camera-white.svg);}
+.tab-icon--photos:focus,
+.body-main .router-link-active.tab-icon--photos { background-image: url(~@/assets/camera-white.svg);}
 .tab-icon--documents:hover,
-.tab-icon--documents:focus { background-image: url(~@/assets/file-white.svg);}
+.tab-icon--documents:focus,
+.body-main .router-link-active.tab-icon--documents { background-image: url(~@/assets/file-white.svg);}
 
 .tab-icon--plants,
 .active.tab-icon--plants:hover,
@@ -139,4 +145,11 @@
     font-size: 1.1em;
     font-weight: 700;
   }
+}
+
+.body-main a.router-link-active {
+  background-color: $primary_color;
+  color: white;
+  opacity: 1;
+
 }

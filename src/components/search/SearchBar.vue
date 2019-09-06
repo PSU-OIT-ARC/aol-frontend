@@ -4,9 +4,9 @@
       placeholder="Search for Oregon lakes" type="text"
       :value="query" @input="search" autofocus="true" />
 
-      <div class="search-clear" @click="clear">
+      <div class="search--icons" @click="clear">
         <img v-if="this.query==''" src="~@/assets/icon_search.svg" height="20" />
-        <img v-else src="~@/assets/icon_clear.svg" height="20" />
+        <img v-else class="search--clear" src="~@/assets/icon_clear.svg" height="20" />
       </div>
 
   </div>
@@ -46,7 +46,7 @@ export default {
     }
   }
 
-  .search-clear {
+  .search--icons {
     position: absolute;
     top: 6px;
     right: 8px;
@@ -56,7 +56,10 @@ export default {
     &:hover {
       opacity: .7;
     }
-
   }
+
+.search--clear {
+  opacity: .4;
+}
 
 </style>
