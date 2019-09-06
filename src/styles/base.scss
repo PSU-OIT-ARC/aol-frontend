@@ -282,6 +282,10 @@ a:link, a:visited {
   }
 }
 
+.map-buttons .disabled svg * {
+  fill: grey;
+}
+
 a.map-button {
   position: relative;
   left: 0px;

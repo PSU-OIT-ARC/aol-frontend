@@ -64,6 +64,10 @@ const getters = {
 
     getCurrentPage (state) {
         return state.current_page;
+    },
+
+    getCurrentZoom(state) {
+        return state.map_zoom;
     }
 }
 

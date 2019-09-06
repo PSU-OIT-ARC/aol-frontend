@@ -1,3 +1,5 @@
+import config from '@/components/map/config';
+
 const state = {
     // generic state
     is_loading: false,
@@ -8,6 +10,7 @@ const state = {
     map_object: null,
     map_node: null,
     map_view: null,
+    map_zoom: config.zoom,
     map_basemap: 'topo',
     map_filter: 'all_lakes',
 
