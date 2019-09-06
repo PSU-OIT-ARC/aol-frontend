@@ -18,7 +18,7 @@ const state = {
     lakes: [],
     search: {
         results: [],
-        query: null
+        query: '' 
     },
     current_lake: null,
     current_focus: null,
