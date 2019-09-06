@@ -6,7 +6,7 @@ const MOBILE_MODE = {
 
 const config = {
     backend_url: process.env.VUE_APP_API_URL,
-    max_search_results: 5,
+    max_search_results: 99,
     is_mobile: function(window) {
         return window.innerWidth < MOBILE_MODE.width;
     }
