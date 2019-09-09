@@ -114,6 +114,12 @@ export default {
             createVectorTileLayers(map),
             createFeatureServiceLayers(map, view, this)
         ]).then(() => {
+
+          let last_layer_idx = map.layers.length;
+          let marine_layer = map.findLayerById(
+              'marine_board_facilities_service_layer');
+          map.reorder(marine_layer, last_layer_idx);
+
           view.when(()=> {
             let gte = this.getTimeElapsed();
             console.debug("Loading map layers took " + gte('layers') + "ms");
