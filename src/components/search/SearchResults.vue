@@ -102,7 +102,7 @@ a:hover, a:focus {
     z-index: 99999;
     min-height: auto;
     max-height: 500px;
-    overflow: scroll;
+    overflow-y: scroll;
     margin-top: 14px;
     padding: 0px 0px;
     color: #333;

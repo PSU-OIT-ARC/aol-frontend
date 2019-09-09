@@ -4,7 +4,12 @@
     <div class="offline-card">
       <div></div>
       <div class="content">
-        I am so offline right now
+        <img src="~@/assets/offline_lake.png" />
+
+        <div class="copy">
+          <h3>You are currently in offline mode</h3>
+          <p>Please try to use the site again when you have network connection. If you believe you have received this message in error, please let us know.</p>
+        </div>
       </div>
       <div></div>
     </div>
@@ -16,6 +21,7 @@
     computed: {
       online () {
         return navigator.onLine;
+        //return false;
       }
     }
   }
@@ -24,33 +30,40 @@
 
 <style scoped lang='scss'>
   .offline-container {
+    position: absolute;
+    z-index: 9999;
     width: 100vw;
     height: 100vh;
-    font-size: 1em;
-    z-index: 9999;
-    position: absolute;
-    font-family: sans-serif;
 
     .image-background {
-      background: no-repeat url('~@/assets/intro-umpqua-lake.png');
-      background-size: cover;
-      filter: blur(9px);
-      width: 100%;
-      height: 100%
+      background-color: #222;
+      opacity: .75;
+      width: 100vw;
+      height: 100vh;
+    }
+  }
+
+  .offline-card {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr minmax(175px, 400px) 1fr;
+    @include respond-to(handheld) {
+      top: 0;
     }
 
-    .offline-card {
-      position: absolute;
-      top: 10%;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr minmax(175px, 300px) 1fr;
+    .content {
+      background-color: white;
+      min-height: 300px;
 
-      .content {
-        background: white;
-        padding: 2em;
-        text-align: center;
-        min-height: 200px;
+      img {
+        width: 100%;
+        height: auto;
+      }
+
+      .copy {
+        padding: 20px;
       }
     }
   }
