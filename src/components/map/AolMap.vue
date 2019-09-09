@@ -39,7 +39,7 @@ export default {
     ...mapActions(['markTimestamp',
                    'getAuthToken',
                    'setMapObject', 'setMapNode', 'setMapView',
-                   'setLoading', 'setZoom',
+                   'setLoading', 'setZoom', 'setIntroDismissed',
                    'resetBounds', 'fitBounds']),
 
 
@@ -223,11 +223,13 @@ export default {
   watch: {
     currentFocus: function(val) {
       if (val != null && this.lakes.length) {
+        this.setIntroDismissed(true);
         this.fitBounds(val);
       }
     },
     currentLake: function(val) {
       if (val != null && this.lakes.length) {
+        this.setIntroDismissed(true);
         this.fitBounds(val);
       }
     }
