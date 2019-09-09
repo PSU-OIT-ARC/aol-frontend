@@ -1,5 +1,5 @@
 <template>
-  <ul id="search-results-wrapper" v-if="query">
+  <ul id="search-results-wrapper" ref='resultsWrapper' v-if="query">
     <div v-if="query && !results.length">
       <div class="no-results">Sorry, no results</div>
     </div>
@@ -10,22 +10,71 @@
         </router-link>
         <lake-card v-if="!result.is_major" :lake="result"></lake-card>
       </li>
+      <li v-show="showLoading" class='loading'>
+        <loading-spinner/>
+      </li>
     </div>
   </ul>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import _ from 'lodash';
+import config from '@/config';
 import LakeCard from '@/components/lake/LakeCard';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default {
   name: 'search-results',
-  props: ["query", "results"],
+  props: ["query"],
+  data () {
+    return {
+      renderered_results: config.max_search_results
+    }
+  },
   components: {
-    LakeCard
+    LakeCard,
+    LoadingSpinner
+  },
+  updated () {
+    let container = this.$refs.resultsWrapper;
+    if (container) {
+      container.addEventListener('scroll', (e) => {
+        this.checkScrollBottom(e);
+      });
+    }
   },
   methods: {
+    ...mapGetters(['searchResults']),
     href (lake) {
       return {name: 'home', query: {'lake': lake.reachcode}};
+    },
+    checkScrollBottom (e) {
+      let el = e.target;
+      let buffer = 5;
+      if (el.scrollTop >= el.offsetHeight - buffer) {
+        this.loadMoreResults();
+      }
+    },
+    loadMoreResults: _.debounce(function () {
+        if (this.renderered_results <= this.searchResults().length) {
+          this.renderered_results += config.max_search_results;
+        }
+    }, 100),
+  },
+  computed: {
+    results () {
+      let results = this.searchResults().slice(0, this.renderered_results);
+      return results
+    },
+    showLoading () {
+       return  this.renderered_results <= this.searchResults().length;
+    }
+  },
+  watch: {
+    // reset renderered_results on query change
+    'query': function () {
+       this.renderered_results = config.max_search_results;
     }
   }
 }
@@ -82,4 +131,8 @@ a:hover, a:focus {
     padding: 20px;
   }
 
+  li.loading {
+    padding-top: 20px;
+    text-align: center;
+  }
 </style>

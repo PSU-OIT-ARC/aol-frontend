@@ -2,7 +2,7 @@
   <div>
     <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
       <search-bar></search-bar>
-      <search-results :query="query" :results="results"></search-results>
+      <search-results :query="query"></search-results>
     </div>
   </div>
 </template>
@@ -24,7 +24,6 @@ export default {
   computed: {
     ...mapGetters({
       query: 'searchQuery',
-      results: 'searchResults',
     }),
     hide_results() {
       if (this.$route.query['lake']) {
