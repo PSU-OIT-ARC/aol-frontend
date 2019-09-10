@@ -21,8 +21,9 @@ export default {
     ...mapGetters({query: 'searchQuery'})
   },
   methods: {
-    ...mapActions(['searchLakes', 'resetSearchResults']),
+    ...mapActions(['searchLakes', 'resetSearchResults', 'setIntroDismissed']),
     search (e) {
+      this.setIntroDismissed(true);
       this.searchLakes(e.target.value);
     },
     clear () {
