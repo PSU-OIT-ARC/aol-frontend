@@ -61,6 +61,11 @@ export default {
   created () {
     // fetch the flatpage object
     this.fetchPage(this.slug);
+  },
+  watch: {
+    '$route': function () {
+      this.fetchPage(this.slug);
+    }
   }
 }
 </script>
