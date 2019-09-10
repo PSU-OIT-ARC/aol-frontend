@@ -21,8 +21,9 @@
 
         <div class="content-body">
           <div class="body-main" v-html="page.content"></div>
-        </div>
-
+          <contact-info />
+        </div> <!-- end content-body -->
+        <aol-footer />
       </div>
 
     </div>
@@ -32,11 +33,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ContactInfo from '@/components/ContactInfo';
+import AolFooter from '@/components/AolFooter';
 
 export default {
   name: 'page',
   props: {
     slug: String,
+  },
+  components: {
+    ContactInfo,
+    AolFooter
   },
   computed: {
     ...mapGetters(['getCurrentPage']),
@@ -161,11 +168,6 @@ export default {
   @include respond-to(handheld) {
     padding: 0px 15px;
   }
-}
-
-.sidebar__shade {
-  padding: 15px;
-  background-color: #F3F3F3;
 }
 
 h4 {
