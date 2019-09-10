@@ -57,6 +57,10 @@ const mutations = {
         state.is_loading = loading;
     },
 
+    setError (state, error_type) {
+        state.error = error_type;
+    },
+
     setIntroDismissed (state, dismissed) {
       state.intro_dismissed = dismissed;
     }

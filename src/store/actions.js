@@ -18,6 +18,10 @@ const actions = {
         context.commit("setLoading", is_loading);
     },
 
+    setError (context, error_type) {
+        context.commit("setError", error_type);
+    },
+
     setIntroDismissed (context, dismissed) {
         context.commit("setIntroDismissed", dismissed);
     },
@@ -134,6 +138,7 @@ const actions = {
                     view.goTo(extent).then(()=>{
                         context.dispatch('setLoading', false)
                    }).catch((e) => {
+                       context.dispatch('setError', config.ERROR_TYPES.MAP)
                        console.error(e.message)
                    });
                }
@@ -172,7 +177,9 @@ const actions = {
                 }
             ).catch(
                 e => {
-                    console.log(e.message);
+                    console.error(e.message);
+                    // Does this warrant a APP level error?
+                    context.dispatch('setError', config.ERROR_TYPES.FETCH)
                     reject();
                 }
             );
@@ -212,6 +219,7 @@ const actions = {
             ).catch(
                 e => {
                     console.error(e.message);
+                    context.dispatch('setError', config.ERROR_TYPES.FETCH)
                     reject();
                 }
             );
@@ -233,6 +241,7 @@ const actions = {
             ).catch(
                 e => {
                     console.error(e.message);
+                    context.disaptch('setError', config.ERROR_TYPES.FETCH)
                     reject();
                 }
             );
