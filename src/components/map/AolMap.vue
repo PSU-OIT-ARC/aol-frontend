@@ -7,8 +7,9 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { loadModules } from 'esri-loader';
-
+import app_config from '@/config';
 import config from '@/components/map/config';
+
 import {
   createNLCDTileLayer,
   createVectorTileLayers,
@@ -37,7 +38,7 @@ export default {
                    'getCurrentFocus',
                    'getCurrentLake']),
     ...mapActions(['markTimestamp',
-                   'getAuthToken',
+                   'getAuthToken', 'setError',
                    'setMapObject', 'setMapNode', 'setMapView',
                    'setLoading', 'setZoom', 'setIntroDismissed',
                    'resetBounds', 'fitBounds']),
@@ -132,12 +133,14 @@ export default {
             view.watch('zoom', (zoom) => {
               this.setZoom(zoom);
               updateClusters(map, view).catch((e) => {
+                this.setError(app_config.ERROR_TYPES.MAP)
                 console.error(e)
               })
             })
           });
           resolve();
         }).catch((e) => {
+            this.setError(app_config.ERROR_TYPES.MAP)
             console.error(e)
         })
       }); // end promise
@@ -220,8 +223,10 @@ export default {
               });
               resolve([map, view])
             });
-
           }); // end getAuthToken
+        }).catch((e) => {
+            this.setError(app_config.ERROR_TYPES.APP);
+            this.setLoading(false);
         }); // end loadModules
       }); // end Promise
     }, //end initMap
@@ -274,6 +279,8 @@ export default {
               this.fitBounds(this.getCurrentLake());
             }
           });
+        }).catch((e)=> {
+          console.log(e)
         });
       }
 
