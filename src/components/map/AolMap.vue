@@ -243,6 +243,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       let map_node = this.$store.state.map_node;
+      let view = this.$store.state.map_view;
       if (map_node != null) {
         this.$refs.map.replaceWith(map_node)
         if (document.querySelector('#map') != null) {
@@ -250,12 +251,13 @@ export default {
         } else {
           console.warn("Cannot toggle display class on map. Element unavailable.")
         }
-
-        if (this.getCurrentFocus() != null) {
-          this.fitBounds(this.getCurrentFocus());
-        } else if (this.getCurrentLake() != null) {
-          this.fitBounds(this.getCurrentLake());
-        }
+        view.watch('resizing', (resizing) => {
+            if (this.getCurrentFocus() != null) {
+              this.fitBounds(this.getCurrentFocus());
+            } else if (this.getCurrentLake() != null) {
+              this.fitBounds(this.getCurrentLake());
+            }
+        })
       } else {
         // initialize map context
         this.setLoading(true);
