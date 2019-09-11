@@ -26,7 +26,7 @@
       <lake-card v-if="!lake.is_major" :lake='lake'></lake-card>
       <div class="lake-summary">
         <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
-        <text-section :lake='lake'></text-section>
+        <text-section :lake='lake' :truncate='true'></text-section>
       </div>
 
     </div>
