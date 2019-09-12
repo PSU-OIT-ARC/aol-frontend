@@ -69,11 +69,12 @@ const config = {
             async: true
         }
     },
-    map_center: [-121.7, 44.1],
-    zoom: 8,
+    //map_center: [-121.7, 44.1],
+    map_center: [-13547582.029541165, 5480930.47749898],
+    zoom: 7,
     minZoom: 7,
     maxZoom: 16,
-    extent_buffer: 1.1,
+    extent_buffer: 1.2,
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [
