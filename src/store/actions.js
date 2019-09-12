@@ -102,18 +102,27 @@ const actions = {
         If the lake object has a cached geom attribute, goTo that extent
         Otherwise, query feature service for lake geometry using reachcode.
         */
-        context.dispatch('setLoading', true)
 
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
 
-        const _massage_extent = (geom) => {
+        const _buffer_extent = (geom) => {
             let extent = geom.extent.clone();
             extent.expand(map_config.extent_buffer)
             return extent
         }
 
-        if (map == null) {
+        const _get_offset_center = (extent) => {
+            let sidebar = document.querySelector('.sidebar_active .lake-sidebar');
+            if (config.is_mobile(window) || !sidebar) {
+                return null;
+            }
+            let  screen_extent_center = view.toScreen(extent.center)
+             screen_extent_center.x -= sidebar.clientWidth/2;
+            return view.toMap( screen_extent_center);
+        }
+
+        if (map == null || view == null) {
             console.warn("Map is not loaded. Cannot fit bounds.");
             return
         }
@@ -134,9 +143,12 @@ const actions = {
                     let geom = response.features[0].geometry;
                     console.debug('Caching lake geom returned from ARCGIS online query by reachcode')
                     lake.cached_geom = geom;
-                    let extent = _massage_extent(geom)
+                    let extent = _buffer_extent(geom)
                     view.goTo(extent).then(()=>{
-                        context.dispatch('setLoading', false)
+                        let offset = _get_offset_center(extent);
+                        if (offset) {
+                            view.goTo({center: offset}, {animate: false});
+                        }
                    }).catch((e) => {
                        context.dispatch('setError', config.ERROR_TYPES.MAP)
                        console.error(e.message)
@@ -148,9 +160,12 @@ const actions = {
         }
         else {
             console.debug('fitBounds using cached geom')
-            let extent = _massage_extent(lake.cached_geom);
+            let extent = _buffer_extent(lake.cached_geom);
             view.goTo(extent).then(()=>{
-                context.dispatch('setLoading', false)
+                let offset = _get_offset_center(extent);
+                if (offset) {
+                    view.goTo({center: offset}, {animate: false});
+                }
             }).catch((e) => {
                 console.error(e.message)
             });
