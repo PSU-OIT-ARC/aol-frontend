@@ -1,4 +1,6 @@
 import config from '@/components/map/config';
+import app_config from '@/config';
+
 import { loadModules } from 'esri-loader';
 import Supercluster from 'supercluster';
 
@@ -343,6 +345,80 @@ const getClusterGraphicStyles = (size) => {
     }
 }
 
+const _buffer_extent = (geom) => {
+    let extent = geom.extent.clone();
+    extent.expand(config.extent_buffer)
+    return extent
+}
+
+const _get_offset_center = (extent, view) => {
+    let sidebar = document.querySelector('.sidebar_active .lake-sidebar');
+    if (app_config.is_mobile(window) || !sidebar) {
+        return null;
+    }
+    let  screen_extent_center = view.toScreen(extent.center)
+     screen_extent_center.x -= sidebar.clientWidth/2;
+    return view.toMap( screen_extent_center);
+}
+
+const fitExtent = (map, view, lake) => {
+    /*
+    If the lake object has a cached geom attribute, goTo that extent
+    Otherwise, query feature service for lake geometry using reachcode.
+    */
+    return new Promise((resolve) => {
+        if (map == null || view == null) {
+            console.warn("Map is not loaded. Cannot fit bounds.");
+            return
+        }
+
+        if (lake == undefined) {
+            console.debug('No lake provided to fitBounds:')
+            return
+        }
+
+        if (lake.cached_geom == undefined) {
+            console.debug('Fetching geometry from ArcGIS online')
+            let lake_layer = map.findLayerById('lake_bbox_service_layer');
+            let query = lake_layer.createQuery();
+            query.where = `REACHCODE = ${lake.reachcode}`;
+            query.maxRecordCountFactor = 4;
+            lake_layer.queryFeatures(query).then((response) => {
+                if (response.features.length) {
+                    let geom = response.features[0].geometry;
+                    console.debug('Caching lake geom returned from ARCGIS online query by reachcode')
+                    lake.cached_geom = geom;
+                    let extent = _buffer_extent(geom)
+                    view.goTo(extent).then(()=>{
+                        let offset = _get_offset_center(extent, view);
+                        if (offset) {
+                            view.goTo({center: offset}, {animate: false});
+                        }
+                        resolve(view);
+                   }).catch((e) => {
+                       console.error(e.message)
+                   });
+               }
+           }).catch((e) => {
+               console.error(e.message)
+           });
+        }
+        else {
+            console.debug('fitBounds using cached geom')
+            let extent = _buffer_extent(lake.cached_geom);
+            view.goTo(extent).then(()=>{
+                let offset = _get_offset_center(extent, view);
+                if (offset) {
+                    view.goTo({center: offset}, {animate: false});
+                }
+                resolve(view);
+            }).catch((e) => {
+                console.error(e.message)
+            });
+        }
+    });
+};
+
 const checkExtent = (view, initialExtent) => {
 // thanks to:
 // https://community.esri.com/thread/229431-getting-mapview-to-stay-within-bounds
@@ -376,5 +452,6 @@ export {
     convertGeoJsonToEsriFeature,
     clusterIndex,
     clusterLayer,
-    checkExtent
+    checkExtent,
+    fitExtent
 }
