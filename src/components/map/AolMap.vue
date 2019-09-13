@@ -137,6 +137,20 @@ export default {
                 console.error(e)
               })
             })
+
+            // reset extent to fit all features
+            // this lets the extent be viewable for any device
+            let lake_boundaries_layer = map.findLayerById(
+                'lake_bbox_service_layer');
+            lake_boundaries_layer.when(()=>{
+              return lake_boundaries_layer.queryExtent();
+            }).then((response) => {
+                let buffered_extent = response.extent.clone();
+                // add a little buffer and shift slightly
+                buffered_extent.expand(config.extent_buffer);
+                buffered_extent.offset(-60000, 1000, 0);
+                view.goTo(buffered_extent);
+            });
           });
           resolve();
         }).catch((e) => {
