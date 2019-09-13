@@ -5,6 +5,7 @@
 <template>
   <div id="app">
     <nav-bar></nav-bar>
+    <error-bar v-if='error != null' :error="error"/>
     <offline-card/>
     <router-view/>
   </div>
@@ -15,13 +16,19 @@ import { mapActions, mapGetters } from 'vuex';
 
 import NavBar from '@/components/NavBar';
 import OfflineCard from '@/components/OfflineCard';
+import ErrorBar from '@/components/ErrorBar';
 
 export default {
   name: 'app',
-  components: { NavBar, OfflineCard },
+  components: { NavBar, OfflineCard, ErrorBar },
   methods: {
     ...mapActions(['markTimestamp', 'fetchLakes']),
     ...mapGetters(['getTimeElapsed', 'getLakes']),
+  },
+  computed: {
+    error () {
+      return this.$store.state.error;
+    }
   },
   created () {
     if (!this.getLakes().length) {

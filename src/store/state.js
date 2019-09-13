@@ -5,7 +5,7 @@ const state = {
     is_loading: false,
     intro_dismissed: false,
     timestamp: {},
-
+    error: null,
     // map objects
     map_object: null,
     map_node: null,
@@ -18,7 +18,7 @@ const state = {
     lakes: [],
     search: {
         results: [],
-        query: '' 
+        query: ''
     },
     current_lake: null,
     current_focus: null,
