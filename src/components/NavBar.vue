@@ -86,8 +86,14 @@ export default {
     margin-top: 8px;
     font-size: 1em;
 
-    a {
+    a:link, a:visited {
       margin-left: 25px;
+      color: $primary_color;
+      text-decoration: none;
+
+      &:hover {
+        color: #222;
+      }
     }
 
     @include respond-to(handheld) {
@@ -131,6 +137,7 @@ export default {
     right: 15px;
     width: 100%;
     height: auto;
+    background-color: white;
 
     a span {
       display: block;
