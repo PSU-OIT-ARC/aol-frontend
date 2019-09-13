@@ -52,7 +52,7 @@
 
     @include respond-to(handheld) {
       width: calc(100vw - 30px); //30 internal padding
-      top: 0vh;
+      top: 42px;
     }
 
     .intro__photo {
