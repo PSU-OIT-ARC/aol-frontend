@@ -89,7 +89,7 @@ const actions = {
         const map =  context.rootState.map_object;
         const view = context.rootState.map_view;
         fitExtent(map, view, lake).then((view) => {
-            context.commit('setZoom', view.zoom)
+            context.dispatch('setZoom', view.zoom)
         })
     },
 
@@ -99,6 +99,7 @@ const actions = {
         const view = context.rootState.map_view;
         view.goTo(map_config.map_center).then(()=> {
           view.set('zoom', map_config.zoom);
+          context.dispatch('setZoom', view.zoom);
         })
     },
 
