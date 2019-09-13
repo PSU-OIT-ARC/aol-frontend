@@ -87,7 +87,7 @@ export default {
       return config.is_mobile(window);
     },
     photo_style () {
-      let photo = require('@/assets/intro-umpqua-lake.png');
+      let photo = require('@/assets/generic_background.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
       }
