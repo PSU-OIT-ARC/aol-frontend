@@ -439,7 +439,7 @@ const checkExtent = (view, initialExtent) => {
     if (currentCenter.y > initialExtent.ymax) {
       newCenter.y = initialExtent.ymax;
     }
-    view.goTo(newCenter, {duration: 20});
+    view.goTo(newCenter, {duration: 0});
   }
 }
 
