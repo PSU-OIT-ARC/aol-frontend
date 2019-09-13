@@ -1,5 +1,6 @@
 import map_config from '@/components/map/config';
 import config from '@/config';
+import { fitExtent } from '@/components/map/utils';
 
 const API_URL = config.backend_url;
 const actions = {
@@ -83,6 +84,15 @@ const actions = {
         context.commit('setSearchResults', search);
     },
 
+    fitBounds (context, lake) {
+        //Zoom/pan to lake bounds.
+        const map =  context.rootState.map_object;
+        const view = context.rootState.map_view;
+        fitExtent(map, view, lake).then((view) => {
+            context.commit('setZoom', view.zoom)
+        })
+    },
+
     resetBounds (context) {
         console.debug("Resetting map bounds");
 
@@ -94,67 +104,6 @@ const actions = {
 
     setZoom (context, zoom) {
         context.commit('setMapZoom', zoom);
-    },
-
-    fitBounds (context, lake) {
-        /*
-        Zoom/pan to lake bounds.
-        If the lake object has a cached geom attribute, goTo that extent
-        Otherwise, query feature service for lake geometry using reachcode.
-        */
-        context.dispatch('setLoading', true)
-
-        const map =  context.rootState.map_object;
-        const view = context.rootState.map_view;
-
-        const _massage_extent = (geom) => {
-            let extent = geom.extent.clone();
-            extent.expand(map_config.extent_buffer)
-            return extent
-        }
-
-        if (map == null) {
-            console.warn("Map is not loaded. Cannot fit bounds.");
-            return
-        }
-
-        if (lake == undefined) {
-            console.debug('No lake provided to fitBounds:')
-            return
-        }
-
-        if (lake.cached_geom == undefined) {
-            console.debug('Fetching geometry from ArcGIS online')
-            let lake_layer = map.findLayerById('lake_bbox_service_layer');
-            let query = lake_layer.createQuery();
-            query.where = `REACHCODE = ${lake.reachcode}`;
-            query.maxRecordCountFactor = 4;
-            lake_layer.queryFeatures(query).then((response) => {
-                if (response.features.length) {
-                    let geom = response.features[0].geometry;
-                    console.debug('Caching lake geom returned from ARCGIS online query by reachcode')
-                    lake.cached_geom = geom;
-                    let extent = _massage_extent(geom)
-                    view.goTo(extent).then(()=>{
-                        context.dispatch('setLoading', false)
-                   }).catch((e) => {
-                       context.dispatch('setError', config.ERROR_TYPES.MAP)
-                       console.error(e.message)
-                   });
-               }
-           }).catch((e) => {
-               console.error(e.message)
-           });
-        }
-        else {
-            console.debug('fitBounds using cached geom')
-            let extent = _massage_extent(lake.cached_geom);
-            view.goTo(extent).then(()=>{
-                context.dispatch('setLoading', false)
-            }).catch((e) => {
-                console.error(e.message)
-            });
-        }
     },
 
     fetchLakes (context, status) {
