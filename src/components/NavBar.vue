@@ -24,11 +24,11 @@
       </div>
 
       <div v-if="show_menu" class="mobile-links">
-        <router-link :to="{name: 'aquatic-invasives'}">
+        <router-link to="/aquatic-invasives">
           <span v-on:click="show_menu = false">Aquatic Invasives</span>
         </router-link>
 
-        <router-link :to="{name: 'about'}">
+        <router-link to="/about">
           <span v-on:click="show_menu = false">About</span>
         </router-link>
 
