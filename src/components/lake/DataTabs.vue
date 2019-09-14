@@ -98,7 +98,7 @@ export default {
         return false
       });
 
-      return sections.filter((i) => {
+      return sections.filter(() => {
         if (!this.lake.is_major) {
            return false;
         }

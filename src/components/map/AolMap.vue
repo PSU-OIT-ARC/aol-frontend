@@ -12,13 +12,13 @@ import { loadModules } from 'esri-loader';
 import app_config from '@/config';
 import config from '@/components/map/config';
 import {
-    createNLCDTileLayer,
+    // NOTE: temporarily remove custom baselayers
+    // createNLCDTileLayer,
+
     createVectorTileLayers,
     createFeatureServiceLayers,
     convertGeoJsonToEsriFeature,
-    clusterLayer,
     clusterIndex,
-    createClusterIndex,
     filterClusters,
     updateClusters,
     prepareExtent,
@@ -68,9 +68,9 @@ export default {
                 this.fitCluster(f.graphic.attributes.cluster_id);
               } else { 
                 let reachcode = null;
-                if (f.graphic.attributes.hasOwnProperty('ReachCode')) {
+                if (Object.prototype.hasOwnProperty.call(f.graphic.attributes, 'ReachCode')) {
                   reachcode = f.graphic.attributes.ReachCode
-                } else if (f.graphic.attributes.hasOwnProperty('REACHCODE')) {
+                } else if (Object.prototype.hasOwnProperty.call(f.graphic.attributes, 'REACHCODE')) {
                   reachcode = f.graphic.attributes.REACHCODE
                 }
 
@@ -255,7 +255,7 @@ export default {
             if (this.view != null) {
                this.view.goTo({target: this.view.extent, animate: false}).then(() => {
                    console.debug("View object already exists.");
-                   resolve();
+                   return
                });
             }
 
@@ -365,7 +365,7 @@ export default {
                         this.markTimestamp('esri-tile-layers');
                         Promise.all([
                             // NOTE: temporarily remove custom baselayers
-                            //createNLCDTileLayer(this.map),
+                            // createNLCDTileLayer(this.map),
                             createVectorTileLayers(this.map),
                         ]).then(() => {
                             let gte = this.getTimeElapsed();

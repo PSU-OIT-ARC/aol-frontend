@@ -12,8 +12,6 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
-
   import AolMap from '@/components/map/AolMap';
   import MapLoader from '@/components/map/MapLoader';
 

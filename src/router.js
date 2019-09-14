@@ -27,7 +27,7 @@ export default new Router({
     {
         path: '/login',
         name: 'login',
-        beforeEnter: (to, from, next) => {
+        beforeEnter: () => {
             window.location = process.env.VUE_APP_BACKEND_URL;
         }
     },

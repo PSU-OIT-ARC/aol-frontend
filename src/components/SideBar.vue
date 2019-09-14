@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 import LakeSideBar from '@/components/lake/LakeSideBar';
 import SearchPane from '@/components/search/SearchPane';
