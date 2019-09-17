@@ -69,12 +69,13 @@ const config = {
             async: true
         }
     },
+
     map_center: [-120.9, 44.1],
-    //map_center: [-13547582.029541165, 5480930.47749898],
     zoom: 7,
     minZoom: 7,
     maxZoom: 16,
     extent_buffer: 1.2,
+
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
     layers: [
@@ -119,7 +120,7 @@ const config = {
             renderer: {
               type: "simple",
               symbol: {
-                color: [100, 100, 100, 0.1], // currently transluscent for debug
+                color: [100, 100, 100, 0.0], // currently transluscent for debug
                 type: "simple-fill",
                 style: "solid",
                 outline: null

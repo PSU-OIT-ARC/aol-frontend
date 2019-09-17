@@ -24,25 +24,33 @@ export default {
     IntroCard
   },
   computed: {
-    ...mapGetters({lakes: 'getLakes', focus: 'getCurrentFocus'}),
+    ...mapGetters({lakes: 'getLakes',
+                   focus: 'getCurrentFocus'}),
   },
   methods: {
-    ...mapActions(['resetBounds', 'focusLake']),
+    ...mapActions(['setIntroDismissed',
+                   'focusMap', 'focusLake',
+                   'resetSearchResults']),
+    initializeMap (query) {
+      this.focusMap(query.f);
+      this.focusLake(query.lake);
+
+      if (query.f || query.lake) {
+        this.setIntroDismissed(true);
+      }
+    }
   },
   watch: {
     '$route': function (to) {
-      if (to.name == "home" && to.query && Object.keys(to.query).includes("lake")) {
-        this.focusLake(to.query.lake);
-      } else if (to.name == "home" && to.query && !Object.keys(to.query).length) {
-        this.focusLake(null);
-      }
+      this.initializeMap(to.query);
     },
     lakes: function() {
-      this.focusLake(this.$route.query.lake);
+      this.resetSearchResults();
+      this.initializeMap(this.$route.query);
     }
   },
   created () {
-    this.focusLake(this.$route.query.lake);
+    this.initializeMap(this.$route.query);
   }
 
 }
@@ -61,7 +69,6 @@ export default {
   overflow: hidden;
   @include respond-to(handheld) {
     grid-template-areas: "map sidebar";
-
   }
 }
 

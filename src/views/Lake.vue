@@ -35,7 +35,7 @@
               <data-tabs :lake='lake'></data-tabs>
             </div>
 
-            <div class="body-sidebar" v-if="!mobile_mode">
+            <div class="body-sidebar" v-if="!mobile_mode()">
               <watershed></watershed>
               <documents v-if="lake.documents.length" :lake="lake"></documents>
             </div>
@@ -73,18 +73,12 @@ export default {
     Watershed,
   },
   computed: {
-    ...mapGetters(['getCurrentLake']),
-    lake () {
-      return this.getCurrentLake;
-    },
+    ...mapGetters({lake: 'getCurrentLake'}),
     sidebar_href () {
-      return {name: 'home', query: {lake: this.lake.reachcode}};
+      return {name: 'home', query: {lake: this.reachcode}};
     },
     back_href () {
-      return {name: 'home', query: {}};
-    },
-    mobile_mode () {
-      return config.is_mobile(window);
+      return {name: 'home', query: {f: this.reachcode}};
     },
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
@@ -95,14 +89,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchLake', 'resetSearchResults']),
+    // ...mapActions(['fetchLake', 'resetSearchResults']),
+    ...mapActions(['fetchLake']),
+    mobile_mode () {
+      return config.is_mobile(window);
+    },
   },
   created () {
     // clear out any search SearchResults
-    this.resetSearchResults();
+    // this.resetSearchResults();
 
     // fetch the non-indexed lake object
     this.fetchLake(parseInt(this.reachcode))
+  },
+  destroyed () {
+    // unload the current lake object
+    this.fetchLake(null);
   }
 }
 </script>

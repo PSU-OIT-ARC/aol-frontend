@@ -1,10 +1,13 @@
-import config from '@/components/map/config';
-import app_config from '@/config';
-
 import { loadModules } from 'esri-loader';
 import Supercluster from 'supercluster';
 
-let clusterIndex, clusterLayer;
+import app_config from '@/config';
+import config from '@/components/map/config';
+
+
+let clusterIndex = null;
+let clusterLayer = null;
+
 
 const getFeaturesFromServiceLayer = (map, layer_id, where) => {
     return new Promise ((resolve, reject) => {
@@ -23,7 +26,6 @@ const getFeaturesFromServiceLayer = (map, layer_id, where) => {
         });
     });
 };
-
 
 const createNLCDTileLayer = (map) => {
     return new Promise ((resolve, reject) => {
@@ -78,7 +80,7 @@ const createVectorTileLayers = (map) => {
     });
 };
 
-const createFeatureServiceLayers = (map, view, component) => {
+const createFeatureServiceLayers = (map, view, reachcodes) => {
     return new Promise ((resolve, reject) => {
         let lake_point_layer;
         try {
@@ -117,16 +119,15 @@ const createFeatureServiceLayers = (map, view, component) => {
                 // Special handling of lake_points_service_layer
                 job.then(() => {
                     // get features in order to create cluster layer
-                    let reachcode_exp = `REACHCODE IN (${component.reachcodes.join()})`
                     getFeaturesFromServiceLayer(
                         map,
                         'lake_points_service_layer',
-                        reachcode_exp
+                        `REACHCODE IN (${reachcodes.join()})`
                     ).then((features) => {
                         // Add lake points with clustering
                         createClusterLayer(map, features).then((layer) => {
                             createClusterIndex(map, layer, features).then(()=> {
-                                updateClusters(map, view)
+                                updateClusters(map, view);
                                 resolve();
                             })
                         })
@@ -197,6 +198,17 @@ const createClusterIndex = (map, layer, features) => {
     });
 }
 
+const filterClusters = (map, view, lakes) => {
+    let reachcodes = lakes.map((lake) => {return lake.reachcode});
+    let features = clusterLayer.featureStore.filter((feature) => {
+        return reachcodes.indexOf(feature.attributes.REACHCODE) > -1;
+    });
+
+    createClusterIndex(map, clusterLayer, features).then(() => {
+        updateClusters(map, view);
+    });
+};
+
 const updateClusters = (map, view) => {
     return new Promise ((resolve, reject) => {
         loadModules(["esri/geometry/support/webMercatorUtils"],
@@ -206,10 +218,14 @@ const updateClusters = (map, view) => {
             //const clusterLayer = //map.findLayerById('lake_clusters')
             //console.log(clusterLayer)
             if (clusterLayer == undefined ) {
-                throw new Error("layer not ready")
+                // throw new Error("layer not ready")
+                console.warn("Cluster layer it not yet defined.");
+                resolve()
             }
             if (clusterIndex == undefined) {
-                throw new Error("index not ready")
+                // throw new Error("index not ready")
+                console.warn("Cluster index it not yet defined.");
+                resolve()
             }
             let extent = webMercatorUtils.webMercatorToGeographic(view.extent);
 
@@ -345,113 +361,62 @@ const getClusterGraphicStyles = (size) => {
     }
 }
 
-const _buffer_extent = (geom) => {
-    let extent = geom.extent.clone();
-    extent.expand(config.extent_buffer)
-    return extent
-}
+const prepareExtent = (view, baseExtent) => {
+    // Massages the baseExtent according to domain-specific rules.
+    //
+    let extent = baseExtent.clone();
 
-const _get_offset_center = (extent, view) => {
+    // expands the given extend using a fudge factor
+    extent.expand(config.extent_buffer);
+
+    // offset the given extent by an amount proportional
+    // to the width (in screen terms) of an active sidebar.
     let sidebar = document.querySelector('.sidebar_active .lake-sidebar');
-    if (app_config.is_mobile(window) || !sidebar) {
-        return null;
+    if (sidebar != null && !app_config.is_mobile(window) ) {
+        let dx = -(extent.width / view.width) * sidebar.clientWidth / 2;
+        extent.offset(dx, 0, 0);
     }
-    let  screen_extent_center = view.toScreen(extent.center)
-     screen_extent_center.x -= sidebar.clientWidth/2;
-    return view.toMap( screen_extent_center);
+
+    return extent;
 }
-
-const fitExtent = (map, view, lake) => {
-    /*
-    If the lake object has a cached geom attribute, goTo that extent
-    Otherwise, query feature service for lake geometry using reachcode.
-    */
-    return new Promise((resolve) => {
-        if (map == null || view == null) {
-            console.warn("Map is not loaded. Cannot fit bounds.");
-            return
-        }
-
-        if (lake == undefined) {
-            console.debug('No lake provided to fitBounds:')
-            return
-        }
-
-        if (lake.cached_geom == undefined) {
-            console.debug('Fetching geometry from ArcGIS online')
-            let lake_layer = map.findLayerById('lake_bbox_service_layer');
-            let query = lake_layer.createQuery();
-            query.where = `REACHCODE = ${lake.reachcode}`;
-            query.maxRecordCountFactor = 4;
-            lake_layer.queryFeatures(query).then((response) => {
-                if (response.features.length) {
-                    let geom = response.features[0].geometry;
-                    console.debug('Caching lake geom returned from ARCGIS online query by reachcode')
-                    lake.cached_geom = geom;
-                    let extent = _buffer_extent(geom)
-                    view.goTo(extent).then(()=>{
-                        let offset = _get_offset_center(extent, view);
-                        if (offset) {
-                            view.goTo({center: offset}, {animate: false});
-                        }
-                        resolve(view);
-                   }).catch((e) => {
-                       console.error(e.message)
-                   });
-               }
-           }).catch((e) => {
-               console.error(e.message)
-           });
-        }
-        else {
-            console.debug('fitBounds using cached geom')
-            let extent = _buffer_extent(lake.cached_geom);
-            view.goTo(extent).then(()=>{
-                let offset = _get_offset_center(extent, view);
-                if (offset) {
-                    view.goTo({center: offset}, {animate: false});
-                }
-                resolve(view);
-            }).catch((e) => {
-                console.error(e.message)
-            });
-        }
-    });
-};
 
 const checkExtent = (view, initialExtent) => {
-// thanks to:
-// https://community.esri.com/thread/229431-getting-mapview-to-stay-within-bounds
-  let currentCenter = view.extent.center;
-  if (!initialExtent.contains(currentCenter)) {
+    // Enforces current view center point to be contained by
+    // the extentobject given by initialExtent.
+    //
+    // Refs: https://community.esri.com/thread/229431-getting-mapview-to-stay-within-bounds
+    //
+    let currentCenter = view.extent.center;
+    if (!initialExtent.contains(currentCenter)) {
 
-    let newCenter = view.extent.center;
+        let newCenter = view.extent.center;
 
-    if (currentCenter.x < initialExtent.xmin) {
-      newCenter.x = initialExtent.xmin;
+        if (currentCenter.x < initialExtent.xmin) {
+            newCenter.x = initialExtent.xmin;
+        }
+        if (currentCenter.x > initialExtent.xmax) {
+            newCenter.x = initialExtent.xmax;
+        }
+        if (currentCenter.y < initialExtent.ymin) {
+            newCenter.y = initialExtent.ymin;
+        }
+        if (currentCenter.y > initialExtent.ymax) {
+            newCenter.y = initialExtent.ymax;
+        }
+        view.goTo(newCenter, {duration: 0});
     }
-    if (currentCenter.x > initialExtent.xmax) {
-      newCenter.x = initialExtent.xmax;
-    }
-    if (currentCenter.y < initialExtent.ymin) {
-      newCenter.y = initialExtent.ymin;
-    }
-    if (currentCenter.y > initialExtent.ymax) {
-      newCenter.y = initialExtent.ymax;
-    }
-    view.goTo(newCenter, {duration: 0});
-  }
 }
 
 export {
     createNLCDTileLayer,
     createVectorTileLayers,
     createFeatureServiceLayers,
-    createClusterIndex,
-    updateClusters,
     convertGeoJsonToEsriFeature,
     clusterIndex,
     clusterLayer,
-    checkExtent,
-    fitExtent
+    createClusterIndex,
+    filterClusters,
+    updateClusters,
+    prepareExtent,
+    checkExtent
 }

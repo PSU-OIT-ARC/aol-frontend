@@ -3,7 +3,7 @@
     <div class='inner'>
       <a name="watershed" id="watershed"></a>
       <map-loader/>
-      <aol-map :small='true' id='map'></aol-map>
+      <aol-map ref="map" :mode='"mini"' :small='true'></aol-map>
     </div>
     <p class="caption">
       <!-- <a href="#">Lake</a>|<a href="#">Watershed</a> -->
@@ -12,6 +12,8 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
+
   import AolMap from '@/components/map/AolMap';
   import MapLoader from '@/components/map/MapLoader';
 

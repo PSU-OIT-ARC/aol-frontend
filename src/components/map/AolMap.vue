@@ -1,305 +1,468 @@
 <template>
-  <div id='map' class='map'
-     ref='map' :class="small ? 'small' : ''">
+  <div id='esri-map'
+       class='map'
+       :class="small ? 'small' : ''">
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { loadModules } from 'esri-loader';
+
 import app_config from '@/config';
 import config from '@/components/map/config';
-
 import {
-  createNLCDTileLayer,
-  createVectorTileLayers,
-  createFeatureServiceLayers,
-  updateClusters,
-  convertGeoJsonToEsriFeature,
-  clusterIndex,
-  checkExtent
+    createNLCDTileLayer,
+    createVectorTileLayers,
+    createFeatureServiceLayers,
+    convertGeoJsonToEsriFeature,
+    clusterLayer,
+    clusterIndex,
+    createClusterIndex,
+    filterClusters,
+    updateClusters,
+    prepareExtent,
+    checkExtent
 } from '@/components/map/utils';
 
 export default {
-  name: 'aol-map',
-  props: {'small': { default: false }},
-  computed: {
-    ...mapGetters({map: 'getMapObject',
-                   lakes: 'getLakes',
-                   reachcodes: 'getReachcodes',
-                   currentFocus: 'getCurrentFocus',
-                   currentLake: 'getCurrentLake'}),
-  },
-  methods: {
-    ...mapGetters(['getTimeElapsed',
-                   'getIsLoading',
-                   'getMapBasemap',
-                   'getLakeByReachcode',
-                   'getCurrentFocus',
-                   'getCurrentLake']),
-    ...mapActions(['markTimestamp',
-                   'getAuthToken', 'setError',
-                   'setMapObject', 'setMapNode', 'setMapView',
-                   'setLoading', 'setZoom', 'setIntroDismissed',
-                   'resetBounds', 'fitBounds']),
-
-
-    zoomToCluser (cluster_id, view) {
-        let points = clusterIndex.getLeaves(cluster_id)
-        Promise.all(points.map(convertGeoJsonToEsriFeature)).then(
-          (points) => {
-          view.goTo(points)
-        });
+    name: 'aol-map',
+    props: ['small', 'mode'],
+    computed: {
+        ...mapGetters({map: 'getMapObject',
+                       views: 'getMapView',
+                       zoom: 'getMapZoom',
+                       filter: 'getMapFilter',
+                       focus: 'getMapFocus',
+                       lakes: 'getLakes',
+                       reachcodes: 'getReachcodes',
+                       currentFocus: 'getCurrentFocus'}),
     },
-    selectFeatureFromClick(event, view) {
-      view.hitTest(event).then((response) => {
+    methods: {
+        ...mapGetters(['getTimeElapsed',
+                       'getIsLoading',
+                       'getMapBasemap',
+                       'getMapZoom',
+                       'getMapFilter',
+                       'getMapFocus',
+                       'getLakeByReachcode',
+                       'getCurrentFocus',
+                       'getCurrentLake']),
+        ...mapActions(['markTimestamp', 'setError', 'getAuthToken',
+                       'setMapObject', 'setMapView', 'setMapZoom',
+                       'setLoading', 'setIntroDismissed']),
 
-        let features = response.results.filter((result) => {
-            return result.graphic.layer.id == "lake_bbox_service_layer" ||
-                   (result.graphic.attributes != null &&
-                    result.graphic.attributes.cluster);
-        });
+        onClick(event) {
+          this.view.hitTest(event).then((response) => {
 
-        if (!features.length) {
-          // clear selection
-          this.$router.push({name: 'home'});
-          return
-        }
+            let features = response.results.filter((result) => {
+                return result.graphic.layer.id == "lake_bbox_service_layer" ||
+                       (result.graphic.attributes != null &&
+                        result.graphic.attributes.cluster);
+            });
 
-        for (let f of features) {
-          if (f.graphic.attributes != null && f.graphic.attributes.cluster) {
-             this.zoomToCluser(f.graphic.attributes.cluster_id, view)
-             break;
-          }
+            // if selected feature is a cluster, fit to the cluster
+            // else selected feature is waterbody feature, fit to it
+            for (let f of features) {
+              if (f.graphic.attributes != null && f.graphic.attributes.cluster) {
+                this.fitCluster(f.graphic.attributes.cluster_id);
+              } else { 
+                let reachcode = null;
+                if (f.graphic.attributes.hasOwnProperty('ReachCode')) {
+                  reachcode = f.graphic.attributes.ReachCode
+                } else if (f.graphic.attributes.hasOwnProperty('REACHCODE')) {
+                  reachcode = f.graphic.attributes.REACHCODE
+                }
 
-          let reachcode = null;
-          if (f.graphic.attributes.hasOwnProperty('ReachCode')) {
-            reachcode = f.graphic.attributes.ReachCode
-          }
-          else if (f.graphic.attributes.hasOwnProperty('REACHCODE')) {
-            reachcode = f.graphic.attributes.REACHCODE
-          }
+                if (reachcode == null || reachcode == '') {
+                  console.debug("Selection does not provide a reachcode")
+                  return
+                } else if (this.$route.name == 'home' &&
+                           this.$route.query.lake == parseInt(reachcode)) {
+                  console.warn("Selection made is the current selection");
+                  return
+                }
 
-          if (reachcode == null || reachcode == '') {
-            console.debug("Selection does not provide a reachcode")
-          }
-          else {
-            let gl = this.getLakeByReachcode();
-            let lake = gl(parseInt(reachcode));
-            if (lake != undefined && lake != null) {
-              console.debug("Loading waterbody " + reachcode + " from index");
-              if (f.graphic.geometry.type == 'polygon') {
-                  console.debug("Caching geometry returned from hitTest query");
-                  lake.cached_geom = f.graphic.geometry;
+                let gl = this.getLakeByReachcode();
+                let lake = gl(parseInt(reachcode));
+
+                if (lake != undefined && lake != null) {
+                  console.debug("Loading waterbody " + reachcode + " from index");
+                  this.$router.push({name: 'home', query: {lake: lake.reachcode}});
+                } else {
+                  console.debug("Waterbody " + reachcode + " not present in index");
+                }
               }
-              this.$router.push({name: 'home', query: {'lake': lake.reachcode}});
-            } else {
-              console.debug("Waterbody " + reachcode + " not present in index");
             }
-            break;
-          }
-        }
 
-      })
-    },
-    loadLayers (map, view) {
-      return new Promise ((resolve) => {
-        this.markTimestamp('layers');
+          })
+        },
+        initBounds () {
+            //
+            // Initializes the extent of the map.
+            //
+            // Examines state to determine how to construct the extent.
+            //
+            console.debug("Initializing map bounds");
 
-        // TODO: The following utilities load layers which are hosted
-        //       as secure (i.e., private) data sources. Such data sources
-        //       are incompatible with app-based logins.
-        Promise.all([
-          // NOTE: temporarily remove custom baselayers
-            //createNLCDTileLayer(map),
-            createVectorTileLayers(map),
-            createFeatureServiceLayers(map, view, this)
-        ]).then(() => {
+            if (this.getCurrentFocus() == null &&
+                this.getCurrentLake() == null) {
 
-          let last_layer_idx = map.layers.length;
-          let marine_layer = map.findLayerById(
-              'marine_board_facilities_service_layer');
-          map.reorder(marine_layer, last_layer_idx);
+                if (this.getMapFocus() != null) {
+                    let gl = this.getLakeByReachcode();
+                    let lake = gl(parseInt(this.getMapFocus()));
+                    this.fitLake(lake);
+                } else {
+                    this.resetBounds();
+                }
+            } else if (this.mode == 'full') {
+                this.fitLake(this.getCurrentFocus());
+            } else if (this.mode == 'mini') {
+                this.fitLake(this.getCurrentLake());
+            }
+        },
+        resetBounds () {
+            //
+            // Reset extent to fit all features this lets
+            // the extent be viewable for any device
+            //
+            console.debug("Resetting map bounds");
+            this.setLoading(true);
 
-          view.when(()=> {
-            let gte = this.getTimeElapsed();
-            console.debug("Loading map layers took " + gte('layers') + "ms");
-
-            // we might not need the point handler
-            // if the bounding boxes are accurate enough?
-            view.on('click', (event) =>
-              this.selectFeatureFromClick(event, view)
-            );
-            view.watch('zoom', (zoom) => {
-              this.setZoom(zoom);
-              updateClusters(map, view).catch((e) => {
-                this.setError(app_config.ERROR_TYPES.MAP)
-                console.error(e)
-              })
-            })
-
-            // reset extent to fit all features
-            // this lets the extent be viewable for any device
-            let lake_boundaries_layer = map.findLayerById(
-                'lake_bbox_service_layer');
+            let lake_boundaries_layer = this.map.findLayerById('lake_bbox_service_layer');
             lake_boundaries_layer.when(()=>{
               return lake_boundaries_layer.queryExtent();
             }).then((response) => {
-                let buffered_extent = response.extent.clone();
-                // add a little buffer and shift slightly
-                buffered_extent.expand(config.extent_buffer);
-                buffered_extent.offset(-60000, 1000, 0);
-                view.goTo(buffered_extent);
-            });
-          });
-          resolve();
-        }).catch((e) => {
-            this.setError(app_config.ERROR_TYPES.MAP)
-            console.error(e)
-        })
-      }); // end promise
-    },
-    initMap () {
-      return new Promise ((resolve) => {
-        this.markTimestamp('esri');
-
-        loadModules([
-          "esri/Map",
-          "esri/views/MapView",
-          "esri/widgets/Locate",
-          "esri/identity/IdentityManager",
-        ], config.dojo_options).then(([
-            EsriMap, MapView, Locate, IdentityManager
-        ]) => {
-          let gte = this.getTimeElapsed();
-          console.debug("Loading ESRI modules took " + gte('esri') + "ms");
-
-          this.getAuthToken().then((data) => {
-            let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
-            IdentityManager.registerToken({
-              'server': config.ArcGisOnlineTilesUrl,
-              'token': data.access_token,
-              'expires': timeout
-            });
-            IdentityManager.registerToken({
-              'server': config.ArcGisOnlineServicesUrl,
-              'token': data.access_token,
-              'expires': timeout
-            });
-
-            let zoom = config.zoom;
-            let center = config.map_center;
-
-            let map = new EsriMap({
-              basemap: this.getMapBasemap()
-            });
-            let view = new MapView({
-              map: map,
-              container: 'map',
-              zoom: zoom,
-              center: center
-            });
-
-            // we're using custom controls
-            let locateWidget = new Locate({
-              viewModel: {
-                view: view
-              },
-              goToLocationEnabled: false,  // otherwise it starts immediately?
-              declaredClass: 'aol-locate-widget'
-            });
-
-            view.ui.components = [locateWidget];
-
-            view.constraints = {
-                minZoom: config.minZoom,
-                maxZoom: config.maxZoom,
-                snapToZoom: false,
-                rotationEnabled: false
-            };
-
-            view.when().then(()=> {
-
-              let initialExtent = view.extent;
-              this.setMapObject(map);
-              this.setMapNode(this.$refs.map);
-              this.setMapView(view);
-
-              view.on('drag', () => {
-                checkExtent(view, initialExtent);
+              let extent = prepareExtent(this.view, response.extent);
+              this.view.goTo(extent).then(() => {
+                  this.setLoading(false);
               });
-              view.on('key-down', (e) => {
-                const arrow_keys = [
-                    'ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'];
-                if (arrow_keys.indexOf(e.key > -1)) {
-                  checkExtent(view, initialExtent);
-                }
-              });
-              resolve([map, view])
+            }).catch((err) => {
+               console.error(err);
+               this.setLoading(false);
             });
-          }); // end getAuthToken
-        }).catch((e) => {
-            this.setError(app_config.ERROR_TYPES.APP);
-            this.setLoading(false);
-        }); // end loadModules
-      }); // end Promise
-    }, //end initMap
-  }, // end methods
-  watch: {
-    currentFocus: function(val) {
-      if (val != null && this.lakes.length) {
-        this.setIntroDismissed(true);
-        this.fitBounds(val);
-      }
-    },
-    currentLake: function(val) {
-      if (val != null && this.lakes.length) {
-        this.setIntroDismissed(true);
-        this.fitBounds(val);
-      }
-    }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      let map_node = this.$store.state.map_node;
-      if (map_node != null) {
-        this.$refs.map.replaceWith(map_node)
-        if (document.querySelector('#map') != null) {
-          document.querySelector('#map').classList.toggle('small', this.small);
-        } else {
-          console.warn("Cannot toggle display class on map. Element unavailable.")
-        }
+        },
+        fitLake (lake) {
+            //
+            // Zoom/pan to lake bounds.
+            // 
+            // If the geometry is computed via a feature service query using
+            // the given reachcode.
+            //
+            if (this.map == null) {
+                console.warn("Map is not loaded. Cannot fit lake.");
+                return
 
-        if (this.getCurrentFocus() != null) {
-          this.fitBounds(this.getCurrentFocus());
-        } else if (this.getCurrentLake() != null) {
-          this.fitBounds(this.getCurrentLake());
-        }
-      } else {
-        // initialize map context
-        this.setLoading(true);
-        this.initMap().then(([map, view])=> {
-          this.loadLayers(map, view).then(()=> {
-            this.setLoading(false);
-            if (document.querySelector('#map') != null) {
-              document.querySelector('#map').classList.toggle('small', this.small);
+            } else if (lake === undefined || lake == null) {
+                console.error("Cannot fit to null or undefined lake.");
+                return
+
             } else {
-              console.warn("Cannot toggle display class on map. Element unavailable.")
-            }
+                console.debug("Fitting to bounds of "+lake.reachcode);
+                this.setLoading(true);
 
-            if (this.getCurrentFocus() != null) {
-              this.fitBounds(this.getCurrentFocus());
-            } else if (this.getCurrentLake() != null) {
-              this.fitBounds(this.getCurrentLake());
+                let lake_layer = this.map.findLayerById('lake_bbox_service_layer');
+                if (lake_layer == null) {
+                  console.warn("Lake bounding box layer not initialized.");
+                  return
+                }
+
+                let query = lake_layer.createQuery();
+                query.where = `REACHCODE = ${lake.reachcode}`;
+                query.maxRecordCountFactor = 4;
+
+                lake_layer.queryFeatures(query).then((response) => {
+                    let features = response.features.filter((f) => {
+                        // TODO: validate this guard
+                        return f.geometry != null && f.geometry.extent != null;
+                    });
+
+                    if (features.length == 0) {
+                        console.error("Got no result from querying features.");
+                    } else if (features.length > 1) {
+                        console.warn("Got more than one result from querying features.");
+                    } else {
+                        let tsName = 'fit-extent-for-'+lake.reachcode;
+                        this.markTimestamp(tsName);
+
+                        let extent = prepareExtent(this.view, features[0].geometry.extent);
+                        this.view.goTo(extent).then(()=> {
+                            let gte = this.getTimeElapsed();
+                            console.debug("Fitting for geom took " + gte(tsName) + "ms");
+                            this.setLoading(false);
+                        });
+                    }
+
+                }).catch((err) => {
+                    console.error(err)
+                    this.setLoading(false);
+                });
+
+            }
+        },
+        fitCluster (cluster_id) {
+            //
+            // Zoom/pan to cluster bounds.
+            //
+            console.debug("Fitting to cluster "+cluster_id);
+            this.setLoading(true)
+
+            let points = clusterIndex.getLeaves(cluster_id)
+            Promise.all(points.map(convertGeoJsonToEsriFeature)).then((points) => {
+              this.view.goTo(points);
+              this.setLoading(false);
+            });
+        },
+        loadFeatures () {
+          return new Promise ((resolve) => {
+            if (this.map.features_loaded != undefined && this.map.features_loaded) {
+              console.debug("Features already loaded.");
+              resolve();
+
+            } else {
+              this.markTimestamp('esri-feature-layers');
+              createFeatureServiceLayers(this.map, this.view, this.reachcodes).then(() => {
+                let gte = this.getTimeElapsed();
+                console.debug("Loading feature layers took " + gte('esri-feature-layers') + "ms");
+
+                let last_layer_idx = this.map.layers.length;
+                let marine_layer = this.map.findLayerById('marine_board_facilities_service_layer');
+                this.map.reorder(marine_layer, last_layer_idx);
+
+                // mark features as initialized
+                this.map.features_loaded = true;
+
+                resolve();
+              });
+
             }
           });
-        }).catch((e)=> {
-          console.log(e)
-        });
-      }
+        },
+        filterFeatures (filter) {
+          let lakes = this.lakes;
 
-    });
-  }, // end mounted
+          // filter applicable lakes
+          if (filter != 'all_lakes') {
+              lakes = this.lakes.filter((lake) => {
+                  return lake[filter] == true;
+              });
+          }
+
+          filterClusters(this.map, this.view, lakes);
+        },
+        initView () {
+            this.view = this.mode == 'full' ? this.views.full : this.views.mini;
+            if (this.view != null) {
+               this.view.goTo({target: this.view.extent, animate: false}).then(() => {
+                   console.debug("View object already exists.");
+                   resolve();
+               });
+            }
+
+            return new Promise ((resolve) => {
+                this.markTimestamp('esri-view');
+
+                loadModules([
+                    "esri/views/MapView",
+                    "esri/widgets/Locate",
+                ], config.dojo_options).then(([
+                    MapView, Locate
+                ]) => {
+                    let gte = this.getTimeElapsed();
+                    console.debug("Loading ESRI view modules took " + gte('esri-view') + "ms");
+
+                    this.view = new MapView({
+                        map: this.map,
+                        container: 'esri-map',
+                        zoom: this.zoom,
+                        center: config.map_center
+                    });
+
+                    let dimension = this.view.width + "x" + this.view.height;
+                    console.debug("Created map view with dimensions " + dimension);
+
+                    if (this.mode == 'full') {
+                        // we're using custom controls
+                        let locateWidget = new Locate({
+                            viewModel: {view: this.view},
+                            goToLocationEnabled: false,  // otherwise it starts immediately?
+                            declaredClass: 'aol-locate-widget'
+                        });
+                        this.view.ui.components = [locateWidget];
+                    }
+
+                    this.view.constraints = {
+                        minZoom: config.minZoom,
+                        maxZoom: config.maxZoom,
+                        snapToZoom: false,
+                        rotationEnabled: false
+                    };
+                    this.view.when().then(()=> {
+                        this.setMapView({type: this.mode, view: this.view})
+
+                        // bounds checking is configurable in map config module
+                        if (config.checkBounds) {
+                            let initialExtent = this.view.extent.clone();
+                            this.view.on('drag', () => {checkExtent(this.view, initialExtent)});
+                            this.view.on('key-down', (e) => {
+                                const arrow_keys = [
+                                    'ArrowDown',
+                                    'ArrowUp',
+                                    'ArrowRight',
+                                    'ArrowLeft'
+                                ];
+                                if (arrow_keys.indexOf(e.key > -1)) {
+                                    checkExtent(this.view, initialExtent);
+                                }
+                            });
+                        }
+                    });
+
+                    resolve();
+
+                });  // end loadModules
+            });  // end Promise
+        },  // end initView
+        initMap () {
+            if (this.map != null) {
+                return new Promise ((resolve) => {
+                    console.debug("Map object already exists.");
+                    resolve();
+                });
+            }
+
+            return new Promise ((resolve) => {
+                this.markTimestamp('esri-map');
+
+                loadModules([
+                    "esri/Map",
+                    "esri/identity/IdentityManager",
+                ], config.dojo_options).then(([
+                      EsriMap, IdentityManager
+                ]) => {
+                    let gte = this.getTimeElapsed();
+                    console.debug("Loading ESRI map modules took " + gte('esri-map') + "ms");
+
+                    this.getAuthToken().then((data) => {
+                        let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
+                        IdentityManager.registerToken({
+                            'server': config.ArcGisOnlineTilesUrl,
+                            'token': data.access_token,
+                            'expires': timeout
+                        });
+                        IdentityManager.registerToken({
+                            'server': config.ArcGisOnlineServicesUrl,
+                            'token': data.access_token,
+                            'expires': timeout
+                        });
+
+                        let map = new EsriMap({basemap: this.getMapBasemap()});
+                        this.setMapObject(map);
+
+                        // TODO: The following utilities load layers which are hosted
+                        //       as secure (i.e., private) data sources. Such data sources
+                        //       are incompatible with app-based logins.
+                        this.markTimestamp('esri-tile-layers');
+                        Promise.all([
+                            // NOTE: temporarily remove custom baselayers
+                            //createNLCDTileLayer(this.map),
+                            createVectorTileLayers(this.map),
+                        ]).then(() => {
+                            let gte = this.getTimeElapsed();
+                            console.debug("Loading map tile layers took " + gte('esri-tile-layers') + "ms");
+                        }).catch((e) => {
+                            this.setError(app_config.ERROR_TYPES.APP);
+                            console.error(e)
+                        })
+
+                        resolve();
+
+                    }).catch((e) => {
+                        this.setError(app_config.ERROR_TYPES.APP);
+                        console.error(e)
+                    }); // end getAuthToken
+                }).catch((e) => {
+                  this.setError(app_config.ERROR_TYPES.APP);
+                  console.error(e)
+                }); // end loadModules
+            }); // end Promise
+        }, //end initMap
+    }, // end methods
+    watch: {
+        zoom: function(val) {
+            if (parseFloat(this.view.zoom) != val) {
+                this.setIntroDismissed(true);
+                this.view.zoom = val;
+            }
+        },
+        filter: function(val) {
+            this.setIntroDismissed(true);
+            this.filterFeatures(val);
+        },
+        currentFocus: function() {
+            if (this.currentFocus != null) {
+              this.initBounds();
+            }
+        },
+        focus: function() {
+            if (this.focus != null) {
+                this.initBounds();
+            }
+        }
+    },
+    mounted () {
+        this.$nextTick(() => {
+          this.setLoading(true);
+
+          // initialize map context
+          this.initMap().then(() => {
+
+              // initialize map viewport
+              this.initView().then(() => {
+                  this.setLoading(false);
+
+                  // load feature layers
+                  this.loadFeatures().then(() => {
+
+                      // registers click event to select features from map
+                      this.view.on('click', (event) => this.onClick(event));
+
+                      // registers watcher for zoom level to update data store
+                      // and to recompute clusters.
+                      this.view.watch('zoom', (zoom) => {
+                          this.setMapZoom(parseFloat(zoom));
+                      });
+
+                      // registers watcher for extent changes in order to update
+                      // the resultant lake point clustering layer
+                      this.view.watch('extent', () => {
+                          updateClusters(this.map, this.view).catch((e) => {
+                              this.setError(app_config.ERROR_TYPES.MAP)
+                              console.error(e)
+                        })
+                      });
+
+                      this.initBounds();
+
+                    // error handling: loadFeatures
+                    }).catch((err) => {
+                        this.setError(app_config.ERROR_TYPES.APP);
+                        console.error(err)
+                    });
+
+                // error handling: initView
+                }).catch((err)=> {
+                    this.setError(app_config.ERROR_TYPES.APP);
+                    console.error(err)
+                });
+
+            // error handling: initMap
+            }).catch((err)=> {
+                this.setError(app_config.ERROR_TYPES.APP);
+                console.error(err)
+            });
+        });
+    }, // end mounted
 }
 </script>
 

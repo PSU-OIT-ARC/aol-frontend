@@ -1,7 +1,7 @@
 <template>
   <div class='map-container'>
     <map-loader/>
-    <aol-map></aol-map>
+    <aol-map ref="map" :mode='"full"' :small='false'></aol-map>
 
     <div v-show="active_state.legend" class="map-legend-wrapper">
       <a class="close-filters" @click="toggleVisibility('legend')">
@@ -14,24 +14,28 @@
     <div class="map-buttons-wrapper">
       <div class="map-buttons">
 
-        <a role="button" href="#" class="map-button map-button--zoom-in"
-           :class="zoomInDisabled ? 'disabled' : ''"
+        <a role="button"
+           class="map-button map-button--zoom-in"
+           :class="{disabled: zoomInDisabled()}"
            @click="zoomIn">
            <zoom-in-svg/>
         </a>
-        <a role="button" href="#" class="map-button map-button--zoom-out"
-           v-bind:class="zoomOutDisabled ? 'disabled' : ''"
+        <a role="button"
+           class="map-button map-button--zoom-out"
+           :class="{disabled: zoomOutDisabled()}"
            @click="zoomOut">
            <zoom-out-svg/>
         </a>
 
-        <a role="button" class="map-button map-button--extent"
+        <a role="button"
+           class="map-button map-button--extent"
            @click="goToInitialExtent">
           <initial-extent/>
         </a>
 
-        <a role="button" href="#" class="map-button map-button--layers"
-           v-bind:class="{ selected: active_state.filters}"
+        <a role="button"
+           class="map-button map-button--layers"
+           :class="{selected: active_state.filters}"
            @click="toggleVisibility('filters')">
           <layer-svg/>
         </a>
@@ -96,42 +100,57 @@ export default {
     AolMap,
     MapLoader
   },
-
+  computed: {
+    ...mapGetters({zoom: 'getMapZoom'}),
+  },
   methods: {
-    ...mapActions(['resetSearchResults', 'resetBounds']),
-    ...mapGetters(['getCurrentZoom']),
+    ...mapActions(['setMapZoom', 'focusMap',
+                   'resetSearchResults']),
     zoomIn () {
-      const view = this.$store.state.map_view;
-      view.zoom += 0.5;
+      if (!this.zoomInDisabled()) {
+        this.setMapZoom(parseFloat(this.zoom) + 0.5);
+      }
+
+      return false;
+    },
+    zoomInDisabled () {
+      return parseFloat(this.zoom) + 0.5 > parseFloat(config.maxZoom);
     },
     zoomOut () {
-      const view = this.$store.state.map_view;
-      view.zoom -= 0.5;
+      if (!this.zoomOutDisabled()) {
+        this.setMapZoom(parseFloat(this.zoom) - 0.5);
+      }
+
+      return false;
+    },
+    zoomOutDisabled () {
+      return parseFloat(this.zoom) - 0.5 < parseFloat(config.minZoom);
     },
     toggleVisibility (attr) {
       this.active_state[attr] = !this.active_state[attr];
+      return false;
     },
     locate () {
-      const view = this.$store.state.map_view;
-      let locate = view.ui.components.find(
-        i => i.declaredClass == 'aol-locate-widget')
+      let view = this.$refs.map.view;
+      let locate = view.ui.components.find((component) => {
+          return component.declaredClass == 'aol-locate-widget';
+      });
+
       locate.goToLocationEnabled = true;
       locate.locate()
     },
     goToInitialExtent () {
-        this.$router.push({name: 'home', query: {}});
-        this.resetSearchResults();
-        this.resetBounds();
+      if (Object.keys(this.$route.query).includes('lake') ||
+          Object.keys(this.$route.query).includes('f')) {
+            this.$router.push({name: 'home'});
+      }
+
+      this.$refs.map.resetBounds();
+      this.resetSearchResults();
+
+      return false;
     }
   },
-  computed: {
-    zoomInDisabled () {
-      return this.getCurrentZoom() >= config.maxZoom;
-    },
-    zoomOutDisabled () {
-      return this.getCurrentZoom() <= config.minZoom;
-    }
-  }
 }
 </script>
 
@@ -139,7 +158,6 @@ export default {
   a.map-button.disabled {
     background: #ccc;
     cursor: not-allowed;
-
   }
 
 </style>

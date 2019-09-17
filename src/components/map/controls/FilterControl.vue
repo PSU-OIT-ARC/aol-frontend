@@ -7,7 +7,7 @@
                :id="filter.name"
                :value='filter.name'
                :checked="getMapFilter() == filter.name"
-               @change="selectLakesFromFilters(filter)"/>
+               @change="setMapFilter(filter.name)"/>
         <label :for='filter.name'>{{ filter.label }}</label>
       </div>
     </div>
@@ -16,10 +16,10 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { createClusterIndex, updateClusters, clusterLayer } from '@/components/map/utils';
 
 export default {
   name: 'filter-control',
+  props: ['map', 'view'],
   data () {
     return {
       filters: [
@@ -40,34 +40,7 @@ export default {
   },
   methods: {
     ...mapActions(['setMapFilter']),
-    ...mapGetters(['getMapFilter', 'getLakes']),
-    selectLakesFromFilters (filter) {
-      const map = this.$store.state.map_object;
-      const view = this.$store.state.map_view;
-
-      let filtered_lakes = [];
-      if (filter.name == 'all_lakes') {
-        filtered_lakes = this.getLakes();
-      }
-      else {
-        filtered_lakes = this.getLakes().filter((lake)=> {
-            return lake[filter.name] == true;
-        })
-      }
-
-      let filtered_reachcodes = filtered_lakes.map((l) => {
-          return l.reachcode
-      });
-      let filtered_features = clusterLayer.featureStore.filter((f) => {
-          return filtered_reachcodes.indexOf(f.attributes.REACHCODE) > -1
-      });
-
-      createClusterIndex(map, clusterLayer, filtered_features).then(() => {
-          updateClusters(map, view)
-      });
-
-      this.setMapFilter(filter.name);
-    },
+    ...mapGetters(['getMapFilter']),
   }
 }
 </script>
