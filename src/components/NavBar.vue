@@ -15,7 +15,7 @@
 
       <div role="button" aria-label="menu" v-bind:class="['menu-trigger', { expand: show_menu}]" @click="show_menu = !show_menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14">
-          <g fill="#06186A">
+          <g>
             <rect width="21" height="2"/>
             <rect width="21" height="2" y="6"/>
             <rect width="21" height="2" y="12"/>
@@ -106,18 +106,18 @@ export default {
   .nav-links--mobile {
     display: none;
     @include respond-to(handheld) {
-      display: inherit;
+      display: block;
       position: absolute;
       z-index: 99999;
-      right: 15px;
-      top: 8px;
+      right: 0px;
+      top: 0px;
       width: 50%;
       text-align: right;
     }
 
     a:link, a:visited {
       text-decoration: none;
-      color: $primary_color;
+      color: white;
     }
   }
 
@@ -125,28 +125,48 @@ export default {
     position: absolute;
     top: 0px;
     right: 0px;
-    height: 25px;
+    height: 27px;
     width: 25px;
     cursor: pointer;
+    padding: 10px 15px;
+
+    svg g {
+      fill: $primary_color;
+    }
+  }
+
+  .menu-trigger.expand {
+    background-color: $primary_color;
+    svg g {
+      fill: white;
+    }
   }
 
   .mobile-links {
     position: absolute;
     text-align: right;
-    top: 34px;
-    right: 15px;
+    top: 43px;
+    right: 0px;
     width: 100%;
     height: auto;
     background-color: white;
+    animation: slide-in 100ms forwards;
+    background-color: $primary_color;
+    padding-bottom: 10px;
+
 
     a span {
       display: block;
-      width: 100%;
-      padding: 8px 15px;
-      background-color: white;
+      position: relative;
+      left: 0px;
+      padding: 10px 15px 0px 0px;
+      background-color: $primary_color;
+
       &:hover {
-        background-color: #dedede;
+        background-color: lighten($primary_color, 10%);
       }
+
+
     }
   }
 }
