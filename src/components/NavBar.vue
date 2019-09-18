@@ -6,10 +6,13 @@
     </div>
 
     <div class="nav-links">
-      <router-link to="/aquatic-invasives">Aquatic Invasives</router-link>
-      <router-link to="/about">About</router-link>
+      <router-link :to="{name: 'flatpage', params: {slug: 'aquatic-invasives'}}">
+        Aquatic Invasives
+      </router-link>
+      <router-link :to="{name: 'flatpage', params: {slug: 'about'}}">
+        About
+      </router-link>
     </div>
-
 
     <div class="nav-links--mobile">
 
@@ -24,16 +27,13 @@
       </div>
 
       <div v-if="show_menu" class="mobile-links">
-        <router-link to="/aquatic-invasives">
+        <router-link :to="{name: 'flatpage', params: {slug: 'aquatic-invasives'}}">
           <span v-on:click="show_menu = false">Aquatic Invasives</span>
         </router-link>
 
-        <router-link to="/about">
+        <router-link :to="{name: 'flatpage', params: {slug: 'about'}}">
           <span v-on:click="show_menu = false">About</span>
         </router-link>
-
-      </div>
-
       </div>
 
     </div>
