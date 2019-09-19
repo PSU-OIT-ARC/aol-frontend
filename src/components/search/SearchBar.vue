@@ -24,7 +24,7 @@ export default {
     ...mapActions(['searchLakes', 'resetSearchResults', 'setIntroDismissed']),
     search (e) {
       this.setIntroDismissed(true);
-      this.searchLakes(e.target.value);
+      this.searchLakes(e.target.value.trim());
     },
     clear () {
       this.resetSearchResults();
