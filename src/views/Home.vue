@@ -1,6 +1,5 @@
 <template>
   <div v-bind:class="[focus ? 'sidebar_active' : '', 'home']">
-    <intro-card/>
     <side-bar class='sidebar-wrapper'
       v-bind:class="[focus ? 'sidebar_active' : '']">
     </side-bar>
@@ -14,14 +13,12 @@ import { mapActions, mapGetters } from 'vuex';
 
 import MapContainer from '@/components/map/MapContainer';
 import SideBar from '@/components/SideBar';
-import IntroCard from '@/components/IntroCard';
 
 export default {
   name: 'home',
   components: {
     MapContainer,
-    SideBar,
-    IntroCard
+    SideBar
   },
   computed: {
     ...mapGetters({lakes: 'getLakes', focus: 'getCurrentFocus'}),
