@@ -18,7 +18,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'search-bar',
   computed: {
-    ...mapGetters({query: 'searchQuery'})
+    ...mapGetters({query: 'getSearchQuery'})
   },
   methods: {
     ...mapActions(['searchLakes', 'resetSearchResults', 'setIntroDismissed']),

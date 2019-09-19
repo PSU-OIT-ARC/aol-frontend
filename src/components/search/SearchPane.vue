@@ -22,9 +22,7 @@ export default {
     SearchResults
   },
   computed: {
-    ...mapGetters({
-      query: 'searchQuery',
-    }),
+    ...mapGetters({query: 'getSearchQuery'}),
     hide_results() {
       if (this.$route.query['lake']) {
         return true

@@ -51,7 +51,7 @@ export default {
     TextSection
   },
   computed: {
-    ...mapGetters(['searchResults']),
+    ...mapGetters({searchResults: 'getSearchResults'}),
     has_results () {
       return this.searchResults != null && this.searchResults.length;
     },

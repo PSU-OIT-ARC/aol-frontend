@@ -16,11 +16,11 @@ const getters = {
         return state.map_filter;
     },
 
-    searchQuery (state) {
+    getSearchQuery (state) {
         return state.search.query;
     },
 
-    searchResults (state) {
+    getSearchResults (state) {
         return state.search.results;
     },
 
