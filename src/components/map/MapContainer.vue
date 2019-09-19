@@ -1,6 +1,6 @@
 <template>
   <div class='map-container'>
-    <map-loader/>
+    <map-loader :mode='"full"'/>
     <aol-map></aol-map>
 
     <div v-show="active_state.legend" class="map-legend-wrapper">
