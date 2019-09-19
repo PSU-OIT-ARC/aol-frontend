@@ -57,24 +57,27 @@ const actions = {
         search.query = query;
         search.results = [];
 
-        context.commit('setSearchResults', search);
         if (query == null || query == '') {
             search.results = [];
             context.commit('setSearchResults', search)
-            return;
+        } else {
+            let numericalQuery = parseInt(query);
+            let isPartialNumber = numericalQuery != NaN && numericalQuery.toString() != "NaN"
+            if (isPartialNumber && query.length == numericalQuery.toString().length) {
+                search.results = context.getters.getLakes.filter((lake) => {
+                    return lake.reachcode == numericalQuery;
+                });
+            } else {
+                let starts_with = context.getters.getLakes.filter(lake => {
+                    return lake.title.toLowerCase().startsWith(query.toLowerCase());
+                });
+                let includes = context.getters.getLakes.filter(lake => {
+                    return lake.title.toLowerCase().includes(query.toLowerCase());
+                });
+                search.results = Array.from(new Set(starts_with.concat(includes)));
+            }
+            context.commit('setSearchResults', search);
         }
-
-        let starts_with = context.getters.getLakes.filter(lake => {
-            return lake.title.toLowerCase().startsWith(query.toLowerCase());
-        });
-        let includes = context.getters.getLakes.filter(lake => {
-            return lake.title.toLowerCase().includes(query.toLowerCase());
-        });
-        let all_results = starts_with.concat(includes);
-        let results = new Set(all_results);
-        search.results = Array.from(results);
-
-        context.commit('setSearchResults', search);
     },
 
     resetSearchResults (context) {
