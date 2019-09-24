@@ -126,7 +126,7 @@ table {
   margin: 20px 0px;
 
   th, td {
-    width: 200px;
+    max-width: 200px;
     text-align: left;
     vertical-align: top;
     font-size: .9em;
@@ -139,6 +139,10 @@ table {
   th {
     color: #888;
     text-transform: uppercase;
+  }
+
+  td span {
+    padding-right: 10px;
   }
 }
 
