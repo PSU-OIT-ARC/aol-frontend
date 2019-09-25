@@ -89,7 +89,7 @@ export default {
     }
   },
   methods: {
-    // ...mapActions(['fetchLake', 'resetSearchResults']),
+    ...mapActions(['fetchLake', 'resetSearchResults']),
     ...mapActions(['fetchLake']),
     mobile_mode () {
       return config.is_mobile(window);
@@ -97,7 +97,7 @@ export default {
   },
   created () {
     // clear out any search SearchResults
-    // this.resetSearchResults();
+    this.resetSearchResults();
 
     // fetch the non-indexed lake object
     this.fetchLake(parseInt(this.reachcode))
