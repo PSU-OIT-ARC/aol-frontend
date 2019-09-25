@@ -82,7 +82,6 @@ const createVectorTileLayers = (map) => {
 
 const createFeatureServiceLayers = (map, view, reachcodes) => {
     return new Promise ((resolve, reject) => {
-        let lake_point_layer;
         try {
             loadModules(['esri/layers/FeatureLayer'],
                 config.dojo_options).then(([FeatureLayer]) => {
@@ -413,8 +412,6 @@ export {
     createFeatureServiceLayers,
     convertGeoJsonToEsriFeature,
     clusterIndex,
-    clusterLayer,
-    createClusterIndex,
     filterClusters,
     updateClusters,
     prepareExtent,

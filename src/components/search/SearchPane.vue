@@ -8,16 +8,14 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
-import CloseButtonSVG from "@/components/CloseButtonSVG";
 import SearchBar from "@/components/search/SearchBar";
 import SearchResults from "@/components/search/SearchResults";
 
 export default {
   name: 'search-pane',
   components: {
-    'close-button-svg': CloseButtonSVG,
     SearchBar,
     SearchResults
   },

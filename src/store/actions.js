@@ -1,6 +1,4 @@
-import map_config from '@/components/map/config';
 import config from '@/config';
-import { fitExtent } from '@/components/map/utils';
 
 
 const API_URL = config.backend_url;
@@ -73,7 +71,7 @@ const actions = {
             context.commit('setSearchResults', search)
         } else {
             let numericalQuery = parseInt(query);
-            let isPartialNumber = numericalQuery != NaN && numericalQuery.toString() != "NaN"
+            let isPartialNumber = isNaN(numericalQuery) && numericalQuery.toString() != "NaN"
             if (isPartialNumber && query.length == numericalQuery.toString().length) {
                 search.results = context.getters.getLakes.filter((lake) => {
                     return lake.reachcode == numericalQuery;
