@@ -1,7 +1,13 @@
 
+
 const LOADING = 'loading';
-const MOBILE_MODE = {
-    width: 600,
+const VIEWPORTS = {
+    handset: {
+        width: 600
+    },
+    tablet: {
+        width: 1200
+    },
 }
 
 const ERROR_TYPES = {
@@ -13,10 +19,18 @@ const ERROR_TYPES = {
 const config = {
     backend_url: process.env.VUE_APP_API_URL,
     max_search_results: 10,
+    ERROR_TYPES: ERROR_TYPES,
+
     is_mobile: function(window) {
-        return window.innerWidth < MOBILE_MODE.width;
+        return window.innerWidth < VIEWPORTS.handset.width;
     },
-    ERROR_TYPES: ERROR_TYPES
+    is_handset: function(window) {
+        return window.innerWidth < VIEWPORTS.handset.width;
+    },
+    is_tablet: function(window) {
+        return (window.innerWidth > VIEWPORTS.handset.width && 
+                window.innerWidth < VIEWPORTS.tablet.width);
+    }
 }
 
 export default config

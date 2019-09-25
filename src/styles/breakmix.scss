@@ -2,7 +2,7 @@
 $break-small: 600px;
 $break-med: 900px;
 $break-large: 1200px;
-// $break-xlarge: 1400px; if necessary
+$break-xlarge: 1400px;  // if necessary
 
 @mixin respond-to($media) {
   @if $media == handheld {
@@ -11,6 +11,10 @@ $break-large: 1200px;
     }
   } @else if $media == medscreen {
     @media only screen and (min-width: $break-small + 1) and (max-width: $break-med - 1) {
+      @content;
+    }
+  } @else if $media == lgscreen {
+    @media only screen and (min-width: $break-med + 1) and (max-width: $break-large - 1) {
       @content;
     }
   } @else if $media == widescreen {
