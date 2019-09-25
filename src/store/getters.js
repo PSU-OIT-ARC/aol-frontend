@@ -40,11 +40,11 @@ const getters = {
       return state.intro_dismissed;
     },
 
-    searchQuery (state) {
+    getSearchQuery (state) {
         return state.search.query;
     },
 
-    searchResults (state) {
+    getSearchResults (state) {
         return state.search.results;
     },
 

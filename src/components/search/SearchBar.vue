@@ -18,13 +18,13 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'search-bar',
   computed: {
-    ...mapGetters({query: 'searchQuery'})
+    ...mapGetters({query: 'getSearchQuery'})
   },
   methods: {
     ...mapActions(['searchLakes', 'resetSearchResults', 'setIntroDismissed']),
     search (e) {
       this.setIntroDismissed(true);
-      this.searchLakes(e.target.value);
+      this.searchLakes(e.target.value.trim());
     },
     clear () {
       this.resetSearchResults();

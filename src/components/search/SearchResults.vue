@@ -1,19 +1,14 @@
 <template>
   <ul id="search-results-wrapper" ref='resultsWrapper' v-if="query">
-    <div v-if="query && !results.length">
+    <li v-if="query && !results.length">
       <div class="no-results">Sorry, no results</div>
-    </div>
-    <div v-else>
-      <li v-for="result in results" :key="result.reachcode">
-        <router-link v-if="result.is_major" :to="href(result)">
-          <lake-card :lake="result"></lake-card>
-        </router-link>
-        <lake-card v-if="!result.is_major" :lake="result"></lake-card>
-      </li>
-      <li v-show="showLoading" class='loading'>
-        <loading-spinner/>
-      </li>
-    </div>
+    </li>
+    <li v-else v-for="result in currentResults" :key="result.reachcode">
+      <router-link v-if="result.is_major" :to="lake_href(result)">
+        <lake-card :lake="result"></lake-card>
+      </router-link>
+      <lake-card v-if="!result.is_major" :lake="result"></lake-card>
+    </li>
   </ul>
 </template>
 
@@ -22,61 +17,62 @@ import { mapGetters } from 'vuex';
 import _ from 'lodash';
 import config from '@/config';
 import LakeCard from '@/components/lake/LakeCard';
-import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default {
-  name: 'search-results',
-  props: ["query"],
-  data () {
-    return {
-      renderered_results: config.max_search_results
-    }
-  },
-  components: {
-    LakeCard,
-    LoadingSpinner
-  },
-  updated () {
-    let container = this.$refs.resultsWrapper;
-    if (container) {
-      container.addEventListener('scroll', (e) => {
-        this.checkScrollBottom(e);
-      });
-    }
-  },
-  methods: {
-    ...mapGetters(['searchResults']),
-    href (lake) {
-      return {name: 'home', query: {'lake': lake.reachcode}};
-    },
-    checkScrollBottom (e) {
-      let el = e.target;
-      let buffer = 5;
-      if (el.scrollTop >= el.offsetHeight - buffer) {
-        this.loadMoreResults();
-      }
-    },
-    loadMoreResults: _.debounce(function () {
-        if (this.renderered_results <= this.searchResults().length) {
-          this.renderered_results += config.max_search_results;
+    name: 'search-results',
+    props: ["query"],
+    data () {
+        return {
+            numResults: config.max_search_results,
+            currentResults: [],
         }
-    }, 100),
-  },
-  computed: {
-    results () {
-      let results = this.searchResults().slice(0, this.renderered_results);
-      return results
     },
-    showLoading () {
-       return  this.renderered_results <= this.searchResults().length;
+    components: {
+        LakeCard,
+    },
+    computed: {
+        ...mapGetters({results: 'getSearchResults'}),
+    },
+    methods: {
+        lake_href (lake) {
+            return {name: 'home', query: {'lake': lake.reachcode}};
+        },
+        getMoreResults: _.debounce(
+            function() {
+                if (this.numResults <= this.results.length) {
+                    this.numResults += config.max_search_results;
+                    this.expandResults();
+                }
+            }, 100
+        ),
+        expandResults () {
+            if (this.results.length) {
+                this.currentResults = this.results.slice(0, this.numResults);
+            }
+        }
+    },
+    watch: {
+        // reset numResults on query change
+        'query': function () {
+            this.numResults = config.max_search_results;
+            this.expandResults();
+        }
+    },
+    updated () {
+        let container = this.$refs.resultsWrapper;
+        if (container == undefined || container == null) {
+            console.debug("Results container is not present");
+            return
+        }
+
+        container.addEventListener('scroll', (e) => {
+            let el = e.target;
+            let buffer = 5;
+            if (el.scrollTop >= el.offsetHeight - buffer) {
+                this.getMoreResults();
+            }
+        });
     }
-  },
-  watch: {
-    // reset renderered_results on query change
-    'query': function () {
-       this.renderered_results = config.max_search_results;
-    }
-  }
 }
 </script>
 
