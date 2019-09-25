@@ -14,7 +14,7 @@
           </router-link>
         </div>
         <div class="close-sidebar">
-          <router-link :to="map_href">
+          <router-link :to="back_href">
             <close-button-svg />
           </router-link>
         </div>
@@ -56,10 +56,7 @@ export default {
       return this.searchResults != null && this.searchResults.length;
     },
     back_href () {
-      return {name: 'home', query: {}};
-    },
-    map_href () {
-      return {name: 'home', query: {f: this.lake.reachcode}};
+      return {name: 'home', query: {f: 'none'}};
     },
     lake_href () {
       return {name: 'lake', params: {reachcode: this.lake.reachcode}};
