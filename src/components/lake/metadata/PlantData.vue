@@ -4,7 +4,7 @@
     <a name="plants" id="plants"></a>
     <h3>Plants</h3>
 
-    <table class="table" cellpadding="0" cellspacing="0">
+    <table class="table datatable" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
           <th>Date</th>
@@ -18,7 +18,10 @@
             v-bind:item="entry"
             v-bind:index="index"
             v-bind:key="entry.pk">
-          <td class="table-date nowrap">{{ entry.observation_date }}</td>
+          <td class="table-date nowrap">
+            <span v-if="entry.observation_date">{{ entry.observation_date }}</span>
+            <span v-else class="indent">&mdash;</span>
+          </td>
           <td>
             {{ entry.plant['common_name'] }} <br/>
             <em>{{ entry.plant['name'] }}</em>

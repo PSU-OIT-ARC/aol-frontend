@@ -93,7 +93,7 @@
 
 /* Lake detail card */
 
-.content-header .lake-card {
+.detail-content .lake-card {
   grid-template-columns: 370px 1fr;
 
   padding: 0px;
@@ -106,6 +106,7 @@
   @include respond-to(handheld) {
     grid-template-columns: 110px 1fr;
     width: calc(100vw - 30px);
+    margin: 0px 15px;
   }
 
   .info {
@@ -128,26 +129,51 @@
 }
 
 table {
+  width: 100%;
   margin: 20px 0px;
 
-  th, td {
-    max-width: 200px;
+  tr th,
+  tr td {
     text-align: left;
     vertical-align: top;
     font-size: .9em;
+  }
+
+  tr th {
+    color: #888;
+    text-transform: uppercase;
+
+  }
+}
+
+table.datatable {
+
+  tr th,
+  tr td {
     padding-right: 10px;
+
     @include respond-to(handheld) {
+      font-size: .8em;
+    }
+    @include respond-to(medscreen) {
       font-size: .8em;
     }
   }
 
-  th {
-    color: #888;
-    text-transform: uppercase;
+  tr th {
+    @include respond-to(handheld) {
+      min-width: 4em;
+    }
+    @include respond-to(medscreen) {
+      min-width: 4em;
+    }
   }
 
-  td span {
-    padding-right: 10px;
+  tr td > span.indent {
+    padding-right: 0px;
+  }
+  tr td span.indent {
+    padding: 0px 10px;
   }
 }
 
@@ -162,7 +188,8 @@ table {
 #search-results-wrapper .lake-card .photo {
   min-height: 90px;
 }
-.content-header .lake-card .photo--generic {
+
+.detail-content .lake-card .photo--generic {
   background-size: 160px 160px;
   @include respond-to(handheld) {
     background-size: 100px 100px;

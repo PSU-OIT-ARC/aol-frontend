@@ -3,7 +3,7 @@
     <div v-bind:class="[!this.lake.photo ? 'photo--generic' : '', 'photo']" :style="photo_style"></div>
     <div class="info">
       <h3>{{ lake.title }} <i>({{lake.county_set}})</i></h3>
-      <div class="data-icons" v-if="lake.major">
+      <div class="data-icons" v-if="lake.is_major">
         <div class="icon summary"></div>
         <div v-if="lake.has_mussels" class="icon mussels"></div>
         <div v-if="lake.has_plants" class="icon plants"></div>

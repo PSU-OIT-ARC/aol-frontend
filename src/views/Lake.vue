@@ -1,53 +1,45 @@
 <template>
-<div class='outer-wrap'>
-  <div v-if='lake' class="lake-detail-wrapper">
-
-    <div class="blur-image-wrapper">
-      <div class="blur-image" :style="photo_style"></div>
+  <div v-if='lake' class="lake-detail">
+    <div class="detail-photo-wrapper">
+      <div class="detail-photo" :style="photo_style"></div>
     </div>
 
-    <div class="lake-detail">
+    <div class="detail-content-wrapper">
+      <div class="gutter gutter--left"></div>
+      <div class="detail-content">
+        <div class="detail-header">
+          <div class="detail__nav">
+            <div class='back-to-sidebar'>
+              <router-link :to="sidebar_href">
+                &larr; Back
+              </router-link>
+            </div>
+            <div class="close-sidebar">
+              <router-link :to="back_href">
+                <close-button-svg />
+              </router-link>
+            </div>
+          </div> <!-- end detail__nav -->
 
-      <div class="gutter gutter--left">
+          <lake-card class="card" :lake="lake"></lake-card>
+        </div>
+        <div class="detail-body">
+          <div class="detail-main">
+            <data-tabs :lake='lake'></data-tabs>
+          </div>
+
+          <div class="detail-sidebar" v-if="!mobile_mode()">
+            <watershed></watershed>
+            <documents v-if="lake.documents.length" :lake="lake"></documents>
+          </div>
+
+        </div> <!-- end detail-body -->
       </div>
+      <div class="gutter gutter--right"></div>
 
-        <div class="content-wrapper">
+    </div> <!-- end detail-content-wrapper -->
 
-          <div class="content-header">
-            <div class="content__nav">
-              <div class='back-to-sidebar'>
-                <router-link :to="sidebar_href">
-                  &larr; Back
-                </router-link>
-              </div>
-              <div class="close-sidebar">
-                <router-link :to="back_href">
-                  <close-button-svg />
-                </router-link>
-              </div>
-            </div>
-
-           <lake-card class="card" :lake="lake"></lake-card>
-          </div> <!-- end content-nav -->
-
-          <div class="content-body">
-            <div class="body-main">
-              <data-tabs :lake='lake'></data-tabs>
-            </div>
-
-            <div class="body-sidebar" v-if="!mobile_mode()">
-              <watershed></watershed>
-              <documents v-if="lake.documents.length" :lake="lake"></documents>
-            </div>
-          </div> <!-- end content-body -->
-
-        </div> <!-- end content-header -->
-
-        <div class="gutter gutter--right"></div>
-
-    </div> <!-- end content-wrapper -->
-  </div>
-</div>
+  </div> <!-- end lake-detail -->
 </template>
 
 <script>
@@ -110,7 +102,7 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-  .lake-detail-wrapper {
+  .lake-detail {
     display: grid;
     grid-template-rows: 200px 1fr;
     grid-template-columns: 1fr;
@@ -121,22 +113,23 @@ export default {
     }
   }
 
-  .lake-detail {
-    display: grid;
-    grid-template-columns: 1fr minmax(900px, 1200px) 1fr;
-    background: whitesmoke;
+  .detail-photo-wrapper {
+    background-color: #838383;
+    overflow: hidden;
+    position: relative;
+
     @include respond-to(handheld) {
+      width: 100vw;
+    }
+    @include respond-to(medscreen) {
+      width: 100vw;
+    }
+    @include respond-to(lgscreen) {
       width: 100vw;
     }
   }
 
-  .blur-image-wrapper {
-    background-color: #838383;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .blur-image {
+  .detail-photo {
     position: absolute;
     top: 0;
     left: 0;
@@ -149,59 +142,115 @@ export default {
     transform: scale(1.1);
   }
 
-  .back-to-sidebar {
-    text-align: left;
-  }
+  .detail-content-wrapper {
 
-  .content-wrapper {
-    position: relative;
-    top: -180px;
+    display: grid;
+    grid-template-columns: 1fr minmax(900px, 1200px) 1fr;
+    background: whitesmoke;
+
     @include respond-to(handheld) {
-      top: -140px;
+      width: 100vw;
     }
-    @include respond-to(handheld) {
+    @include respond-to(medscreen) {
+      width: 100vw;
+    }
+    @include respond-to(lgscreen) {
       width: 100vw;
     }
   }
 
-  .content-header {
+  .detail-content {
+    position: relative;
+    top: -180px;
+
     @include respond-to(handheld) {
-      padding: 0px 15px;
+      top: -140px;
+      width: 100vw;
+    }
+    @include respond-to(medscreen) {
+      width: 100vw;
+    }
+    @include respond-to(lgscreen) {
+      width: 100vw;
     }
   }
 
-  .content__nav {
+  .detail-header {
+  }
+
+  .detail__nav {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 10px 0px;
+    padding: 15px 0px;
     position: relative;
-    top: 0px;
+    top: -10px;
 
     a {
       color:white;
     }
+
+    @include respond-to(handheld) {
+      padding: 15px;
+    }
+    @include respond-to(medscreen) {
+      padding: 15px;
+    }
+    @include respond-to(lgscreen) {
+      padding: 15px;
+    }
   }
 
-  .content-body {
+  .back-to-sidebar {
+    text-align: left;
+  }
+
+  .detail-body {
     display: grid;
     grid-template-columns: 2.1fr .9fr;
     margin-top: 40px;
+
     @include respond-to(handheld) {
       margin-top: 20px;
       grid-template-columns: none;
       grid-template-rows: auto auto;
     }
+
   }
 
-  .body-sidebar {
-    padding: 0px 0px 0px 50px;
+  .detail-main {
+    padding: 0px 0px 0px 0px;
+
     @include respond-to(handheld) {
-      display: none;
-      padding: 0px 15px;
+      padding-right: 0px;
+      margin-left: 0px;
+    }
+    @include respond-to(medscreen) {
+      padding-right: 10px;
+      margin-left: 15px;
+    }
+    @include respond-to(lgscreen) {
+      padding-right: 10px;
+      margin-left: 15px;
     }
 
   }
+  .detail-sidebar {
+    padding: 0px 0px 0px 50px;
 
+    @include respond-to(handheld) {
+      display: none;
+      padding-left: 0px;
+      margin-right: 0px;
+    }
+    @include respond-to(medscreen) {
+      padding-left: 10px;
+      margin-right: 15px;
+    }
+    @include respond-to(lgscreen) {
+      padding-left: 10px;
+      margin-right: 15px;
+    }
+  }
 
   .behind {
     width: 100vw;
