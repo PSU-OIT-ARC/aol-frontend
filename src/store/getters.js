@@ -8,6 +8,18 @@ const getters = {
         }
     },
 
+    getMapObject(state) {
+        return state.map_object;
+    },
+
+    getMapView(state) {
+        return state.map_view;
+    },
+
+    getMapZoom(state) {
+        return state.map_zoom;
+    },
+
     getMapBasemap (state) {
         return state.map_basemap;
     },
@@ -16,12 +28,8 @@ const getters = {
         return state.map_filter;
     },
 
-    searchQuery (state) {
-        return state.search.query;
-    },
-
-    searchResults (state) {
-        return state.search.results;
+    getMapFocus (state) {
+        return state.map_focus;
     },
 
     getIsLoading (state) {
@@ -30,6 +38,14 @@ const getters = {
 
     getIsIntroDismissed (state) {
       return state.intro_dismissed;
+    },
+
+    searchQuery (state) {
+        return state.search.query;
+    },
+
+    searchResults (state) {
+        return state.search.results;
     },
 
     getLakes (state) {
@@ -65,10 +81,6 @@ const getters = {
     getCurrentPage (state) {
         return state.current_page;
     },
-
-    getCurrentZoom(state) {
-        return state.map_zoom;
-    }
 }
 
 export default getters;

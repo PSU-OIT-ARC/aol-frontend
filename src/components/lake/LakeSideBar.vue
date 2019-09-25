@@ -14,7 +14,7 @@
           </router-link>
         </div>
         <div class="close-sidebar">
-          <router-link :to="back_href">
+          <router-link :to="map_href">
             <close-button-svg />
           </router-link>
         </div>
@@ -58,8 +58,11 @@ export default {
     back_href () {
       return {name: 'home', query: {}};
     },
+    map_href () {
+      return {name: 'home', query: {f: this.lake.reachcode}};
+    },
     lake_href () {
-      return {name: 'lake', params: {'reachcode': this.lake.reachcode}};
+      return {name: 'lake', params: {reachcode: this.lake.reachcode}};
     },
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');

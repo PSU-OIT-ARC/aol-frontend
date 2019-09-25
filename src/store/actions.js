@@ -2,6 +2,7 @@ import map_config from '@/components/map/config';
 import config from '@/config';
 import { fitExtent } from '@/components/map/utils';
 
+
 const API_URL = config.backend_url;
 const actions = {
 
@@ -27,29 +28,39 @@ const actions = {
         context.commit("setIntroDismissed", dismissed);
     },
 
-    setMapObject (context, map) {
-        context.commit('setMap', map);
+    setMapObject(context, map_object) {
+        context.commit('setMapObject', map_object);
     },
 
-    setMapNode (context, node) {
-        context.commit('setMapNode', node);
+    setMapView(context, options) {
+        context.commit('setMapView', options);
     },
 
-    setMapView (context, view) {
-        context.commit('setMapView', view);
+    setMapZoom(context, zoom) {
+        context.commit('setMapZoom', zoom);
     },
 
     setMapBasemap (context, basemap) {
-        let map =  context.rootState.map_object;
+        let map =  context.getters.getMapObject;
         if (map != null) {
             console.debug("Using " + basemap + " base map");
-            map.basemap = basemap;
             context.commit('setMapBasemap', basemap);
+            map.basemap = basemap;
         }
     },
 
     setMapFilter (context, filter) {
         context.commit('setMapFilter', filter);
+    },
+
+    focusMap (context, focus) {
+        if (focus != undefined && focus != null) {
+            console.debug("Committing map focus " + focus);
+            context.commit("setMapFocus", focus);
+        } else if (context.getters.getMapFocus != null) {
+            console.debug("Removing map focus " + context.getters.getMapFocus);
+            context.commit("setMapFocus", null);
+        }
     },
 
     searchLakes (context, query) {
@@ -84,29 +95,6 @@ const actions = {
         context.commit('setSearchResults', search);
     },
 
-    fitBounds (context, lake) {
-        //Zoom/pan to lake bounds.
-        const map =  context.rootState.map_object;
-        const view = context.rootState.map_view;
-        fitExtent(map, view, lake).then((view) => {
-            context.dispatch('setZoom', view.zoom)
-        })
-    },
-
-    resetBounds (context) {
-        console.debug("Resetting map bounds");
-
-        const view = context.rootState.map_view;
-        view.goTo(map_config.map_center).then(()=> {
-          view.set('zoom', map_config.zoom);
-          context.dispatch('setZoom', view.zoom);
-        })
-    },
-
-    setZoom (context, zoom) {
-        context.commit('setMapZoom', zoom);
-    },
-
     fetchLakes (context, status) {
         let url = `${API_URL}/lake/?format=json`+`&status=`+status;
         return new Promise((resolve, reject) => {
@@ -127,9 +115,9 @@ const actions = {
                 }
             ).catch(
                 e => {
-                    console.error(e.message);
                     // Does this warrant a APP level error?
                     context.dispatch('setError', config.ERROR_TYPES.FETCH)
+                    console.error(e.message);
                     reject();
                 }
             );
@@ -137,43 +125,49 @@ const actions = {
     },
 
     focusLake (context, reachcode) {
-        let gl = context.getters.getLakeByReachcode;
-        let lake = gl(parseInt(reachcode));
+        try {
+            let gl = context.getters.getLakeByReachcode;
+            let lake = gl(parseInt(reachcode));
 
-        if (lake != undefined && lake != null) {
-            console.debug("Committing focus " + lake.reachcode);
-            context.commit("setCurrentFocus", lake);
-        } else if (context.rootState.current_focus != null) {
-            console.debug("Removing focus " + context.rootState.current_focus.reachcode);
-            context.commit("setCurrentFocus", null);
+            if (lake != undefined && lake != null) {
+                console.debug("Committing focus " + lake.reachcode);
+                context.commit("setCurrentFocus", lake);
+            } else if (context.getters.getCurrentFocus != null) {
+                console.debug("Removing focus " + context.getters.getCurrentFocus.reachcode);
+                context.commit("setCurrentFocus", null);
+            }
+        } catch (err) {
+            console.error(err);
         }
-
-        console.debug("Depopulating current lake");
-        context.commit("setCurrentLake", null);
     },
 
     fetchLake (context, reachcode) {
-        return new Promise((resolve, reject) => {
-            fetch(
-                `${API_URL}/lake/${reachcode}/?format=json`
-            ).then(
-                response => {
-                    return response.json();
-                }
-            ).then(
-                data => {
-                    console.debug("Fetched lake " + reachcode);
-                    context.commit("setCurrentLake", data);
-                    resolve(data);
-                }
-            ).catch(
-                e => {
-                    console.error(e.message);
-                    context.dispatch('setError', config.ERROR_TYPES.FETCH)
-                    reject();
-                }
-            );
-        });
+        if (reachcode == null) {
+            console.debug("Depopulating current lake");
+            context.commit("setCurrentLake", null);
+        } else {
+            return new Promise((resolve, reject) => {
+                fetch(
+                    `${API_URL}/lake/${reachcode}/?format=json`
+                ).then(
+                    response => {
+                        return response.json();
+                    }
+                ).then(
+                    data => {
+                        console.debug("Fetched lake " + reachcode);
+                        context.commit("setCurrentLake", data);
+                        resolve(data);
+                    }
+                ).catch(
+                    e => {
+                        context.dispatch('setError', config.ERROR_TYPES.FETCH)
+                        console.error(e.message);
+                        reject();
+                    }
+                );
+            });
+        }
     },
 
     fetchPage (context, slug) {
@@ -190,8 +184,8 @@ const actions = {
                 }
             ).catch(
                 e => {
+                    context.dispatch('setError', config.ERROR_TYPES.FETCH)
                     console.error(e.message);
-                    context.disaptch('setError', config.ERROR_TYPES.FETCH)
                     reject();
                 }
             );

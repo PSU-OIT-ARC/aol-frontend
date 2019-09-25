@@ -6,13 +6,19 @@ const state = {
     intro_dismissed: false,
     timestamp: {},
     error: null,
+
     // map objects
     map_object: null,
-    map_node: null,
-    map_view: null,
+    map_view: {
+        mini: null,
+        full: null
+    },
+
+    // TODO: can we extract these into AolMap?
     map_zoom: config.zoom,
     map_basemap: 'topo',
     map_filter: 'all_lakes',
+    map_focus: null,
 
     // lake state
     lakes: [],

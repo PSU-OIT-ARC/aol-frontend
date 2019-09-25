@@ -4,16 +4,24 @@ const mutations = {
         state.timestamp[options.label] = options.timestamp;
     },
 
-    setMap (state, map) {
-        state.map_object = map;
+    setError (state, error_type) {
+        state.error = error_type;
     },
 
-    setMapNode (state, node) {
-        state.map_node = node;
+    setMapObject (state, map_object) {
+        state.map_object = map_object;
     },
 
-    setMapView (state, view) {
-        state.map_view = view;
+    setMapView (state, options) {
+        if (options.type == 'full') {
+            state.map_view.full = options.view;
+        } else {  // if (view_type == 'mini') {
+            state.map_view.mini = options.view;
+        }
+    },
+
+    setMapZoom (state, zoom) {
+        state.map_zoom = zoom;
     },
 
     setMapBasemap (state, basemap) {
@@ -22,6 +30,18 @@ const mutations = {
 
     setMapFilter (state, filter) {
         state.map_filter = filter;
+    },
+
+    setMapFocus (state, focus) {
+        state.map_focus = focus;
+    },
+
+    setLoading (state, loading) {
+        state.is_loading = loading;
+    },
+
+    setIntroDismissed (state, dismissed) {
+      state.intro_dismissed = dismissed;
     },
 
     setSearchResults (state, data) {
@@ -41,29 +61,14 @@ const mutations = {
       state.current_focus = data;
     },
 
-    setMapZoom (state, zoom) {
-        state.map_zoom = zoom;
-    },
-
     setCurrentLake (state, data) {
-      state.current_lake = data;
+        state.current_lake = data;
     },
 
     setCurrentPage (state, page) {
         state.current_page = page;
-    },
-
-    setLoading (state, loading) {
-        state.is_loading = loading;
-    },
-
-    setError (state, error_type) {
-        state.error = error_type;
-    },
-
-    setIntroDismissed (state, dismissed) {
-      state.intro_dismissed = dismissed;
     }
+
 }
 
 export default mutations;
