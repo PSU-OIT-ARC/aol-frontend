@@ -1,6 +1,7 @@
 <template>
   <div class="sidebar">
     <search-pane></search-pane>
+    <intro-card/>
     <lake-side-bar
         v-if="getCurrentFocus" :lake="getCurrentFocus">
     </lake-side-bar>
@@ -9,8 +10,10 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
 import LakeSideBar from '@/components/lake/LakeSideBar';
 import SearchPane from '@/components/search/SearchPane';
+import IntroCard from '@/components/IntroCard';
 
 export default {
   name: 'sidebar',
@@ -18,8 +21,9 @@ export default {
     ...mapGetters(['getCurrentFocus']),
   },
   components: {
-    LakeSideBar,
-    SearchPane
+    SearchPane,
+    IntroCard,
+    LakeSideBar
   }
 }
 </script>

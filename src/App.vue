@@ -6,8 +6,8 @@
   <div id="app">
     <nav-bar></nav-bar>
     <error-bar v-if='error != null' :error="error"/>
-    <offline-card/>
-    <router-view/>
+    <offline-card v-show="!online()"/>
+    <router-view v-show="online()"/>
   </div>
 </template>
 
@@ -24,6 +24,9 @@ export default {
   methods: {
     ...mapActions(['markTimestamp', 'fetchLakes']),
     ...mapGetters(['getTimeElapsed', 'getLakes']),
+    online () {
+      return navigator.onLine;
+    }
   },
   computed: {
     error () {

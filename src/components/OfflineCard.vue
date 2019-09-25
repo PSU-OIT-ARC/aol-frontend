@@ -1,5 +1,5 @@
 <template>
-  <div class='offline-container' v-if="!online">
+  <div class='offline-container'>
     <div class='image-background'></div>
     <div class="offline-card">
       <div></div>
@@ -15,18 +15,6 @@
     </div>
   </div>
 </template>
-
-<script>
-  export default {
-    computed: {
-      online () {
-        return navigator.onLine;
-        //return false;
-      }
-    }
-  }
-
-</script>
 
 <style scoped lang='scss'>
   .offline-container {
