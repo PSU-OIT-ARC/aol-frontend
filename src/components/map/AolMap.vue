@@ -31,26 +31,21 @@ export default {
     computed: {
         ...mapGetters({map: 'getMapObject',
                        views: 'getMapView',
+                       basemap: 'getMapBasemap',
                        zoom: 'getMapZoom',
                        filter: 'getMapFilter',
                        focus: 'getMapFocus',
                        lakes: 'getLakes',
                        reachcodes: 'getReachcodes',
-                       currentFocus: 'getCurrentFocus'}),
+                       currentFocus: 'getCurrentFocus',
+                       currentLake: 'getCurrentLake'}),
     },
     methods: {
         ...mapGetters(['getTimeElapsed',
-                       'getIsLoading',
-                       'getMapBasemap',
-                       'getMapZoom',
-                       'getMapFilter',
-                       'getMapFocus',
-                       'getLakeByReachcode',
-                       'getCurrentFocus',
-                       'getCurrentLake']),
+                       'getLakeByReachcode']),
         ...mapActions(['markTimestamp', 'setError', 'getAuthToken',
                        'setMapObject', 'setMapView', 'setMapZoom',
-                       'setLoading', 'setIntroDismissed']),
+                       'setLoading', 'setIntroDismissed', 'resetSearchResults']),
 
         onClick(event) {
           this.view.hitTest(event).then((response) => {
@@ -105,20 +100,21 @@ export default {
             //
             console.debug("Initializing map bounds");
 
-            if (this.getCurrentFocus() == null &&
-                this.getCurrentLake() == null) {
-
-                if (this.getMapFocus() != null) {
-                    let gl = this.getLakeByReachcode();
-                    let lake = gl(parseInt(this.getMapFocus()));
-                    this.fitLake(lake);
-                } else {
+            if (this.currentFocus == null && this.currentLake == null) {
+                if (this.focus == null ) {
+                    this.resetSearchResults();
                     this.resetBounds();
+                } else if (Number.isInteger(parseInt(this.focus))) {
+                    let gl = this.getLakeByReachcode();
+                    let lake = gl(parseInt(this.focus));
+                    this.fitLake(lake);
+                } else if (this.focus == 'none') {
+                    console.debug("Keeping current map extent");
                 }
             } else if (this.mode == 'full') {
-                this.fitLake(this.getCurrentFocus());
+                this.fitLake(this.currentFocus);
             } else if (this.mode == 'mini') {
-                this.fitLake(this.getCurrentLake());
+                this.fitLake(this.currentLake);
             }
         },
         resetBounds () {
@@ -356,7 +352,7 @@ export default {
                             'expires': timeout
                         });
 
-                        let map = new EsriMap({basemap: this.getMapBasemap()});
+                        let map = new EsriMap({basemap: this.basemap});
                         this.setMapObject(map);
 
                         // TODO: The following utilities load layers which are hosted
@@ -400,15 +396,11 @@ export default {
             this.filterFeatures(val);
         },
         currentFocus: function() {
-            if (this.currentFocus != null) {
-              this.initBounds();
-            }
+            this.initBounds();
         },
         focus: function() {
-            if (this.focus != null) {
-                this.initBounds();
-            }
-        }
+            this.initBounds();
+       }
     },
     mounted () {
         this.$nextTick(() => {

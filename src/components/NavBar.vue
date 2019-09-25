@@ -2,7 +2,11 @@
   <div id="nav">
 
     <div class="site-title">
-      <h1><router-link to="/">Atlas <span>of Oregon Lakes</span></router-link></h1>
+      <h1>
+        <router-link :to="{name: 'home'}">
+          Atlas <span>of Oregon Lakes</span>
+        </router-link>
+      </h1>
     </div>
 
     <div class="nav-links">
