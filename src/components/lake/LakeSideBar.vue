@@ -2,7 +2,7 @@
   <div class="lake-sidebar">
 
     <div class="sidebar-photo-wrapper">
-      <div class="sidebar-photo" :style="photo_style"></div>
+      <div v-bind:class="[!lake.photo ? 'photo--generic' : '', 'sidebar-photo']" :style="photo_style"></div>
     </div>
 
     <div class="sidebar-content">
@@ -65,7 +65,7 @@ export default {
       return {name: 'lake', params: {reachcode: this.lake.reachcode}};
     },
     photo_style () {
-      let photo = require('@/assets/intro-umpqua-lake.png');
+      let photo = require('@/assets/generic_background.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
       }
@@ -142,6 +142,10 @@ a:hover, a:focus {
     background-position: center center;
     filter: blur(9px) brightness(80%);
     transform: scale(1.1);
+  }
+
+  .photo--generic {
+
   }
 
   .sidebar-content {

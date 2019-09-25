@@ -8,13 +8,11 @@
           Page not found
         </div>
       </h1>
+
       <h2>Oh no, we can't find what you're looking for!</h2>
+
       <p>
-        <div class='sad'>&#128546;</div>
-        This is sad for us too.
-      </p>
-      <p>
-        Try going <a href='#' onclick='history.back()'>back</a> or to the <router-link :to="{ name: 'home'}">home page.</router-link>
+        <router-link :to="{ name: 'home'}">Try going to the home page and searching &rarr;</router-link>
       </p>
     </div>
     <div></div>
@@ -50,7 +48,5 @@
   .not-found {
     font-size: .5em;
   }
-  .sad {
-    font-size: 4em;
-  }
+
 </style>

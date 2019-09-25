@@ -1,6 +1,6 @@
 <template>
   <div class="lake-card">
-    <div class="photo" :style="photo_style"></div>
+    <div v-bind:class="[!this.lake.photo ? 'photo--generic' : '', 'photo']" :style="photo_style"></div>
     <div class="info">
       <h3>{{ lake.title }} <i>({{lake.county_set}})</i></h3>
       <div class="data-icons" v-if="lake.major">
@@ -40,7 +40,7 @@ export default {
   props: ['lake'],
   computed: {
     photo_style () {
-      let photo = require('@/assets/intro-umpqua-lake.png');
+      let photo = require('@/assets/icon_generic_lake.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
       }

@@ -81,7 +81,7 @@ export default {
       return {name: 'home', query: {f: this.reachcode}};
     },
     photo_style () {
-      let photo = require('@/assets/intro-umpqua-lake.png');
+      let photo = require('@/assets/generic_background.png');
       if (this.lake.photo) {
         photo = this.lake.photo;
       }

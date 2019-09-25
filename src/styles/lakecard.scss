@@ -13,6 +13,11 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
+    background-color: white;
+  }
+
+  .photo.photo--generic {
+    background-size: 100px 100px;
   }
 
   .info {
@@ -149,3 +154,13 @@ table {
 
 #search-results-wrapper .fast-stats { display: none; }
 #search-results-wrapper .show-all { padding: 1em 0em; text-align: center; background-color: #f0f0f0;}
+
+#search-results-wrapper .lake-card .photo {
+  min-height: 90px;
+}
+.content-header .lake-card .photo--generic {
+  background-size: 160px 160px;
+  @include respond-to(handheld) {
+    background-size: 100px 100px;
+  }
+}
