@@ -4,7 +4,7 @@
     <a name="mussels" id="mussels"></a>
     <h3>Molluscs</h3>
 
-    <table class="table" cellpadding="0" cellspacing="0">
+    <table class="table datatable" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
           <th>Date</th>
@@ -19,7 +19,10 @@
             v-bind:item="entry"
             v-bind:index="index"
             v-bind:key="entry.pk">
-          <td class="nowrap">{{ entry.date_sampled }}</td>
+          <td class="nowrap">
+            <span v-if="entry.date_sampled">{{ entry.date_sampled }}</span>
+            <span v-else class="indent">&mdash;</span>
+          </td>
           <td>{{ entry.target }}</td>
           <td>{{ entry.collection_method }}</td>
           <td>

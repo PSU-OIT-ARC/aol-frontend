@@ -129,26 +129,51 @@
 }
 
 table {
+  width: 100%;
   margin: 20px 0px;
 
-  th, td {
-    max-width: 200px;
+  tr th,
+  tr td {
     text-align: left;
     vertical-align: top;
     font-size: .9em;
+  }
+
+  tr th {
+    color: #888;
+    text-transform: uppercase;
+
+  }
+}
+
+table.datatable {
+
+  tr th,
+  tr td {
     padding-right: 10px;
+
     @include respond-to(handheld) {
+      font-size: .8em;
+    }
+    @include respond-to(medscreen) {
       font-size: .8em;
     }
   }
 
-  th {
-    color: #888;
-    text-transform: uppercase;
+  tr th {
+    @include respond-to(handheld) {
+      min-width: 4em;
+    }
+    @include respond-to(medscreen) {
+      min-width: 4em;
+    }
   }
 
-  td span {
-    padding-right: 10px;
+  tr td > span.indent {
+    padding-right: 0px;
+  }
+  tr td span.indent {
+    padding: 0px 10px;
   }
 }
 
