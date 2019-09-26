@@ -67,16 +67,13 @@ export default {
         'plants',
         'mussels',
         'photos',
-        config.is_mobile(window)
+        'documents',
       ],
       currentSection: null,
       currentSectionName: ''
     }
   },
   computed: {
-    mobile_mode () {
-      return config.is_mobile(window);
-    },
     sections () {
       let self = this;
       let sections = this.allSections.filter(function(el, idx) {
@@ -87,8 +84,9 @@ export default {
 
         if (key === true) {
           return true
-        } else if (key == 'has_docs') {
-          return config.is_mobile(window) && self.lake[key];
+        } else if (key == 'has_docs' || key == 'documents') {
+          return config.is_mobile(window) &&
+                 (self.lake[key] == true || self.lake[key].length);
         } else if (self.lake[key]) {
           if (key != 'body' && Array.isArray(self.lake[key])) {
             return self.lake[key].length;
