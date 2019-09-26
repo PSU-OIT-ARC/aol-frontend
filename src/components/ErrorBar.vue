@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import config from '@/config';
 
 export default {
@@ -27,17 +29,21 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({error_msg: 'getErrorMessage'}),
     message () {
-      if (this.error == config.ERROR_TYPES.MAP) {
-        return "Map is not responding..."
+      if (this.error_msg) {
+        return this.error_msg;
+      } else {
+        if (this.error == config.ERROR_TYPES.MAP) {
+          return "Map is not responding...";
+        } else if (this.error == config.ERROR_TYPES.FETCH) {
+          return "Trouble connecting...";
+        } else if (this.error == config.ERROR_TYPES.APP) {
+          return "An unexpected error has occured. You may need to refresh the page.";
+        } else {
+          return "An unexpected error has occured...";
+        }
       }
-      if (this.error == config.ERROR_TYPES.FETCH) {
-        return "Trouble connecting..."
-      }
-      if (this.error == config.ERROR_TYPES.APP) {
-          return "An unexpected error has occured. You may need to refresh the page."
-      }
-      return "An unexpected error has occured..."
     }
   }
 }

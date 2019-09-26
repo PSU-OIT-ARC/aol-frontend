@@ -22,6 +22,10 @@ const actions = {
         context.commit("setError", error_type);
     },
 
+    setErrorMessage (context, error_msg) {
+        context.commit("setErrorMessage", error_msg);
+    },
+
     setIntroDismissed (context, dismissed) {
         context.commit("setIntroDismissed", dismissed);
     },

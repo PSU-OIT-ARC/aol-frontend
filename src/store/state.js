@@ -6,6 +6,7 @@ const state = {
     intro_dismissed: false,
     timestamp: {},
     error: null,
+    error_msg: '',
 
     // map objects
     map_object: null,

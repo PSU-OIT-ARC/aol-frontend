@@ -8,6 +8,10 @@ const getters = {
         }
     },
 
+    getErrorMessage(state) {
+        return state.error_msg;
+    },
+
     getMapObject(state) {
         return state.map_object;
     },
@@ -64,7 +68,7 @@ const getters = {
 
     getReachcodes (state) {
         return state.lakes.filter((lake) => {
-            return lake.is_major;
+            return lake.is_major && Number.isInteger(parseInt(lake.reachcode));
         }).map((lake) => {
             return parseInt(lake.reachcode);
         })

@@ -80,11 +80,11 @@ const createVectorTileLayers = (map) => {
     });
 };
 
-const createFeatureServiceLayers = (map, view, reachcodes) => {
+const createFeatureServiceLayers = (map, view, reachcodes, setError) => {
     return new Promise ((resolve, reject) => {
         try {
             loadModules(['esri/layers/FeatureLayer'],
-                config.dojo_options).then(([FeatureLayer]) => {
+                        config.dojo_options).then(([FeatureLayer]) => {
 
                 let job = new Promise ((res, rej) => {
                     config.layers.filter((l) => {
@@ -117,20 +117,26 @@ const createFeatureServiceLayers = (map, view, reachcodes) => {
                 })
                 // Special handling of lake_points_service_layer
                 job.then(() => {
-                    // get features in order to create cluster layer
-                    getFeaturesFromServiceLayer(
-                        map,
-                        'lake_points_service_layer',
-                        `REACHCODE IN (${reachcodes.join()})`
-                    ).then((features) => {
-                        // Add lake points with clustering
-                        createClusterLayer(map, features).then((layer) => {
-                            createClusterIndex(map, layer, features).then(()=> {
-                                updateClusters(map, view);
-                                resolve();
+                    if (reachcodes.length) {
+                        // get features in order to create cluster layer
+                        getFeaturesFromServiceLayer(
+                            map,
+                            'lake_points_service_layer',
+                            `REACHCODE IN (${reachcodes.join()})`
+                        ).then((features) => {
+                            // Add lake points with clustering
+                            createClusterLayer(map, features).then((layer) => {
+                                createClusterIndex(map, layer, features).then(()=> {
+                                    updateClusters(map, view);
+                                    resolve();
+                                })
                             })
-                        })
-                    });
+                        });
+                    } else {
+                        console.error("No reachcodes given or available.");
+                        setError(app_config.ERROR_TYPES.MAP);
+                        reject();
+                    }
                 });
 
             }); // end loadModules

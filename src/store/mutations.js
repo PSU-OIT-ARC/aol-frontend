@@ -8,6 +8,10 @@ const mutations = {
         state.error = error_type;
     },
 
+    setErrorMessage (state, error_msg) {
+        state.error_msg = error_msg;
+    },
+
     setMapObject (state, map_object) {
         state.map_object = map_object;
     },

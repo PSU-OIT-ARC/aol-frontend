@@ -78,6 +78,9 @@ const config = {
 
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
+
+    token: `HvwQ6H7lDQG6zcJWwcfQhQsWtRFT94dF0dgNFYOuSF1JxhuFdQ7PimCWSou0reOKBCdMvcSaPfmr2c6rXD96NENx9F3RiBhGElg29QQ_LhpbDJggBmkafJfo15Fihtfbn2M9bMTdzjbr8iSHoL3Zkx4xrW_um6PyoKlogdRIWru1P31SH38-EOrjPzG7ZoEqNtzBZmlWJ-9ETx4jetrsTw..`,
+
     layers: [
         {
             id: "nlcd",

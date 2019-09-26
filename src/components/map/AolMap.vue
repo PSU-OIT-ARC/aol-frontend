@@ -43,7 +43,8 @@ export default {
     methods: {
         ...mapGetters(['getTimeElapsed',
                        'getLakeByReachcode']),
-        ...mapActions(['markTimestamp', 'setError', 'getAuthToken',
+        ...mapActions(['markTimestamp', 'setError', 'setErrorMessage',
+                       'getAuthToken',
                        'setMapObject', 'setMapView', 'setMapZoom',
                        'setLoading', 'setIntroDismissed', 'resetSearchResults']),
 
@@ -85,7 +86,9 @@ export default {
                   console.debug("Loading waterbody " + reachcode + " from index");
                   this.$router.push({name: 'home', query: {lake: lake.reachcode}});
                 } else {
-                  console.debug("Waterbody " + reachcode + " not present in index");
+                  console.warn("Waterbody " + reachcode + " not present in index");
+                  this.setError(app_config.ERROR_TYPES.MAP);
+                  this.setErrorMessage("Unable to load map feature.");
                 }
               }
             }
@@ -175,8 +178,14 @@ export default {
 
                     if (features.length == 0) {
                         console.error("Got no result from querying features.");
+                        this.setError(app_config.ERROR_TYPES.MAP);
+                        this.setErrorMessage("Unable to find map feature.");
+                        this.setLoading(false);
                     } else if (features.length > 1) {
                         console.warn("Got more than one result from querying features.");
+                        this.setError(app_config.ERROR_TYPES.MAP);
+                        this.setErrorMessage("Waterbody matches more than one map feature.");
+                        this.setLoading(false);
                     } else {
                         let tsName = 'fit-extent-for-'+lake.reachcode;
                         this.markTimestamp(tsName);
@@ -190,7 +199,8 @@ export default {
                     }
 
                 }).catch((err) => {
-                    console.error(err)
+                    console.error(err);
+                    this.setError(app_config.ERROR_TYPES.APP);
                     this.setLoading(false);
                 });
 
@@ -217,7 +227,7 @@ export default {
 
             } else {
               this.markTimestamp('esri-feature-layers');
-              createFeatureServiceLayers(this.map, this.view, this.reachcodes).then(() => {
+              createFeatureServiceLayers(this.map, this.view, this.reachcodes, this.setError).then(() => {
                 let gte = this.getTimeElapsed();
                 console.debug("Loading feature layers took " + gte('esri-feature-layers') + "ms");
 
@@ -343,12 +353,14 @@ export default {
                         let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
                         IdentityManager.registerToken({
                             'server': config.ArcGisOnlineTilesUrl,
-                            'token': data.access_token,
+                            // 'token': data.access_token,
+                            'token': config.token,
                             'expires': timeout
                         });
                         IdentityManager.registerToken({
                             'server': config.ArcGisOnlineServicesUrl,
-                            'token': data.access_token,
+                            // 'token': data.access_token,
+                            'token': config.token,
                             'expires': timeout
                         });
 
