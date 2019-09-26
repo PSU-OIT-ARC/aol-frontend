@@ -59,7 +59,7 @@ export default {
       return {name: 'home', query: {f: 'none'}};
     },
     lake_href () {
-      return {name: 'lake', params: {reachcode: this.lake.reachcode}};
+      return {name: 'lake', params: {reachcode: this.lake.reachcode}, hash: "#text-section"};
     },
     photo_style () {
       let photo = require('@/assets/generic_background.png');

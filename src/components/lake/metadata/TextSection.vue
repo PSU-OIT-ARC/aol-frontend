@@ -9,9 +9,7 @@
        v-bind:key="index">
       {{ line }}
     </p>
-    <router-link v-if="truncate"
-      :to="{ name: 'lake', params: {'reachcode': lake.reachcode}}"
-      class='full-page-button'>
+    <router-link v-if="truncate" :to="lake_href" class='full-page-button'>
       See full details
     </router-link>
   </div>
@@ -39,6 +37,11 @@
         sentences = sentences.split('\r');
         let truncated = sentences.slice(0, 4);
         return truncated.join(' ') + '…';
+      },
+      lake_href () {
+        return {name: 'lake',
+                params: {reachcode: this.lake.reachcode},
+                hash: "#text-section"};
       }
     }
   }
