@@ -39,6 +39,15 @@
     }
   }
 
+  li.active {
+      font-family: "Lato-Bold", sans-serif;
+      font-weight: 700;
+      background-color: #fff;
+      color: $primary_color;
+      opacity: 1;
+      box-shadow:inset 0px 0px 0px 1px #e7e7e7;
+  }
+
   a:link, a:visited {
     display: block;
     font-family: "Lato-Regular", sans-serif;
@@ -51,22 +60,6 @@
     opacity: .75;
     @include respond-to(handheld) {
       font-size: .7em;
-    }
-
-
-    &:hover, &:focus {
-      background-color: $primary_color;
-      color: white;
-      opacity: 1;
-    }
-
-    &.active {
-      font-family: "Lato-Bold", sans-serif;
-      font-weight: 700;
-      background-color: #fff;
-      color: $primary_color;
-      opacity: 1;
-      box-shadow:inset 0px 0px 0px 1px #e7e7e7;
     }
   }
 }
@@ -93,44 +86,51 @@
 
 /* For the Data Tabs, there *should* be a way to just dynamically call a section-name.svg and then change the fill color of that svg on hover, focus and active state. Using <use> was useless. <object> calls a source by the data= attribute, which Vue thinks is ridiculous. So for now we have two sets of simple svg icons, and like animals, we swap them out. */
 
-.tab-icon--plants:hover,
-.tab-icon--plants:focus,
-.body-main .router-link-active.tab-icon--plants { background-image: url(~@/assets/plants-white.svg);}
-.tab-icon--mussels:hover,
-.tab-icon--mussels:focus,
-.body-main .router-link-active.tab-icon--mussels { background-image: url(~@/assets/clam-white.svg);}
-.tab-icon--text-section:hover,
-.tab-icon--text-section:focus,
-.body-main .router-link-active.tab-icon--text-section { background-image: url(~@/assets/book-open-white.svg); }
-.tab-icon--watershed:hover,
-.tab-icon--watershed:focus,
-.body-main .router-link-active.tab-icon--watershed { background-image: url(~@/assets/water-white.svg);}
-.tab-icon--photos:hover,
-.tab-icon--photos:focus,
-.body-main .router-link-active.tab-icon--photos { background-image: url(~@/assets/camera-white.svg);}
-.tab-icon--documents:hover,
-.tab-icon--documents:focus,
-.body-main .router-link-active.tab-icon--documents { background-image: url(~@/assets/file-white.svg);}
+.tab-icon--text-section {
+    background-image: url(~@/assets/book-open.svg);
+}
+.tab-icon--plants {
+    background-image: url(~@/assets/plants.svg);
+}
+.tab-icon--mussels {
+    background-image: url(~@/assets/clam.svg);
+}
+.tab-icon--photos {
+    background-image: url(~@/assets/camera.svg);
+}
+.tab-icon--documents {
+    background-image: url(~@/assets/file.svg);
+}
+.tab-icon--watershed {
+    background-image: url(~@/assets/water.svg);
+}
 
-.tab-icon--plants,
-.active.tab-icon--plants:hover,
-.active.tab-icon--plants:focus { background-image: url(~@/assets/plants.svg);}
-.tab-icon--mussels,
-.active.tab-icon--mussels:hover,
-.active.tab-icon--mussels:focus { background-image: url(~@/assets/clam.svg); }
-.tab-icon--text-section,
-.active.tab-icon--text-section:hover,
-.active.tab-icon--text-section:focus { background-image: url(~@/assets/book-open.svg);}
-.tab-icon--watershed,
-.active.tab-icon--watershed:hover,
-.active.tab-icon--watershed:focus { background-image: url(~@/assets/water.svg);}
-.tab-icon--photos,
-.active.tab-icon--photos:hover,
-.active.tab-icon--photos:focus { background-image: url(~@/assets/camera.svg);}
-.tab-icon--documents,
-.active.tab-icon--documents:hover,
-.active.tab-icon--documents:focus { background-image: url(~@/assets/file.svg);}
+.tab-icon.not-active:hover {
+    background-color: $primary_color;
 
+    a {
+        color: white;
+        opacity: 1;
+    }
+}
+.tab-icon--text-section.not-active:hover {
+    background-image: url(~@/assets/book-open-white.svg);
+}
+.tab-icon--plants.not-active:hover {
+    background-image: url(~@/assets/plants-white.svg);
+}
+.tab-icon--mussels.not-active:hover {
+    background-image: url(~@/assets/clam-white.svg);
+}
+.tab-icon--photos.not-active:hover {
+    background-image: url(~@/assets/camera-white.svg);
+}
+.tab-icon--documents.not-active:hover {
+    background-image: url(~@/assets/file-white.svg);
+}
+.tab-icon--watershed.not-active:hover {
+    background-image: url(~@/assets/water-white.svg);
+}
 
 .data-sections {
   margin-bottom: 20px;
@@ -145,11 +145,4 @@
     font-size: 1.1em;
     font-weight: 700;
   }
-}
-
-.body-main a.router-link-active {
-  background-color: $primary_color;
-  color: white;
-  opacity: 1;
-
 }

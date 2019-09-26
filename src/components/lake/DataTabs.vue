@@ -3,17 +3,17 @@
       <div class='data-sections'>
 
         <ul class='tabs'>
-          <tab :class='section.name'
-            v-for="section in sections" :key="section.name"
-            :section="section" :lake="lake"
-            :active="currentSectionName === section.name">
+          <tab v-for="section in sections" :key="section.name"
+               :section="section"
+               :lake="lake"
+               :active="isCurrentSection(section.name)">
           </tab>
         </ul>
 
         <keep-alive v-if='!tabs_only'>
-          <component :class="currentSectionName"
+          <component v-bind:is="currentSection"
                      :lake='lake'
-                     v-bind:is="currentSection"
+                     :class="currentSectionName"
                      class='data-section'>
           </component>
         </keep-alive>
@@ -108,13 +108,16 @@ export default {
     },
   },
   methods: {
-    setCurrentSection () {
+    isCurrentSection(name) {
+      return this.currentSectionName == name;
+    },
+    initSection () {
       let hash = this.$route.hash.replace(/#/g,'');
       let component = this.sections.find(i => i.name == hash);
 
       if (component != undefined && component != null) {
         this.currentSection = component;
-        this.currentSectionname = component.name;
+        this.currentSectionName = component.name;
       } else {
         this.currentSection = TextSection;
         this.currentSectionName = TextSection.name;
@@ -122,11 +125,11 @@ export default {
     }
   },
   created () {
-    this.setCurrentSection();
+    this.initSection();
   },
   watch: {
     '$route': function () {
-      this.setCurrentSection();
+      this.initSection();
     }
   },
 }
