@@ -2,7 +2,7 @@
   <div class="lake-card">
     <div v-bind:class="[!this.lake.photo ? 'photo--generic' : '', 'photo']" :style="photo_style"></div>
     <div class="info">
-      <h3>{{ lake.title }} <i>({{lake.county_set}})</i></h3>
+      <h3>{{ lake.title }}</h3>
       <div class="data-icons" v-if="lake.is_major">
         <div class="icon summary"></div>
         <div v-if="lake.has_mussels" class="icon mussels"></div>
@@ -10,8 +10,15 @@
         <div v-if="lake.has_documents" class="icon documents"></div>
         <div class="icon watershed"></div>
       </div>
-      <p>{{lake.reachcode}}</p>
-
+      <span class="reachcode">{{lake.reachcode}}</span>
+      <div class="metadata">
+        <em v-for="(county, index) in lake.counties"
+            v-bind:item="county"
+            v-bind:index="index"
+            v-bind:key="county">
+            {{ county }} <span v-if="index < lake.counties.length-1">/</span>
+        </em>
+      </div>
       <div class="fast-stats">
         <table cellpadding="0" cellspacing="0">
           <thead>
