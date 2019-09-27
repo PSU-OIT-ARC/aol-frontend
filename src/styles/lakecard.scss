@@ -121,6 +121,7 @@
 
   h3 {
     font-size: 1.6em;
+    
     @include respond-to(handheld) {
       font-size: 1.1em;
       max-width: 80%;

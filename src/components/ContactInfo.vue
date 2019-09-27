@@ -31,13 +31,11 @@
     padding: 15px;
     background-color: #F3F3F3;
   }
-  
+
   h3 {
     font-family: "Lato-Bold", sans-serif;
     font-weight: 700;
     font-size: 1.2em;
-    margin-top: 30px;
-    margin-bottom: 0px;
     padding-bottom: 0px;
   }
 

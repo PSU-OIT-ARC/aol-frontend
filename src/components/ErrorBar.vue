@@ -48,8 +48,8 @@ export default {
     color: #333;
     background: pink;
     text-align: center;
-    padding: 3px;
-    animation: fade-in 100ms forwards;
+    padding: 10px;
+    animation: drop-in 100ms forwards;
     position: absolute;
     top: 42px;
     z-index: 19999;
