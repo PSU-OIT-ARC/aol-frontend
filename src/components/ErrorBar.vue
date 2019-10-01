@@ -53,7 +53,7 @@ export default {
     position: absolute;
     top: 42px;
     z-index: 19999;
-    width: 100vw;
+    width: calc(100vw - 20px);
   }
   .flash {
     animation: fade-out 1s ease-out 1000ms;
