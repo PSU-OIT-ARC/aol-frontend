@@ -8,14 +8,14 @@
       <a href="http://www.oregon.gov/DEQ/Pages/index.aspx">Oregon Department of Environmental Quality</a>
     </p>
 
-    &copy; 1985-2019 Atlas of Oregon Lakes
+    &copy; 1985-{{ new Date().getFullYear() }} Atlas of Oregon Lakes
   </footer>
 </template>
 
 <style scoped>
   footer {
   padding: 15px;
-  background-color: #F3F3F3;
+  background-color: #F5F5F5;
   margin-top: 40px;
 }
 

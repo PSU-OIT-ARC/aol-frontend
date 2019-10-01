@@ -4,6 +4,8 @@
       <div class="detail-photo" :style="photo_style"></div>
     </div>
 
+
+
     <div class="detail-content-wrapper">
       <div class="gutter gutter--left"></div>
       <div class="detail-content">
@@ -20,7 +22,7 @@
               </router-link>
             </div>
           </div> <!-- end detail__nav -->
-
+asdfasdf
           <lake-card class="card" :lake="lake"></lake-card>
         </div>
         <div class="detail-body">
@@ -33,11 +35,22 @@
             <documents v-if="lake.documents.length" :lake="lake"></documents>
           </div>
 
+
+
         </div> <!-- end detail-body -->
+
+        <aol-footer />
+
       </div>
+
+
+
       <div class="gutter gutter--right"></div>
 
+
     </div> <!-- end detail-content-wrapper -->
+
+
 
   </div> <!-- end lake-detail -->
 </template>
@@ -49,6 +62,8 @@ import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 import {Watershed, Documents} from '@/components/lake/metadata';
+import AolFooter from '@/components/AolFooter';
+
 
 import config from '@/config';
 
@@ -63,6 +78,7 @@ export default {
     DataTabs,
     Documents,
     Watershed,
+    AolFooter
   },
   computed: {
     ...mapGetters({lake: 'getCurrentLake'}),

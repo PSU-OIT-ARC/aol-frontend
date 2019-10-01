@@ -94,6 +94,7 @@ export default {
       margin-left: 25px;
       color: $primary_color;
       text-decoration: none;
+      padding-bottom: 7px;
 
       &:hover {
         color: #222;

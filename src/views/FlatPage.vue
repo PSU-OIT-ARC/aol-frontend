@@ -9,7 +9,7 @@
       <div class="gutter gutter--left"></div>
       <div class="content-wrapper">
 
-        <div class="content-header">
+        <div class="detail-content content-header">
           <div class="lake-card">
             <div class="photo" :style="photo_style"></div>
             <div class="info">
@@ -122,11 +122,10 @@ export default {
   }
 }
 
+
 .content-wrapper {
   position: relative;
   grid-template-rows: 1fr 80px;
-
-
   top: -180px;
   @include respond-to(handheld) {
     top: -140px;
@@ -137,9 +136,6 @@ export default {
 }
 
 .content-header {
-  @include respond-to(handheld) {
-    padding: 0px 15px;
-  }
   .back {
     margin: 10px 0;
   }
@@ -160,13 +156,30 @@ export default {
   }
 }
 
-.body-main {
-  padding: 0px 15px;
+div.body-main {
+  padding: 0px;
+  @include respond-to(handheld) {
+    padding: 0px 15px;
+  }
+
 
   p {
     margin-top: 10px;
+    padding: 0px;
   }
 }
+
+.body-main img {
+  margin-left: 15px;
+  margin-bottom: 15px;
+  background-color: #ccc;
+  height: auto;
+  @include respond-to(handheld) {
+    margin-left: 0px;
+    max-width: 100%;
+  }
+}
+
 
 .body-sidebar {
   padding: 0px 0px 0px 50px;
@@ -176,6 +189,7 @@ export default {
 }
 
 h4 {
+  font-family: "Lato-Bold", sans-serif;
   font-size: 1em;
   color: #777;
   text-transform: uppercase;
@@ -197,6 +211,7 @@ h3 {
 }
 
 h2 {
+  font-family: "Lato-Bold", sans-serif;
   font-size: 2em;
   margin-top: 5px;
   @include respond-to(handheld) {
