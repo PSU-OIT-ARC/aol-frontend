@@ -12,11 +12,21 @@
   </footer>
 </template>
 
-<style scoped>
+<style scoped lang='scss'>
   footer {
-  padding: 15px;
-  background-color: #F5F5F5;
-  margin-top: 40px;
-}
+    padding: 15px;
+    background-color: white;
+    margin: 40px 0px 0px 0px;
+
+    @include respond-to(handheld) {
+
+    }
+    @include respond-to(medscreen) {
+      margin: 40px 15px 0px 15px;
+    }
+    @include respond-to(lgscreen) {
+      margin: 40px 15px 0px 15px;
+    }
+  }
 
 </style>

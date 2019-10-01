@@ -13,9 +13,9 @@
       See full details
     </router-link>
   </div>
-  <p v-else>
-    {{lake.title}} is a {{lake.waterbody_type}}.
-  </p>
+  <div v-else>
+    <p>{{lake.title}} is a {{lake.waterbody_type}}.</p>
+  </div>
 
 </template>
 
