@@ -15,7 +15,6 @@
 <style scoped lang='scss'>
   footer {
     padding: 15px;
-    background-color: white;
     margin: 40px 0px 0px 0px;
 
     @include respond-to(handheld) {
