@@ -2,7 +2,7 @@
   <div class="map-image--wrapper">
     <div class='inner'>
       <a name="watershed" id="watershed"></a>
-      <map-loader :mode='"embedded"'/>
+      <map-loader class="embedded" :mode='"embedded"'/>
       <aol-map ref="map" :mode='"mini"' :small='true'></aol-map>
     </div>
     <p class="caption">

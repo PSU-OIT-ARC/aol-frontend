@@ -1,6 +1,6 @@
 <template>
   <div class='map-container'>
-    <map-loader :mode='"full"'/>
+    <map-loader class="full" :mode='"full"'/>
     <aol-map ref="map" :mode='"full"' :small='false'></aol-map>
 
     <div v-show="active_state.legend" class="map-legend-wrapper">
@@ -155,6 +155,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .map-container {
+    height: $main_desktop_height;
+    width: 100%;
+    @include respond-to(handheld) {
+      width: $sidebar_mobile_width;
+    }
+  }
+  .map-container.sidebar_active {
+    @include respond-to(handheld) {
+      height: $main_mobile_height;
+    }
+  }
+
   a.map-button.disabled {
     background: #ccc;
     cursor: not-allowed;

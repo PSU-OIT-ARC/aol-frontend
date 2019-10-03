@@ -459,7 +459,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.map {
-  animation: fade-in 1000ms forwards;
-}
+  .map {
+    animation: fade-in 1000ms forwards;
+  }
 </style>

@@ -3,7 +3,8 @@
     <side-bar class='sidebar-wrapper'
       v-bind:class="[focus ? 'sidebar_active' : '']">
     </side-bar>
-    <map-container class='map-wrapper'></map-container>
+    <map-container v-bind:class="[focus ? 'sidebar_active' : '']"
+                   class='map-wrapper'></map-container>
   </div>
 </template>
 
@@ -57,24 +58,16 @@ export default {
 
 .home {
   display: grid;
-  grid-template-columns: 0 1fr;
+  grid-template-columns: 0 auto;
   grid-template-areas: "sidebar map";
-
-  width: 100vw;
-  height: calc(100vh - 42px);
-
-  overflow: hidden;
   @include respond-to(handheld) {
     grid-template-areas: "map sidebar";
+    grid-template-rows: auto 0;
   }
-}
 
-.home.sidebar_active {
-  //grid-template-columns: $sidebar_width 1fr;
-  @include respond-to(handheld) {
-    grid-template-rows: 200px 1fr; /* should use a variable/calc? */
-
-  }
+  width: 100vw;
+  height: $main_desktop_height;
+  overflow: hidden;
 }
 
 </style>

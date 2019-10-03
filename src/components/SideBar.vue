@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar-container">
     <search-pane></search-pane>
     <intro-card/>
     <lake-side-bar
@@ -30,7 +30,7 @@ export default {
 
 <style scoped lang='scss'>
 
-.sidebar {
+.sidebar-container {
   display: grid;
   grid-area: sidebar;
 

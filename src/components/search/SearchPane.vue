@@ -41,12 +41,12 @@ export default {
     box-sizing: border-box;
     animation: fade-in 200ms forwards;
     height: auto;
-    width: $sidebar_width;
+    width: $sidebar_desktop_width;
 
     @include respond-to(handheld) {
       left: 0px;
       padding: 15px;
-      width: calc(100vw);
+      width: $sidebar_mobile_width;
       height: auto;
     }
   }

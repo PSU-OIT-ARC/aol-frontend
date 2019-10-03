@@ -42,7 +42,7 @@
   h3 {
     margin-top: 20px;
     font-size: 1.5em;
-    color: #06186A;
+    color: $primary_color;
     margin-bottom: 30px;
 
     @include respond-to(handheld) {

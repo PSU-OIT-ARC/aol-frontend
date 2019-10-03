@@ -19,27 +19,40 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-.map-loader {
-  position: absolute;
-  top: 20;
-  left: 0;
+  .map-loader {
+    position: absolute;
+    top: 20;
+    left: 0;
 
-  width: 100%;
-  height: 100%;
-  z-index: 99999;
-  background: rgba(222, 222, 222, 0.3);
-  font-weight: bold;
+    width: 100%;
 
-  div.full {
-    position: relative;
-    text-align: center;
-    top: 80%;
+    z-index: 99999;
+    background: rgba(222, 222, 222, 0.3);
+    font-weight: bold;
   }
-  div.embedded {
-    position: relative;
-    text-align: center;
-    top: 40%;
-  }
-}
 
+  .map-loader.full {
+    height: 100%;
+    @include respond-to(handheld) {
+      height: calc(100% + 200px);
+    }
+
+    div {
+      position: relative;
+      text-align: center;
+      top: 80%;
+
+      @include respond-to(handheld) {
+        top: 40%;
+      }
+    }
+  }
+
+  .map-loader.embedded {
+    div {
+      position: relative;
+      text-align: center;
+      top: 40%;
+    }
+  }
 </style>

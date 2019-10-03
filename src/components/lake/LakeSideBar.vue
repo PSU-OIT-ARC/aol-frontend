@@ -1,36 +1,47 @@
 <template>
-  <div class="lake-sidebar">
+  <div class="lake-sidebar sidebar">
 
-    <div class="sidebar-photo-wrapper">
-      <div v-bind:class="[!lake.photo ? 'photo--generic' : '', 'sidebar-photo']" :style="photo_style"></div>
+    <div class="lake-sidebar-photo-wrapper sidebar-photo-wrapper">
+      <div class="lake-sidebar-photo sidebar-photo"
+           v-bind:class="[!lake.photo ? 'photo--generic' : '', 'sidebar-photo']"
+           :style="photo_style">
+      </div>
     </div>
 
-    <div class="sidebar-content">
+    <div class="lake-sidebar-content-wrapper sidebar-content-wrapper">
+      <div class="gutter gutter--left"></div>
+      <div class="lake-sidebar-content sidebar-content">
+        <div class="lake-sidebar-header sidebar-header">
+          <div class="lake-sidebar__nav sidebar__nav">
+            <div class='back-to-sidebar'>
+              <router-link v-if="has_results" :to="back_href">
+                &larr; Back to Search
+              </router-link>
+            </div>
+            <div class="close-sidebar">
+              <router-link :to="back_href">
+                <close-button-svg />
+              </router-link>
+            </div>
+          </div> <!-- end lake-sidebar__nav -->
+          <router-link v-if="lake.is_major" :to="lake_href">
+            <lake-card :lake='lake'></lake-card>
+          </router-link>
+          <lake-card v-if="!lake.is_major" :lake='lake'></lake-card>
+        </div> <!-- end lake-sidebar-header -->
 
-      <div class="sidebar__nav">
-        <div class="back-to-search">
-          <router-link v-if="has_results" :to="back_href">
-            &larr; Back to Search
-          </router-link>
-        </div>
-        <div class="close-sidebar">
-          <router-link :to="back_href">
-            <close-button-svg />
-          </router-link>
-        </div>
+        <div class="lake-sidebar-body sidebar-body">
+          <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
+          <text-section class="text-summary" :lake='lake' :truncate='true'></text-section>
+        </div> <!-- end lake-sidebar-body -->
+
       </div>
 
-      <router-link v-if="lake.is_major" :to="lake_href">
-        <lake-card :lake='lake'></lake-card>
-      </router-link>
-      <lake-card v-if="!lake.is_major" :lake='lake'></lake-card>
-      <div class="lake-summary">
-        <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
-        <text-section :lake='lake' :truncate='true'></text-section>
-      </div>
+      <div class="gutter gutter--right"></div>
 
-    </div>
-  </div>
+    </div> <!-- end lake-sidebar-content-wrapper -->
+
+  </div> <!-- end lake-sidebar -->
 </template>
 
 <script>
@@ -89,101 +100,48 @@ a:hover, a:focus {
 </style>
 
 <style scoped lang='scss'>
-
   .lake-sidebar {
     display: grid;
     position: absolute;
     grid-template-rows: 160px 1fr;
-    width: $sidebar_width;
-    z-index: 9999;
-    height: 96%; /* controls whether you get page scroll after sidebar scroll is complete. Needs higher or dynamic value when window.height is > */
-    background-color: #fff;
+  }
+
+  .lake-sidebar-content-wrapper {
+    //                   navbar   photo    position
+    height: calc(100vh - 42px   - 160px  + 130px);
+    @include respond-to(handheld) {
+        //                   photo
+        height: calc(100vh - 160px);
+    }
+  }
+
+  .lake-sidebar-content {
+    height: 100%;
+  }
+
+  .lake-sidebar-header {
+    height: 220px;
+  }
+
+  .lake-sidebar-body {
+    background-color: whitesmoke;
+
+    //                  header
+    height: calc(100% - 220px);
+    padding: 0px 15px;
 
     @include respond-to(handheld) {
-      top: 200px;
-      width: 100vw;
+      //                  header  position
+      height: calc(100% - 220px + 130px);
+      padding: 0px;
     }
   }
 
-  .sidebar__nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 15px 15px;
-    position: relative;
-    top: -30px;
-
-    a {
-      color: white;
-    }
-  }
-
-  .sidebar-photo-wrapper {
-    background-color: #838383;
-    overflow: hidden;
-    position: relative;
-
-    @include respond-to(handheld) {
-      width: 100vw;
-    }
-
-  }
-
-  .sidebar-photo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 160px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    filter: blur(9px) brightness(80%);
-    transform: scale(1.1);
-  }
-
-  .photo--generic {
-
-  }
-
-  .sidebar-content {
-    position: relative;
-    top: -130px;
-    height: 82.2vh;  // fixes an issue
-    @include respond-to(handheld) {
-      height: 70vh;  // keep sidebar text scrollable on mobile
-    }
-  }
-
-  p {
-    font-size: .9em;
+  .text-summary {
+    font-size: .85em;
     line-height: 1.5em;
+
+    background-color: white;
+    padding: 10px 15px 10px 15px;
   }
-
-  .lake-summary {
-    display: grid;
-    grid-template-rows: auto auto auto;
-    align-content: start;
-    overflow-y: scroll;
-    padding: 35px 15px 50px 15px;
-    height: calc(100vh - 335px);
-
-    @include respond-to(handheld) {
-      width: calc(100vw - 30px);
-      height: auto;
-      overflow-y: hidden;
-    }
-  }
-
-  .lake-summary p:last-of-type {
-      padding-bottom: 60px;
-  }
-
-  .summary-chart {
-    margin-top: 30px;
-  }
-
-  table {
-    width: 100%;
-  }
-
 </style>

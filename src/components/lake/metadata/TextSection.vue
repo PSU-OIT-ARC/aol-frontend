@@ -9,9 +9,11 @@
        v-bind:key="index">
       {{ line }}
     </p>
-    <router-link v-if="truncate" :to="lake_href" class='full-page-button'>
-      See full details
-    </router-link>
+    <div class="full-link-container">
+      <router-link v-if="truncate" :to="lake_href" class='full-page-button'>
+        See full details
+      </router-link>
+    </div>
   </div>
   <div v-else>
     <p>{{lake.title}} is a {{lake.waterbody_type}}.</p>
@@ -47,14 +49,20 @@
   }
 </script>
 
-<style scoped>
-  .full-page-button {
-    max-width: 300px;
-    margin: auto;
-    margin-top: 40px;
+<style scoped lang='scss'>
+  .full-link-container {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 0.5em;
+  }
+  .full-page-button,
+  .full-page-button:link,
+  .full-page-button:visited {
+    max-width: 66.666%;
+    margin: 0 auto;
     display: block;
     padding: 10px;
-    background: #06186A;
+    background-color: $primary_color;
     color: white;
     text-decoration: none;
     border-radius: 5px;

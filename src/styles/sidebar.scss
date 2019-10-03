@@ -1,0 +1,63 @@
+.sidebar-container {
+}
+
+.sidebar {
+  width: $sidebar_desktop_width;
+  height: $main_desktop_height;
+  z-index: 9999;
+  background-color: whitesmoke;
+
+  @include respond-to(handheld) {
+    top: 200px;
+    width: $sidebar_mobile_width;
+    height: auto;
+  }
+}
+
+.sidebar-photo-wrapper {
+  background-color: #838383;
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  filter: blur(9px) brightness(80%);
+  transform: scale(1.1);
+}
+
+.photo--generic {
+}
+
+.sidebar-content-wrapper {
+  position: relative;
+  top: -130px;
+}
+
+.sidebar-content {
+}
+
+.sidebar-header {
+}
+
+.sidebar__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 15px 15px;
+  position: relative;
+  top: -30px;
+
+  a {
+    color: white;
+  }
+}
+
+.sidebar-body {
+}

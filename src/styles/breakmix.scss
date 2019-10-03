@@ -28,8 +28,12 @@ $break-xlarge: 1400px;  // if necessary
 }
 
 /* VARS */
-$sidebar_width: 420px;
 $primary_color: #06186A;
+
+$sidebar_desktop_width: 420px;            // width of sidebar on larger displays
+$sidebar_mobile_width: 100vw;             // width of sidebar on mobile
+$main_desktop_height: calc(100vh - 42px); // height of main content on larger displays
+$main_mobile_height: 200px;               // height of main content on mobile
 
 
 @font-face {
