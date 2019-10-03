@@ -1,5 +1,6 @@
 /* VIEWPORT BREAKPOINTS */
 $break-small: 600px;
+$break-small-height: 700px;
 $break-med: 900px;
 $break-large: 1200px;
 $break-xlarge: 1400px;  // if necessary
@@ -7,6 +8,9 @@ $break-xlarge: 1400px;  // if necessary
 @mixin respond-to($media) {
   @if $media == handheld {
     @media only screen and (max-width: $break-small) {
+      @content;
+    }
+    @media only screen and (max-height: $break-small-height) {
       @content;
     }
   } @else if $media == medscreen {
