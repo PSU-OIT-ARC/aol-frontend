@@ -32,7 +32,7 @@
 
         <div class="lake-sidebar-body sidebar-body">
           <data-tabs :lake='lake' :tabs_only='true'></data-tabs>
-          <text-section class="text-summary" :lake='lake' :truncate='true'></text-section>
+          <text-section class="text-summary" :lake='lake'></text-section>
         </div> <!-- end lake-sidebar-body -->
 
       </div>
@@ -139,7 +139,7 @@ a:hover, a:focus {
 
   .text-summary {
     font-size: .85em;
-    line-height: 1.5em;
+    line-height: 20px;
 
     background-color: white;
     padding: 10px 15px 10px 15px;

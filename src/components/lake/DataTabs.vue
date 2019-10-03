@@ -54,7 +54,7 @@ export default {
         Documents
       ],
       sidebarSectionKeys: [
-        'body',
+        'summary',
         false,
         'has_plants',
         'has_mussels',
@@ -88,7 +88,7 @@ export default {
           return config.is_mobile(window) &&
                  (self.lake[key] == true || self.lake[key].length);
         } else if (self.lake[key]) {
-          if (key != 'body' && Array.isArray(self.lake[key])) {
+          if (key != 'body' && key != 'summary' && Array.isArray(self.lake[key])) {
             return self.lake[key].length;
           }
           return true
