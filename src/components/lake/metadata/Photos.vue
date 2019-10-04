@@ -4,20 +4,24 @@
     <a name="photos" id='photos'></a>
     <h3>Photos</h3>
 
-    <div class="lake-photos">
+    <ul>
       <gallery :images="lake.photos"
                :index="index"
                @close="index = null">
       </gallery>
 
-      <div class="lake-photo"
-           v-for="(image, imageIndex) in lake.photos.map(x => x.href)"
-           v-bind:index="imageIndex"
-           v-bind:key="imageIndex"
-           @click="index = imageIndex"
-           :style="{ backgroundImage: 'url(' + image + ')' }">
-      </div>
-    </div>
+      <li v-for="(image, imageIndex) in lake.photos.map(x => x.href)">
+         <img
+         v-bind:index="imageIndex"
+         v-bind:key="imageIndex"
+         @click="index = imageIndex"
+         loading="lazy"
+         :src="image" />
+      </li>
+
+      <li></li>
+
+    </ul>
   </div>
 
 </template>
@@ -45,30 +49,48 @@
 
 <style scoped lang='scss'>
 
-.lake-photos {
+ul {
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  flex-direction: row;
-  margin-left: -5px;
-
-  @include respond-to(handheld) {
-    width: calc(100vw - 30px);
+  margin: .5vmax;
+  &:after {
+    content:"";
+    flex-grow: 10;
   }
 }
 
-.lake-photo {
-  margin: 5px;
-  width: 160px;
-  height: 160px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  border: 1px solid #222;
+li {
+  height: 12vh;
+  flex-grow: 1;
+  margin: .5vmax;
+}
 
-  @include respond-to(handheld) {
-    width: 135px;
-    height: 135px;
+img {
+  max-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  vertical-align: bottom;
+}
+
+
+// Smaller screens in portrait
+@include respond-to(handheld) {
+  @media (max-aspect-ratio: 1/1) {
+    ul {
+      flex-direction: row;
+    }
+
+    li {
+      height: auto;
+      width: 45%;
+    }
+    img {
+      width: 100%;
+      max-height: 50vh;
+      min-width: 0;
+    }
   }
 }
+
+
 </style>
