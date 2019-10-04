@@ -108,7 +108,8 @@ export default {
                    'resetSearchResults']),
     zoomIn () {
       if (!this.zoomInDisabled()) {
-        this.setMapZoom(parseFloat(this.zoom) + 0.5);
+        // this.setMapZoom(parseFloat(this.zoom) + 0.5);
+        this.setMapZoom(parseFloat(this.zoom) + 1.0);
       }
 
       return false;
@@ -118,7 +119,8 @@ export default {
     },
     zoomOut () {
       if (!this.zoomOutDisabled()) {
-        this.setMapZoom(parseFloat(this.zoom) - 0.5);
+        // this.setMapZoom(parseFloat(this.zoom) - 0.5);
+        this.setMapZoom(parseFloat(this.zoom) - 1.0);
       }
 
       return false;

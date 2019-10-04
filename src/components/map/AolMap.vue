@@ -290,7 +290,7 @@ export default {
                     this.view.constraints = {
                         minZoom: config.minZoom,
                         maxZoom: config.maxZoom,
-                        snapToZoom: false,
+                        snapToZoom: true,
                         rotationEnabled: false
                     };
                     this.view.when().then(()=> {
