@@ -2,6 +2,9 @@
 
 const LOADING = 'loading';
 const VIEWPORTS = {
+    tiny: {
+        width: 350
+    },
     handset: {
         width: 600
     },
@@ -23,6 +26,10 @@ const config = {
 
     is_mobile: function(window) {
         return window.innerWidth < VIEWPORTS.handset.width;
+    },
+
+    is_tiny: function(window) {
+        return window.innerWidth < VIEWPORTS.tiny.width;
     },
     is_handset: function(window) {
         return window.innerWidth < VIEWPORTS.handset.width;
