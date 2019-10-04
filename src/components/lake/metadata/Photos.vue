@@ -18,9 +18,6 @@
          loading="lazy"
          :src="image" />
       </li>
-
-      <li></li>
-
     </ul>
   </div>
 
