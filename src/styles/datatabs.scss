@@ -105,6 +105,25 @@
     background-image: url(~@/assets/water.svg);
 }
 
+/* Regarding the use of the 'focus-within' psuedo-class.
+ * Specified in the Selectors Level 4 Working Draft.
+ * 
+ * The 'focus' psuedo-class is not available for the 'li'
+ * element as is used here in order to slip the palette
+ * of active tabs.
+ *
+ * The 'has' selector, while also a level 4 selector,
+ * may only be used with 'document.querySelector' and
+ * does not yet have any document browser support.
+ *
+ * 'focus-within', on the other hand is widely available
+ * in mainstream browsers. The following link details
+ * current browser support.
+ * 
+ * Refs: https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within
+ * 
+ */
+.tab-icon.not-active:focus-within,
 .tab-icon.not-active:hover {
     background-color: $primary_color;
 
@@ -113,21 +132,27 @@
         opacity: 1;
     }
 }
+.tab-icon--text-section.not-active:focus-within,
 .tab-icon--text-section.not-active:hover {
     background-image: url(~@/assets/book-open-white.svg);
 }
+.tab-icon--plants.not-active:focus-within,
 .tab-icon--plants.not-active:hover {
     background-image: url(~@/assets/plants-white.svg);
 }
+.tab-icon--mussels.not-active:focus-within,
 .tab-icon--mussels.not-active:hover {
     background-image: url(~@/assets/clam-white.svg);
 }
+.tab-icon--photos.not-active:focus-within,
 .tab-icon--photos.not-active:hover {
     background-image: url(~@/assets/camera-white.svg);
 }
+.tab-icon--documents.not-active:focus-within,
 .tab-icon--documents.not-active:hover {
     background-image: url(~@/assets/file-white.svg);
 }
+.tab-icon--watershed.not-active:focus-within,
 .tab-icon--watershed.not-active:hover {
     background-image: url(~@/assets/water-white.svg);
 }
