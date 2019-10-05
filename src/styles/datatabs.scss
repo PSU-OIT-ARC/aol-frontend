@@ -28,14 +28,21 @@
   @include respond-to(handheld) {
     width: 100vw;
     overflow-y: scroll;
+    margin-bottom: 0px;
   }
 
   li {
-    width: 110px;
+    width: 100px;
     overflow: hidden;
     background-color: #E7E7E7;
     @include respond-to(handheld) {
-      width: 33.333%;
+        width: 85px;
+        height: 75px;
+        margin-bottom: 0px;
+        display: block;
+    }
+    @include respond-to(tiny) {
+        width: 80px;
     }
   }
 
@@ -46,6 +53,10 @@
       color: $primary_color;
       opacity: 1;
       box-shadow:inset 0px 0px 0px 1px #e7e7e7;
+
+      @include respond-to(handheld) {
+          box-shadow: none;
+      }
   }
 
   a:link, a:visited {
@@ -58,25 +69,26 @@
     text-align: center;
     font-size: .8em;
     opacity: .75;
+
     @include respond-to(handheld) {
-      font-size: .7em;
+      padding: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    & span.tab-title {
+      @include respond-to(handheld) {
+        font-size: 0.75em;
+        position: relative;
+        display: block;
+        top: 50px;
+      }
+      @include respond-to(tiny) {
+
+      }
     }
   }
 }
-
-.lake-summary {
-  margin-top: -40px;
-
-  .tabs {
-    margin-bottom: 0px;
-    width: 100%;
-  }
-
-  .tabs li {
-    width: 33%;
-  }
-}
-
 
 .tab-icon {
   background-repeat: no-repeat;
@@ -155,10 +167,6 @@
 .tab-icon--watershed.not-active:focus-within,
 .tab-icon--watershed.not-active:hover {
     background-image: url(~@/assets/water-white.svg);
-}
-
-.data-sections {
-  margin-bottom: 20px;
 }
 
 .data-section {

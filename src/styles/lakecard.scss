@@ -94,8 +94,10 @@
   .data-icons { display:none; }
 
   @include respond-to(handheld) {
-    grid-template-columns: 110px 1fr;
     width: calc(100vw - 30px);
+  }
+  @include respond-to(tiny) {
+    grid-template-columns: 110px 1fr;
   }
 
   h3 {
@@ -120,9 +122,12 @@
   backface-visibility: hidden;
 
   @include respond-to(handheld) {
-    grid-template-columns: 110px 1fr;
-    width: calc(100% - 30px);
+    grid-template-columns: 140px 1fr;
+    width: calc(100vw - 30px);
     margin: 0px 15px;
+  }
+  @include respond-to(tiny) {
+    grid-template-columns: 110px 1fr;
   }
 
   .info {
