@@ -85,7 +85,7 @@ export default {
       return {name: 'home', query: {lake: this.reachcode}};
     },
     back_href () {
-      return {name: 'home', query: {f: this.reachcode}};
+      return {name: 'home'};
     },
     photo_style () {
       let photo = require('@/assets/generic_background.png');

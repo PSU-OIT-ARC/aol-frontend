@@ -218,14 +218,17 @@ const updateClusters = (map, view) => {
             //console.log(clusterLayer)
             if (clusterLayer == undefined ) {
                 // throw new Error("layer not ready")
-                console.warn("Cluster layer it not yet defined.");
-                resolve()
+                console.warn("Cluster layer is not yet defined");
+                resolve();
+                return
             }
             if (clusterIndex == undefined) {
                 // throw new Error("index not ready")
-                console.warn("Cluster index it not yet defined.");
-                resolve()
+                console.warn("Cluster index is not yet defined");
+                resolve();
+                return
             }
+
             let extent = webMercatorUtils.webMercatorToGeographic(view.extent);
 
             let bbox = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];

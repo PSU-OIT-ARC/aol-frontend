@@ -34,6 +34,14 @@ const actions = {
         context.commit('setMapView', options);
     },
 
+    setMapFocus(context, focus) {
+        context.commit('setMapFocus', focus);
+    },
+
+    setMapExtent(context, extent) {
+        context.commit('setMapExtent', extent);
+    },
+
     setMapZoom(context, zoom) {
         context.commit('setMapZoom', zoom);
     },
@@ -49,16 +57,6 @@ const actions = {
 
     setMapFilter (context, filter) {
         context.commit('setMapFilter', filter);
-    },
-
-    focusMap (context, focus) {
-        if (focus != undefined && focus != null) {
-            console.debug("Committing map focus " + focus);
-            context.commit("setMapFocus", focus);
-        } else if (context.getters.getMapFocus != null) {
-            console.debug("Removing map focus " + context.getters.getMapFocus);
-            context.commit("setMapFocus", null);
-        }
     },
 
     searchLakes (context, query) {

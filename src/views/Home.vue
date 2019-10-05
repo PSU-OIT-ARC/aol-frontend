@@ -27,13 +27,13 @@ export default {
   },
   methods: {
     ...mapActions(['setIntroDismissed',
-                   'focusMap', 'focusLake',
+                   'setMapFocus',
+                   'focusLake',
                    'resetSearchResults']),
     initializeMap (query) {
-      this.focusMap(query.f);
       this.focusLake(query.lake);
 
-      if (query.f || query.lake) {
+      if (query.lake) {
         this.setIntroDismissed(true);
       }
     }
@@ -50,7 +50,6 @@ export default {
   created () {
     this.initializeMap(this.$route.query);
   }
-
 }
 </script>
 
