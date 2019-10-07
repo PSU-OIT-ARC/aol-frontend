@@ -25,18 +25,18 @@ const config = {
     ERROR_TYPES: ERROR_TYPES,
 
     is_mobile: function(window) {
-        return window.innerWidth < VIEWPORTS.handset.width;
+        return window.screen.width < VIEWPORTS.handset.width;
     },
 
     is_tiny: function(window) {
-        return window.innerWidth < VIEWPORTS.tiny.width;
+        return window.screen.width < VIEWPORTS.tiny.width;
     },
     is_handset: function(window) {
-        return window.innerWidth < VIEWPORTS.handset.width;
+        return window.screen.width < VIEWPORTS.handset.width;
     },
     is_tablet: function(window) {
-        return (window.innerWidth > VIEWPORTS.handset.width && 
-                window.innerWidth < VIEWPORTS.tablet.width);
+        return (window.screen.width > VIEWPORTS.handset.width && 
+                window.screen.width < VIEWPORTS.tablet.width);
     }
 }
 

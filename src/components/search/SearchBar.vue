@@ -37,7 +37,7 @@ export default {
   #search-bar {
     display: flex;
     position: relative;
-    z-index: 0;
+    z-index: 3002;
 
     input {
       font-family: "Lato-Bold", sans-serif;

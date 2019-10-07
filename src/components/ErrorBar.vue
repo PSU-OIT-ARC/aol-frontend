@@ -51,8 +51,8 @@ export default {
     padding: 10px;
     animation: drop-in 100ms forwards;
     position: absolute;
-    top: 42px;
-    z-index: 19999;
+    top: $navbar_height;
+    z-index: 9999;
     width: calc(100vw - 20px);
   }
   .flash {

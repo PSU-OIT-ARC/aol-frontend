@@ -84,6 +84,27 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+  .layer-switcher--container {
+    padding: 15px;
+    background-color: #fff;
+
+    .layer {
+      display: block;
+      width: 100%;
+    }
+
+    h4 {
+      margin: 5px 5px 10px 5px;
+    }
+
+    label {
+      display: inline-block;
+      width: 90%;
+      cursor: pointer;
+      &:hover {background-color: #eee;}
+    }
+  }
+
   div.layer {
     padding: 5px;
     display: inline-block;

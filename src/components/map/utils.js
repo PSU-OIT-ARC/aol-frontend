@@ -373,15 +373,15 @@ const prepareExtent = (view, baseExtent) => {
 
     // offset the given extent by an amount proportional
     // to the width (in screen terms) of an active sidebar.
-    let sidebar = document.querySelector('.sidebar_active .lake-sidebar');
+    let sidebar = document.querySelector('.sidebar_active .sidebar-container');
     let map = document.querySelector('.sidebar_active .map-container');
 
     if (sidebar != null && !app_config.is_mobile(window) ) {
         let dx = (extent.width / view.width) * sidebar.clientWidth;
 
-        if (map.clientWidth >= sidebar.clientWidth) {
+        if (map.clientWidth >= sidebar.clientWidth * 2) {
             extent.offset(-dx, 0, 0);
-        } else if (map.clientWidth < sidebar.clientWidth) {
+        } else {
             extent.offset(-dx/2, 0, 0);
         }
     }

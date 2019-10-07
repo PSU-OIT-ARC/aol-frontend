@@ -30,13 +30,24 @@ export default {
 
 <style scoped lang='scss'>
 
-.sidebar-container {
-  display: grid;
-  grid-area: sidebar;
-
-  @include respond-to(handheld) {
+  .sidebar-container {
     position: absolute;
+
+    display: grid;
+    grid-area: sidebar;
+
+    width: $sidebar_desktop_width;
+    height: $sidebar_desktop_height;
+    @include respond-to(handheld) {
+      width: $sidebar_mobile_width;
+      height: $sidebar_mobile_height;
+    }
   }
-}
+
+  .sidebar-container.sidebar_active {
+    @include respond-to(handheld) {
+      top: calc(#{$navbar_height} + #{$map_mobile_height});
+    }
+  }
 
 </style>

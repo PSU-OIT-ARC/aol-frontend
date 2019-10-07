@@ -1,11 +1,14 @@
+$detail_desktop_photo_height: 200px;
+$detail_mobile_photo_height: 150px;
+
+
 .detail {
   display: grid;
-  grid-template-rows: 200px 1fr;
-  grid-template-columns: 1fr;
-  height: 100vh;
+  grid-template-columns: minmax(0, 100vw);
+  grid-template-rows: $detail_desktop_photo_height 1fr;
 
   @include respond-to(handheld) {
-    grid-template-rows: 150px 1fr;
+      grid-template-rows: $detail_mobile_photo_height 1fr;
   }
 }
 
@@ -13,24 +16,14 @@
   background-color: #838383;
   overflow: hidden;
   position: relative;
-
-  @include respond-to(handheld) {
-    width: 100vw;
-  }
-  @include respond-to(medscreen) {
-    width: 100vw;
-  }
-  @include respond-to(lgscreen) {
-    width: 100vw;
-  }
 }
 
 .detail-photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
+  height: $detail_desktop_photo_height;
+  @include respond-to(handheld) {
+    height: $detail_mobile_photo_height;
+  }
+
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -43,34 +36,25 @@
 
 .detail-content-wrapper {
   display: grid;
-  grid-template-columns: 1fr minmax(900px, 1200px) 1fr;
-  background: whitesmoke;
+  grid-template-columns: 1fr minmax(#{$break-small}, #{$break-large}) 1fr;
 
   @include respond-to(handheld) {
-    width: 100vw;
+    grid-template-columns: minmax(0, 100vw);
   }
-  @include respond-to(medscreen) {
-    width: 100vw;
-  }
-  @include respond-to(lgscreen) {
-    width: 100vw;
-  }
+
+  background: whitesmoke;
+  width: 100%;
 }
 
 .detail-content {
   position: relative;
-  top: -180px;
+  top: -$detail_desktop_photo_height;
 
   @include respond-to(handheld) {
-    top: -140px;
-    width: 100vw;
+    top: -$detail_mobile_photo_height;
   }
-  @include respond-to(medscreen) {
-    width: 100vw;
-  }
-  @include respond-to(lgscreen) {
-    width: 100vw;
-  }
+
+  width: 100%;
 }
 
 .detail-header {
@@ -79,27 +63,23 @@
 .detail__nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 15px 0px;
-  position: relative;
-  top: -10px;
+  grid-template-rows: 50px;
 
   a {
+    display: block;
+    padding: 0px;
     color: white;
-  }
 
-  @include respond-to(handheld) {
-    padding: 15px;
+    @include respond-to(handheld) {
+      padding: 0px 15px;
+    }
+    @include respond-to(medscreen) {
+      padding: 0px 15px;
+    }
+    @include respond-to(lgscreen) {
+      padding: 0px 15px;
+    }
   }
-  @include respond-to(medscreen) {
-    padding: 15px;
-  }
-  @include respond-to(lgscreen) {
-    padding: 15px;
-  }
-}
-
-.back-to-sidebar {
-  text-align: left;
 }
 
 .detail-body {
@@ -109,8 +89,7 @@
 
   @include respond-to(handheld) {
     margin-top: 20px;
-    grid-template-columns: none;
-    grid-template-rows: auto auto;
+    grid-template-columns: minmax(0, 100vw);
   }
 
 }
@@ -132,6 +111,7 @@
   }
 
 }
+
 .detail-sidebar {
   padding: 0px 0px 0px 50px;
 
@@ -147,11 +127,4 @@
     padding-left: 10px;
     margin-right: 15px;
   }
-}
-
-.behind {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  z-index: -1;
 }

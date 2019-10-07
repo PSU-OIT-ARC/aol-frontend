@@ -63,7 +63,7 @@ export default {
 <style scoped lang='scss'>
 #nav {
   position: relative;
-  z-index: 99999;
+  z-index: 5000;
   display: grid;
   grid-template-columns: 45% 1fr;
   @include respond-to(handheld) {
@@ -113,7 +113,7 @@ export default {
     @include respond-to(handheld) {
       display: block;
       position: absolute;
-      z-index: 99999;
+      z-index: 5000;
       right: 0px;
       top: 0px;
       width: 50%;

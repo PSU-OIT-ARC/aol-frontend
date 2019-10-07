@@ -65,7 +65,11 @@ export default {
   }
 
   width: 100vw;
-  height: $main_desktop_height;
+  height: $map_desktop_height;
+  @include respond-to(handheld) {
+    height: auto;
+  }
+
   overflow: hidden;
 }
 

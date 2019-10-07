@@ -13,7 +13,7 @@
           </div>
           <div class="lake-card">
             <div class="photo" :style="photo_style"></div> 
-           <div class="info">
+            <div class="info">
               <h4>A Public Resource Since 1985</h4>
               <h2>{{ page.title }}</h2>
             </div>

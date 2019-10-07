@@ -4,7 +4,7 @@ $break-small: 600px;
 $break-small-height: 700px;
 $break-med: 900px;
 $break-large: 1200px;
-$break-xlarge: 1400px;  // if necessary
+$break-xlarge: 1400px;
 
 @mixin respond-to($media) {
   @if $media == tiny {
@@ -30,20 +30,14 @@ $break-xlarge: 1400px;  // if necessary
     @media only screen and (min-width: $break-large + 1) and (max-width: $break-xlarge - 1) {
       @content;
     }
+  } @else if $media == xwidescreen {
+    @media only screen and (min-width: $break-xlarge) {
+      @content;
+    }
   }
-  //	@else if $media == xwidescreen {
-  //	  @media only screen and (min-width: $break-xlarge) { @content; }
-  //	}
 }
 
-/* VARS */
-$primary_color: #06186A;
-
-$sidebar_desktop_width: 420px;            // width of sidebar on larger displays
-$sidebar_mobile_width: 100vw;             // width of sidebar on mobile
-$main_desktop_height: calc(100vh - 42px); // height of main content on larger displays
-$main_mobile_height: 200px;               // height of main content on mobile
-
+//Fonts
 
 @font-face {
   font-family: 'Lato-Regular';

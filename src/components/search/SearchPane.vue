@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
-      <search-bar></search-bar>
-      <search-results :query="query"></search-results>
-    </div>
+  <div id="search-wrapper" v-bind:class="[{hide_results: hide_results}]">
+    <search-bar></search-bar>
+    <search-results :query="query"></search-results>
   </div>
 </template>
 
@@ -23,7 +21,7 @@ export default {
     ...mapGetters({query: 'getSearchQuery'}),
     hide_results() {
       if (this.$route.query['lake']) {
-        return true
+        return true;
       }
       return false;
     }
@@ -34,7 +32,7 @@ export default {
 <style scoped lang="scss">
   #search-wrapper {
     position: absolute;
-    z-index: 3002;
+    z-index: 3001;
     left: 0px;
     padding: 15px;
     overflow: hidden;
@@ -49,5 +47,10 @@ export default {
       width: $sidebar_mobile_width;
       height: auto;
     }
+  }
+
+  .hide_results {
+    display: none;
+    pointer-events: none;
   }
 </style>

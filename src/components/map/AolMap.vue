@@ -478,6 +478,30 @@ export default {
 
 <style lang="scss" scoped>
   .map {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    @include respond-to(handheld) {
+      width: 100vw;
+    }
+
     animation: fade-in 1000ms forwards;
+    overflow: hidden;
+    z-index: 1000;
+  }
+
+  .map.small {
+    height: calc(#{$minimap_height} + #{$fudge_factor});
+    width: calc(#{$minimap_width} + #{$fudge_factor});
+
+    pointer-events: none;
+    animation: fade-in 400ms forwards;
+  }
+
+  .sidebar_active .map {
+    @include respond-to(handheld) {
+      height: $map_mobile_height;
+    }
   }
 </style>

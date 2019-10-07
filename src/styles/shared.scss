@@ -1,0 +1,47 @@
+/* 
+ * Shared rules
+ *
+ * The following rules apply to multiple components and thus
+ * cannot be used in scoped style sections when there doesn't
+ * already exist an appropriate SASS assets to contain them.
+ * 
+ */
+
+/* VARS */
+$primary_color: #06186A;
+$navbar_height: 42px;           // height of navbar
+$fudge_factor: 1px;             // fudge factor to effectively round down non-
+                                // integer relative unit values (e.g., % or vh/vw)
+
+/* Utility classes */
+h1 a.router-link-active {
+  border-bottom: 0px;
+}
+
+/* Sidebar classes */
+.close-sidebar {
+  text-align: right;
+  cursor: pointer;
+
+  position: absolute;
+  top: 15px;
+  right: 0px;
+
+  svg {
+    fill: white;
+    width: 15px;
+    height: 15px;
+  }
+  &:hover, &:focus {
+    color: white;
+  }
+}
+
+.back-to-sidebar {
+  text-align: left;
+  cursor: pointer;
+
+  position: absolute;
+  top: 15px;
+  left: 0px;
+}

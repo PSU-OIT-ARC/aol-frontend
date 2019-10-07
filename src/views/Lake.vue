@@ -2,8 +2,8 @@
   <div v-if='lake' class="lake-detail detail">
 
     <div class="lake-detail-photo-wrapper detail-photo-wrapper">
-      <div class="lake-sidebar-photo sidebar-photo"
-           v-bind:class="[!lake.photo ? 'photo--generic' : '', 'sidebar-photo']"
+      <div class="lake-detail-photo detail-photo"
+           v-bind:class="[!lake.photo ? 'photo--generic' : '']"
            :style="photo_style">
       </div>
     </div>
@@ -13,16 +13,13 @@
       <div class="lake-detail-content detail-content">
         <div class="lake-detail-header detail-header">
           <div class="lake-detail__nav detail__nav">
-            <div class='back-to-sidebar'>
-              <router-link :to="sidebar_href">
-                &larr; Back
-              </router-link>
-            </div>
-            <div class="close-sidebar">
-              <router-link :to="back_href">
-                <close-button-svg />
-              </router-link>
-            </div>
+            <router-link class="back-to-sidebar"
+                         :to="sidebar_href">
+              &larr; Back
+            </router-link>
+            <router-link class="close-sidebar" :to="back_href">
+              <close-button-svg />
+            </router-link>
           </div> <!-- end lake-detail__nav -->
           <lake-card :lake="lake"></lake-card>
         </div> <!-- end lake-detail-header -->
