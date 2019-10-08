@@ -40,10 +40,19 @@
         return this.lake.body.replace('<p>&nbsp;</p>', '');
       },
       truncateText () {
-        if (this.lake.summary === undefined || this.lake.summary == null) {
+        if (this.lake.summary === undefined ||
+            this.lake.summary == null) {
           console.debug("Lake summary is unavailable, not processing truncation.")
           return
+        } else if (this.lake.summary == '') {
+          console.debug("Lake has no summary to process.")
+          this.truncatedText = ''
+          return
         }
+
+        // initialize component reactive text
+        console.debug("Initializing truncated text...");
+        this.truncatedText = ''
 
         // match on sentence endings but not abbreviations
         // thanks https://stackoverflow.com/a/34784856
@@ -104,6 +113,8 @@
             }
           }
         }
+
+        console.debug("Generated truncated text: " + this.truncatedText);
       }
     },
     watch: {
