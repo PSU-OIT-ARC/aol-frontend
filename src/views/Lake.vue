@@ -22,7 +22,6 @@
               </router-link>
             </div>
           </div> <!-- end detail__nav -->
-asdfasdf
           <lake-card class="card" :lake="lake"></lake-card>
         </div>
         <div class="detail-body">
