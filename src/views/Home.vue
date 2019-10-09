@@ -43,6 +43,9 @@ export default {
       this.initializeMap(to.query);
     },
     lakes: function() {
+      // lakes will only be loaded once per session, so
+      // this watch callback will only be triggered on
+      // initial view load, highly likely before user input.
       this.resetSearchResults();
       this.initializeMap(this.$route.query);
     }

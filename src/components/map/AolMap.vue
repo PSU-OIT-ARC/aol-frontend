@@ -110,7 +110,6 @@ export default {
                         this.setLoading(false);
                     });
                 } else {
-                    this.resetSearchResults();
                     this.resetBounds();
                 }
             } else if (this.mode == 'full') {
@@ -124,7 +123,6 @@ export default {
             // Reset extent to fit all features this lets
             // the extent be viewable for any device
             //
-            console.debug("Resetting map bounds");
             this.setLoading(true);
             this.setMapFocus(false);
             this.setMapExtent(null);
@@ -133,6 +131,7 @@ export default {
             lake_boundaries_layer.when(()=>{
               return lake_boundaries_layer.queryExtent();
             }).then((response) => {
+              console.debug("Fitting map bounds to features");
               let extent = prepareExtent(this.view, response.extent);
               this.view.goTo(extent).then(() => {
                   this.setLoading(false);

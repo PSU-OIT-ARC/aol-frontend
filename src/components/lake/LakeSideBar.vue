@@ -13,14 +13,21 @@
       <div class="lake-sidebar-content sidebar-content">
         <div class="lake-sidebar-header sidebar-header">
           <div class="lake-sidebar__nav sidebar__nav">
-            <router-link v-if="has_results"
-                         class="back-to-sidebar"
-                         :to="back_href">
-              &larr; Back to Search
-            </router-link>
-            <router-link class="close-sidebar" :to="back_href">
-              <close-button-svg />
-            </router-link>
+            <div>
+              <router-link v-if="has_results"
+                           class="back-to-sidebar"
+                           :to="back_href">
+                &larr; Back to Search
+              </router-link>
+            </div>
+            <div>
+              <span @click="close">
+                <router-link class="close-sidebar"
+                            :to="back_href">
+                  <close-button-svg />
+                </router-link>
+              </span>
+            </div>
           </div> <!-- end lake-sidebar__nav -->
           <router-link v-if="lake.is_major" :to="lake_href">
             <lake-card :lake='lake'></lake-card>
@@ -43,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LakeCard from '@/components/lake/LakeCard';
@@ -76,6 +83,12 @@ export default {
         photo = this.lake.photo;
       }
       return {'backgroundImage': 'url(' + photo + ')'}
+    }
+  },
+  methods: {
+    ...mapActions(['resetSearchResults']),
+    close () {
+      this.resetSearchResults();
     }
   }
 }
