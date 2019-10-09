@@ -97,6 +97,20 @@ const actions = {
     fetchLakes (context, status) {
         let url = `${API_URL}/lake/?format=json`+`&status=`+status;
         return new Promise((resolve, reject) => {
+            let firstFetch = !(context.getters.getLakes != null &&
+                               context.getters.getLakes.length);
+            let gte = context.getters.getTimeElapsed;
+            let tsName = 'waterbody-' + status;
+            let ts = gte(tsName);
+
+            if (ts != null && ts < Date.now() - config.data_timeout) {
+                console.info('The lake index is already loaded.');
+                resolve(false, firstFetch);
+                return
+            } else {
+                context.dispatch('markTimestamp', tsName);
+            }
+
             fetch(url).then(
                 response => {
                     return response.json();
@@ -108,9 +122,10 @@ const actions = {
                         context.commit("setLakes", data);
                     } else {
                         console.debug("Fetched " + data.length + " minor lakes");
-                        context.commit("addLakes", data);
+                        context.commit("setMinorLakes", data);
                     }
-                    resolve();
+                    console.debug("Loading completed in " + gte(tsName) + "ms");
+                    resolve(true, firstFetch);
                 }
             ).catch(
                 e => {

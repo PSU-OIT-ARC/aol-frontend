@@ -23,6 +23,7 @@ const state = {
 
     // lake state
     lakes: [],
+    minor_lakes: [],
     search: {
         results: [],
         query: ''

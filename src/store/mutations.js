@@ -57,8 +57,8 @@ const mutations = {
       state.lakes = data;
     },
 
-    addLakes (state, data) {
-      state.lakes = state.lakes.concat(data);
+    setMinorLakes (state, data) {
+      state.minor_lakes = data;
     },
 
     setCurrentFocus (state, data) {
