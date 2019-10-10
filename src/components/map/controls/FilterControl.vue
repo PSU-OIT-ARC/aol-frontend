@@ -46,6 +46,30 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+  .filter-control--container {
+    padding: 0px 15px;
+    background-color: #fff;
+    @include respond-to(handheld) {
+      padding-bottom: 20px;
+    }
+
+    .filter {
+      display: block;
+      width: 100%;
+    }
+
+    h4 {
+      margin: 5px 5px 10px 5px;
+    }
+
+    label {
+      display: inline-block;
+      width: 90%;
+      cursor: pointer;
+      &:hover {background-color: #eee;}
+    }
+  }
+
   div.filter {
     padding: 5px;
     display: inline-block;

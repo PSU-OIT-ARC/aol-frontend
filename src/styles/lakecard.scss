@@ -7,7 +7,6 @@
   grid-template-columns: 110px 1fr;
   padding: 10px 20px;
   position: relative;
-  z-index: 99;
 
   .photo {
     background-repeat: no-repeat;
@@ -37,10 +36,20 @@
     font-family: "Lato-Bold", sans-serif;
   }
 
-  p {
+  .metadata {
     font-size: .9em;
     font-weight: 400;
-    margin-top: 0px;
+    margin-top: 0.125em;
+  }
+  @include respond-to(handheld) {
+    .metadata {
+      font-size: .8em;
+      margin-top: 0px;
+    }
+  }
+  .reachcode {
+      font-size: .9em;
+      color: #666;
   }
 
   .data-icons { margin: 5px 0px 0px 0px; }
@@ -63,6 +72,12 @@
 .data-icons .photos { background-image: url(~@/assets/camera.svg);}
 .data-icons .watershed { background-image: url(~@/assets/water.svg);}
 
+#search-results-wrapper .fast-stats { display: none; }
+#search-results-wrapper .show-all { padding: 1em 0em; text-align: center; background-color: #f0f0f0;}
+#search-results-wrapper .lake-card .photo {
+  min-height: 90px;
+}
+
 /* Sidebar card */
 
 .sidebar-content .lake-card {
@@ -71,8 +86,6 @@
   margin: 0px 15px;
   padding: 0px;
   box-shadow: 1px 1px 3px #777;
-  position: relative;
-  top: -30px;
 
   animation: drop-in 200ms forwards;
   animation-fill-mode: both;
@@ -90,12 +103,15 @@
   }
 }
 
+.sidebar-content .longrow {
+  width: 66%;
+}
+
 
 /* Lake detail card */
 
 .detail-content .lake-card {
   grid-template-columns: 370px 1fr;
-
   padding: 0px;
   box-shadow: 1px 1px 3px #777;
 
@@ -105,7 +121,7 @@
 
   @include respond-to(handheld) {
     grid-template-columns: 110px 1fr;
-    width: calc(100vw - 30px);
+    width: calc(100% - 30px);
     margin: 0px 15px;
   }
 
@@ -128,6 +144,18 @@
     }
   }
 }
+
+.detail-content .lake-card .photo--generic {
+  background-size: 160px 160px;
+  @include respond-to(handheld) {
+    background-size: 100px 100px;
+  }
+}
+
+
+/* Lake detail card 
+   ???
+*/
 
 table {
   width: 100%;
@@ -175,24 +203,5 @@ table.datatable {
   }
   tr td span.indent {
     padding: 0px 10px;
-  }
-}
-
-.sidebar-content .longrow {
-  width: 66%;
-}
-
-
-#search-results-wrapper .fast-stats { display: none; }
-#search-results-wrapper .show-all { padding: 1em 0em; text-align: center; background-color: #f0f0f0;}
-
-#search-results-wrapper .lake-card .photo {
-  min-height: 90px;
-}
-
-.detail-content .lake-card .photo--generic {
-  background-size: 160px 160px;
-  @include respond-to(handheld) {
-    background-size: 100px 100px;
   }
 }

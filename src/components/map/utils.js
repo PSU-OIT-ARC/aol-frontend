@@ -218,14 +218,17 @@ const updateClusters = (map, view) => {
             //console.log(clusterLayer)
             if (clusterLayer == undefined ) {
                 // throw new Error("layer not ready")
-                console.warn("Cluster layer it not yet defined.");
-                resolve()
+                console.warn("Cluster layer is not yet defined");
+                resolve();
+                return
             }
             if (clusterIndex == undefined) {
                 // throw new Error("index not ready")
-                console.warn("Cluster index it not yet defined.");
-                resolve()
+                console.warn("Cluster index is not yet defined");
+                resolve();
+                return
             }
+
             let extent = webMercatorUtils.webMercatorToGeographic(view.extent);
 
             let bbox = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
@@ -365,15 +368,22 @@ const prepareExtent = (view, baseExtent) => {
     //
     let extent = baseExtent.clone();
 
-    // expands the given extend using a fudge factor
+    // expands the given extent using a fudge factor
     extent.expand(config.extent_buffer);
 
     // offset the given extent by an amount proportional
     // to the width (in screen terms) of an active sidebar.
-    let sidebar = document.querySelector('.sidebar_active .lake-sidebar');
+    let sidebar = document.querySelector('.sidebar_active .sidebar-container');
+    let map = document.querySelector('.sidebar_active .map-container');
+
     if (sidebar != null && !app_config.is_mobile(window) ) {
-        let dx = -(extent.width / view.width) * sidebar.clientWidth / 2;
-        extent.offset(dx, 0, 0);
+        let dx = (extent.width / view.width) * sidebar.clientWidth;
+
+        if (map.clientWidth >= sidebar.clientWidth * 2) {
+            extent.offset(-dx, 0, 0);
+        } else {
+            extent.offset(-dx/2, 0, 0);
+        }
     }
 
     return extent;

@@ -1,6 +1,6 @@
 <template>
   <div class='map-container'>
-    <map-loader :mode='"full"'/>
+    <map-loader class="full" :mode='"full"'/>
     <aol-map ref="map" :mode='"full"' :small='false'></aol-map>
 
     <div v-show="active_state.legend" class="map-legend-wrapper">
@@ -108,7 +108,8 @@ export default {
                    'resetSearchResults']),
     zoomIn () {
       if (!this.zoomInDisabled()) {
-        this.setMapZoom(parseFloat(this.zoom) + 0.5);
+        // this.setMapZoom(parseFloat(this.zoom) + 0.5);
+        this.setMapZoom(parseFloat(this.zoom) + 1.0);
       }
 
       return false;
@@ -118,7 +119,8 @@ export default {
     },
     zoomOut () {
       if (!this.zoomOutDisabled()) {
-        this.setMapZoom(parseFloat(this.zoom) - 0.5);
+        // this.setMapZoom(parseFloat(this.zoom) - 0.5);
+        this.setMapZoom(parseFloat(this.zoom) - 1.0);
       }
 
       return false;
@@ -155,9 +157,152 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  a.map-button.disabled {
-    background: #ccc;
-    cursor: not-allowed;
+  .map-container {
+    display: grid;
+    grid-area: map;
+
+    height: $map_desktop_height;
+    width: 100%;
+    @include respond-to(handheld) {
+      width: $sidebar_mobile_width;
+    }
   }
+
+  .map-container.sidebar_active {
+    @include respond-to(handheld) {
+      height: $map_mobile_height;
+    }
+  }
+
+  .map-buttons-wrapper {
+    /*contains the buttons AND the button stage */
+    display: grid;
+    grid-template-columns: 1fr;
+    /*display: none;*/
+
+    position: absolute;
+    top: 47px;
+    right: 15px;
+    z-index: 3000;
+
+    width: 350px;
+    height: auto;
+    padding: 5px 20px;
+
+    @include respond-to(handheld) {
+      width: 100vw;
+      top: 92px; /* BUTTON-SHIFT below full-width search */
+      right: 0px;
+    }
+  }
+
+  .close-filters {
+    text-align: right;
+    cursor: pointer;
+
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    svg {
+      fill: black;
+      width: 15px;
+      height: 15px;
+    }
+    &:hover, &:focus {
+      color: black;
+    }
+  }
+
+  .map-filter-wrapper {
+    position: absolute;
+    top: 57px;
+    right: 65px;
+    z-index: 3002;
+    width: 300px;
+    height: auto;
+    border: 1px solid #ccc;
+    padding-bottom: 20px;
+    background-color: white;
+    animation: slide-in 200ms forwards;
+
+    @include respond-to(handheld) {
+      top: 42px; /* BUTTON-SHIFT */
+      width: 100vw;
+      right: 0px;
+    }
+  }
+
+  .map-legend-wrapper {
+    position: absolute;
+    top: 57px;
+    right: 65px;
+    z-index: 3002;
+    height: auto;
+    width: 300px;
+    right: 65px;
+    max-height: 75vh;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 15px 0px 20px 15px;
+    animation: slide-in 200ms forwards;
+
+    @include respond-to(handheld) {
+      width: calc(100vw - 15px);
+      right: 0px;
+      top: 42px;
+    }
+
+    h4 {
+      margin: 8px 0px 15px 0px;
+    }
+  }
+
+  .sidebar_active .map-buttons-wrapper {
+    @include respond-to(handheld) {
+      display: none;
+    }
+  }
+
+  .map-buttons {
+    position: absolute;
+    z-index: 3001;
+    top: 0px;
+    right: -15px;
+    width: 51px;
+    height: auto;
+
+    @include respond-to(handheld) {
+      padding-bottom: 20px;
+      top: 5px;
+      right: 0px;
+    }
+  }
+
+  a.map-button {
+    position: relative;
+    left: 0px;
+    display: block;
+    padding: 5px 5px 5px 5px;
+    margin: 10px 0px;
+    width: 24px;
+    background-color: white;
+    border: 1px solid #aaa;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    @include respond-to(handheld) {
+      padding-bottom: 20px;
+      right: 16px;
+      height: 10px;
+    }
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+
 
 </style>

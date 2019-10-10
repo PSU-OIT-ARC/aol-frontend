@@ -3,17 +3,17 @@
       <div class='data-sections'>
 
         <ul class='tabs'>
-          <tab :class='section.name'
-            v-for="section in sections" :key="section.name"
-            :section="section" :lake="lake"
-            :active="currentSectionName === section.name">
+          <tab v-for="section in sections" :key="section.name"
+               :section="section"
+               :lake="lake"
+               :active="isCurrentSection(section.name)">
           </tab>
         </ul>
 
         <keep-alive v-if='!tabs_only'>
-          <component :class="currentSectionName"
+          <component v-bind:is="currentSection"
                      :lake='lake'
-                     v-bind:is="currentSection"
+                     :class="currentSectionName"
                      class='data-section'>
           </component>
         </keep-alive>
@@ -54,7 +54,7 @@ export default {
         Documents
       ],
       sidebarSectionKeys: [
-        'body',
+        'summary',
         false,
         'has_plants',
         'has_mussels',
@@ -67,16 +67,13 @@ export default {
         'plants',
         'mussels',
         'photos',
-        config.is_mobile(window)
+        'documents',
       ],
       currentSection: null,
       currentSectionName: ''
     }
   },
   computed: {
-    mobile_mode () {
-      return config.is_mobile(window);
-    },
     sections () {
       let self = this;
       let sections = this.allSections.filter(function(el, idx) {
@@ -87,10 +84,11 @@ export default {
 
         if (key === true) {
           return true
-        } else if (key == 'has_docs') {
-          return config.is_mobile(window) && self.lake[key];
+        } else if (key == 'has_docs' || key == 'documents') {
+          return config.is_mobile(window) &&
+                 (self.lake[key] == true || self.lake[key].length);
         } else if (self.lake[key]) {
-          if (key != 'body' && Array.isArray(self.lake[key])) {
+          if (key != 'body' && key != 'summary' && Array.isArray(self.lake[key])) {
             return self.lake[key].length;
           }
           return true
@@ -108,13 +106,16 @@ export default {
     },
   },
   methods: {
-    setCurrentSection () {
+    isCurrentSection(name) {
+      return this.currentSectionName == name;
+    },
+    initSection () {
       let hash = this.$route.hash.replace(/#/g,'');
       let component = this.sections.find(i => i.name == hash);
 
       if (component != undefined && component != null) {
         this.currentSection = component;
-        this.currentSectionname = component.name;
+        this.currentSectionName = component.name;
       } else {
         this.currentSection = TextSection;
         this.currentSectionName = TextSection.name;
@@ -122,11 +123,11 @@ export default {
     }
   },
   created () {
-    this.setCurrentSection();
+    this.initSection();
   },
   watch: {
     '$route': function () {
-      this.setCurrentSection();
+      this.initSection();
     }
   },
 }

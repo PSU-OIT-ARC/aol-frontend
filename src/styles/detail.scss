@@ -1,0 +1,130 @@
+$detail_desktop_photo_height: 200px;
+$detail_mobile_photo_height: 150px;
+
+
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 100vw);
+  grid-template-rows: $detail_desktop_photo_height 1fr;
+
+  @include respond-to(handheld) {
+      grid-template-rows: $detail_mobile_photo_height 1fr;
+  }
+}
+
+.detail-photo-wrapper {
+  background-color: #838383;
+  overflow: hidden;
+  position: relative;
+}
+
+.detail-photo {
+  height: $detail_desktop_photo_height;
+  @include respond-to(handheld) {
+    height: $detail_mobile_photo_height;
+  }
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  filter: blur(9px) brightness(80%);
+  transform: scale(1.1);
+}
+
+.photo--generic {
+}
+
+.detail-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr minmax(#{$break-small}, #{$break-large}) 1fr;
+
+  @include respond-to(handheld) {
+    grid-template-columns: minmax(0, 100vw);
+  }
+
+  background: whitesmoke;
+  width: 100%;
+}
+
+.detail-content {
+  position: relative;
+  top: -$detail_desktop_photo_height;
+
+  @include respond-to(handheld) {
+    top: -$detail_mobile_photo_height;
+  }
+
+  width: 100%;
+}
+
+.detail-header {
+}
+
+.detail__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 50px;
+
+  a {
+    display: block;
+    padding: 0px;
+    color: white;
+
+    @include respond-to(handheld) {
+      padding: 0px 15px;
+    }
+    @include respond-to(medscreen) {
+      padding: 0px 15px;
+    }
+    @include respond-to(lgscreen) {
+      padding: 0px 15px;
+    }
+  }
+}
+
+.detail-body {
+  display: grid;
+  grid-template-columns: 2.1fr .9fr;
+  margin-top: 40px;
+
+  @include respond-to(handheld) {
+    margin-top: 20px;
+    grid-template-columns: minmax(0, 100vw);
+  }
+
+}
+
+.detail-main {
+  padding: 0px 0px 0px 0px;
+
+  @include respond-to(handheld) {
+    padding-right: 10px;
+    margin-left: 15px;
+  }
+  @include respond-to(medscreen) {
+    padding-right: 10px;
+    margin-left: 15px;
+  }
+  @include respond-to(lgscreen) {
+    padding-right: 10px;
+    margin-left: 15px;
+  }
+
+}
+
+.detail-sidebar {
+  padding: 0px 0px 0px 50px;
+
+  @include respond-to(handheld) {
+    padding-left: 10px;
+    margin-right: 15px;
+  }
+  @include respond-to(medscreen) {
+    padding-left: 10px;
+    margin-right: 15px;
+  }
+  @include respond-to(lgscreen) {
+    padding-left: 10px;
+    margin-right: 15px;
+  }
+}

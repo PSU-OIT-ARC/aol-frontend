@@ -15,10 +15,11 @@ const state = {
     },
 
     // TODO: can we extract these into AolMap?
+    map_focus: false,
+    map_extent: null,
     map_zoom: config.zoom,
     map_basemap: 'topo',
     map_filter: 'all_lakes',
-    map_focus: null,
 
     // lake state
     lakes: [],

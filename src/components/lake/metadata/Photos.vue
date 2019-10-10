@@ -45,49 +45,59 @@
 </script>
 
 <style scoped lang='scss'>
-
-ul {
-  display: flex;
-  flex-wrap: wrap;
-  margin: .5vmax;
-  &:after {
-    content:"";
-    flex-grow: 10;
-  }
-}
-
-li {
-  height: 12vh;
-  flex-grow: 1;
-  margin: .5vmax;
-}
-
-img {
-  max-height: 100%;
-  min-width: 100%;
-  object-fit: cover;
-  vertical-align: bottom;
-}
-
-
-// Smaller screens in portrait
-@include respond-to(handheld) {
-  @media (max-aspect-ratio: 1/1) {
-    ul {
-      flex-direction: row;
-    }
-
-    li {
-      height: auto;
-      width: 45%;
-    }
-    img {
-      width: 100%;
-      max-height: 50vh;
-      min-width: 0;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: .5vmax;
+    &:after {
+      content:"";
+      flex-grow: 10;
     }
   }
-}
 
+  li {
+    height: 12vh;
+    flex-grow: 1;
+    margin: .5vmax;
+  }
 
+  img {
+    max-height: 100%;
+    min-width: 100%;
+    object-fit: cover;
+    vertical-align: bottom;
+  }
+
+  // Smaller screens in portrait
+  @include respond-to(handheld) {
+    @media (max-aspect-ratio: 1/1) {
+      ul {
+        flex-direction: row;
+      }
+
+      li {
+        height: auto;
+        width: 45%;
+      }
+      img {
+        width: 100%;
+        max-height: 50vh;
+        min-width: 0;
+      }
+    }
+  }
+
+  /* lightbox */
+  #blueimp-gallery a.close::before {
+    visibility: visible;
+    content: 'X';
+  }
+
+  #blueimp-gallery a.close {
+    visibility: hidden;
+  }
+
+  #blueimp-gallery .slide > img {
+
+  }
 </style>

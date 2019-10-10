@@ -1,0 +1,65 @@
+
+
+.card-container {
+  background-color: whitesmoke;
+  height: calc(100vh - #{$navbar_height});
+}
+
+.card {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: auto minmax(175px, 400px) auto;
+  grid-template-rows: minmax(0, 100%);
+
+  top: 100px;
+  @include respond-to(handheld) {
+    top: 0px;
+  } 
+
+  .content {
+    display: grid;
+    grid-template-rows: 150px 300px;
+
+    background-color: white;
+    min-height: 300px;
+
+    border: 1px solid #d5d5d5;
+    @include respond-to(handheld) {
+        border: 0px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+
+    .copy {
+      padding: 20px;
+    }
+  }
+
+  h4 {
+    font-family: "Lato-Bold", sans-serif;
+    margin-top: 0px;
+    margin-bottom: 30px;
+  }
+  h3 {
+    font-size: 1.8em;
+    color: $primary_color;
+    margin-top: 20px;
+    margin-bottom: 10px;
+
+    @include respond-to(handheld) {
+    }
+
+    span {
+      font-weight: 400;
+      color: #888;
+    }
+  }
+  p {
+      border-top: 1px solid #e0e0e0;
+      padding-top: 10px;
+  }
+}

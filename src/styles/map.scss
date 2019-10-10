@@ -1,0 +1,30 @@
+$map_mobile_height: 200px;     // height of map on mobile
+$map_desktop_height: calc(
+  100vh
+  - #{$navbar_height}
+  - #{$fudge_factor}
+);                             // height of map on larger displays
+$minimap_height: 310px;
+$minimap_width: 310px;
+
+
+.map-buttons {
+  svg * {
+    fill: $primary_color;
+  }
+}
+
+a.map-button.selected {
+  background-color: #848484;
+  svg * {
+    fill: white;
+  }
+}
+
+a.map-button.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  svg * {
+    fill: grey;
+  }
+}

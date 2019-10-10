@@ -16,6 +16,14 @@ const getters = {
         return state.map_view;
     },
 
+    getMapFocus(state) {
+        return state.map_focus;
+    },
+
+    getMapExtent(state) {
+        return state.map_extent;
+    },
+
     getMapZoom(state) {
         return state.map_zoom;
     },
@@ -26,10 +34,6 @@ const getters = {
 
     getMapFilter (state) {
         return state.map_filter;
-    },
-
-    getMapFocus (state) {
-        return state.map_focus;
     },
 
     getIsLoading (state) {

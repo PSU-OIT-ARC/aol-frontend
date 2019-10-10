@@ -3,7 +3,8 @@
     <side-bar class='sidebar-wrapper'
       v-bind:class="[focus ? 'sidebar_active' : '']">
     </side-bar>
-    <map-container class='map-wrapper'></map-container>
+    <map-container v-bind:class="[focus ? 'sidebar_active' : '']"
+                   class='map-wrapper'></map-container>
   </div>
 </template>
 
@@ -26,13 +27,13 @@ export default {
   },
   methods: {
     ...mapActions(['setIntroDismissed',
-                   'focusMap', 'focusLake',
+                   'setMapFocus',
+                   'focusLake',
                    'resetSearchResults']),
     initializeMap (query) {
-      this.focusMap(query.f);
       this.focusLake(query.lake);
 
-      if (query.f || query.lake) {
+      if (query.lake) {
         this.setIntroDismissed(true);
       }
     }
@@ -49,7 +50,6 @@ export default {
   created () {
     this.initializeMap(this.$route.query);
   }
-
 }
 </script>
 
@@ -57,24 +57,20 @@ export default {
 
 .home {
   display: grid;
-  grid-template-columns: 0 1fr;
+  grid-template-columns: 0 auto;
   grid-template-areas: "sidebar map";
-
-  width: 100vw;
-  height: calc(100vh - 42px);
-
-  overflow: hidden;
   @include respond-to(handheld) {
     grid-template-areas: "map sidebar";
+    grid-template-rows: auto 0;
   }
-}
 
-.home.sidebar_active {
-  //grid-template-columns: $sidebar_width 1fr;
+  width: 100vw;
+  height: $map_desktop_height;
   @include respond-to(handheld) {
-    grid-template-rows: 200px 1fr; /* should use a variable/calc? */
-
+    height: auto;
   }
+
+  overflow: hidden;
 }
 
 </style>

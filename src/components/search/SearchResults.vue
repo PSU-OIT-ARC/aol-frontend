@@ -95,16 +95,17 @@ a:hover, a:focus {
 <style scoped lang="scss">
   #search-results-wrapper {
     position: relative;
-    z-index: 99999;
+    z-index: 3002;
     min-height: auto;
-    max-height: 500px;
+    max-height: 80vh;
     overflow-y: scroll;
     margin-top: 14px;
     padding: 0px 0px;
     color: #333;
     background-color: white;
+
     @include respond-to(handheld) {
-      max-height: 85vh;
+      max-height: 60vh;
     }
   }
 

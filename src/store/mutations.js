@@ -20,6 +20,14 @@ const mutations = {
         }
     },
 
+    setMapFocus (state, focus) {
+        state.map_focus = focus;
+    },
+
+    setMapExtent (state, extent) {
+        state.map_extent = extent;
+    },
+
     setMapZoom (state, zoom) {
         state.map_zoom = zoom;
     },
@@ -30,10 +38,6 @@ const mutations = {
 
     setMapFilter (state, filter) {
         state.map_filter = filter;
-    },
-
-    setMapFocus (state, focus) {
-        state.map_focus = focus;
     },
 
     setLoading (state, loading) {

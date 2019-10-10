@@ -32,9 +32,10 @@ export default {
         ...mapGetters({map: 'getMapObject',
                        views: 'getMapView',
                        basemap: 'getMapBasemap',
+                       focus: 'getMapFocus',
+                       extent: 'getMapExtent',
                        zoom: 'getMapZoom',
                        filter: 'getMapFilter',
-                       focus: 'getMapFocus',
                        lakes: 'getLakes',
                        reachcodes: 'getReachcodes',
                        currentFocus: 'getCurrentFocus',
@@ -44,7 +45,7 @@ export default {
         ...mapGetters(['getTimeElapsed',
                        'getLakeByReachcode']),
         ...mapActions(['markTimestamp', 'setError', 'getAuthToken',
-                       'setMapObject', 'setMapView', 'setMapZoom',
+                       'setMapObject', 'setMapView', 'setMapFocus', 'setMapExtent', 'setMapZoom',
                        'setLoading', 'setIntroDismissed', 'resetSearchResults']),
 
         onClick(event) {
@@ -89,7 +90,6 @@ export default {
                 }
               }
             }
-
           })
         },
         initBounds () {
@@ -101,15 +101,17 @@ export default {
             console.debug("Initializing map bounds");
 
             if (this.currentFocus == null && this.currentLake == null) {
-                if (this.focus == null ) {
+                if (this.focus == true) {
+                    console.debug("Keeping current map extent");
+                } else if (this.extent != null) {
+                    console.debug("Loading previous (stored) map extent");
+                    this.setLoading(true);
+                    this.view.goTo(this.extent, {animate: false}).then(() => {
+                        this.setLoading(false);
+                    });
+                } else {
                     this.resetSearchResults();
                     this.resetBounds();
-                } else if (Number.isInteger(parseInt(this.focus))) {
-                    let gl = this.getLakeByReachcode();
-                    let lake = gl(parseInt(this.focus));
-                    this.fitLake(lake);
-                } else if (this.focus == 'none') {
-                    console.debug("Keeping current map extent");
                 }
             } else if (this.mode == 'full') {
                 this.fitLake(this.currentFocus);
@@ -124,6 +126,8 @@ export default {
             //
             console.debug("Resetting map bounds");
             this.setLoading(true);
+            this.setMapFocus(false);
+            this.setMapExtent(null);
 
             let lake_boundaries_layer = this.map.findLayerById('lake_bbox_service_layer');
             lake_boundaries_layer.when(()=>{
@@ -182,10 +186,15 @@ export default {
                         this.markTimestamp(tsName);
 
                         let extent = prepareExtent(this.view, features[0].geometry.extent);
-                        this.view.goTo(extent).then(()=> {
+                        this.view.goTo({target: extent, animate: false}).then(()=> {
                             let gte = this.getTimeElapsed();
                             console.debug("Fitting for geom took " + gte(tsName) + "ms");
                             this.setLoading(false);
+
+                            if (this.mode == 'full') {
+                                this.setMapExtent(this.view.extent);
+                                this.setMapFocus(true);
+                            }
                         });
                     }
 
@@ -290,7 +299,7 @@ export default {
                     this.view.constraints = {
                         minZoom: config.minZoom,
                         maxZoom: config.maxZoom,
-                        snapToZoom: false,
+                        snapToZoom: true,
                         rotationEnabled: false
                     };
                     this.view.when().then(()=> {
@@ -398,9 +407,6 @@ export default {
         currentFocus: function() {
             this.initBounds();
         },
-        focus: function() {
-            this.initBounds();
-       }
     },
     mounted () {
         this.$nextTick(() => {
@@ -431,7 +437,12 @@ export default {
                           updateClusters(this.map, this.view).catch((e) => {
                               this.setError(app_config.ERROR_TYPES.MAP)
                               console.error(e)
-                        })
+                          });
+                      });
+
+                      // ???
+                      this.view.on('resize', () => {
+                          console.debug("View has been resized");
                       });
 
                       this.initBounds();
@@ -455,11 +466,42 @@ export default {
             });
         });
     }, // end mounted
+    destroyed () {
+        console.debug("Unsetting map focus state");
+        this.setMapFocus(false);
+
+        console.debug("Storing current map extent");
+        this.setMapExtent(this.view.extent);
+    }
 }
 </script>
 
 <style lang="scss" scoped>
-.map {
-  animation: fade-in 1000ms forwards;
-}
+  .map {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    @include respond-to(handheld) {
+      width: 100vw;
+    }
+
+    animation: fade-in 1000ms forwards;
+    overflow: hidden;
+    z-index: 1000;
+  }
+
+  .map.small {
+    height: calc(#{$minimap_height} + #{$fudge_factor});
+    width: calc(#{$minimap_width} + #{$fudge_factor});
+
+    pointer-events: none;
+    animation: fade-in 400ms forwards;
+  }
+
+  .sidebar_active .map {
+    @include respond-to(handheld) {
+      height: $map_mobile_height;
+    }
+  }
 </style>
