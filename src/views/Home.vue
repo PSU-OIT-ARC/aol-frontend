@@ -23,16 +23,18 @@ export default {
   },
   computed: {
     ...mapGetters({lakes: 'getLakes',
+                   minorLakes: 'getMinorLakes',
                    focus: 'getCurrentFocus'}),
   },
   methods: {
     ...mapActions(['setIntroDismissed',
                    'setMapFocus',
-                   'focusLake',
-                   'resetSearchResults']),
+                   'focusLake']),
     initializeMap (query) {
+      // 
       this.focusLake(query.lake);
 
+      //
       if (query.lake) {
         this.setIntroDismissed(true);
       }
@@ -43,10 +45,9 @@ export default {
       this.initializeMap(to.query);
     },
     lakes: function() {
-      // lakes will only be loaded once per session, so
-      // this watch callback will only be triggered on
-      // initial view load, highly likely before user input.
-      this.resetSearchResults();
+      this.initializeMap(this.$route.query);
+    },
+    minorLakes: function() {
       this.initializeMap(this.$route.query);
     }
   },

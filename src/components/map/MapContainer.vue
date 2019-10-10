@@ -148,6 +148,7 @@ export default {
       }
 
       this.$refs.map.resetBounds();
+      this.$refs.map.loadData();
       this.resetSearchResults();
 
       return false;

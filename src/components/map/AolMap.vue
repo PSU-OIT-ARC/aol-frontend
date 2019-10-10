@@ -37,6 +37,7 @@ export default {
                        zoom: 'getMapZoom',
                        filter: 'getMapFilter',
                        lakes: 'getLakes',
+                       minorLakes: 'getMinorLakes',
                        reachcodes: 'getReachcodes',
                        currentFocus: 'getCurrentFocus',
                        currentLake: 'getCurrentLake'}),
@@ -46,7 +47,8 @@ export default {
                        'getLakeByReachcode']),
         ...mapActions(['markTimestamp', 'setError', 'getAuthToken',
                        'setMapObject', 'setMapView', 'setMapFocus', 'setMapExtent', 'setMapZoom',
-                       'setLoading', 'setIntroDismissed', 'resetSearchResults']),
+                       'setLoading', 'setIntroDismissed',
+                       'resetSearchResults', 'fetchLakes']),
 
         onClick(event) {
           this.view.hitTest(event).then((response) => {
@@ -222,7 +224,9 @@ export default {
             if (this.map.features_loaded != undefined && this.map.features_loaded) {
               console.debug("Features already loaded.");
               resolve();
-
+            } else if (!this.reachcodes) {
+              console.warn("No lake data is yet available");
+              resolve();
             } else {
               this.markTimestamp('esri-feature-layers');
               createFeatureServiceLayers(this.map, this.view, this.reachcodes).then(() => {
@@ -391,60 +395,41 @@ export default {
                 }); // end loadModules
             }); // end Promise
         }, //end initMap
-    }, // end methods
-    watch: {
-        zoom: function(val) {
-            if (parseFloat(this.view.zoom) != val) {
-                this.setIntroDismissed(true);
-                this.view.zoom = val;
-            }
-        },
-        filter: function(val) {
-            this.setIntroDismissed(true);
-            this.filterFeatures(val);
-        },
-        currentFocus: function() {
-            this.initBounds();
-        },
-    },
-    mounted () {
-        this.$nextTick(() => {
-          this.setLoading(true);
+        init () {
+            // initialize map context
+            this.initMap().then(() => {
 
-          // initialize map context
-          this.initMap().then(() => {
+                // initialize map viewport
+                this.initView().then(() => {
 
-              // initialize map viewport
-              this.initView().then(() => {
-                  this.setLoading(false);
+                    // load feature layers
+                    this.loadFeatures().then(() => {
 
-                  // load feature layers
-                  this.loadFeatures().then(() => {
+                        // registers click event to select features from map
+                        this.view.on('click', (event) => this.onClick(event));
 
-                      // registers click event to select features from map
-                      this.view.on('click', (event) => this.onClick(event));
+                        // registers watcher for zoom level to update data store
+                        // and to recompute clusters.
+                        this.view.watch('zoom', (zoom) => {
+                            this.setMapZoom(parseFloat(zoom));
+                        });
 
-                      // registers watcher for zoom level to update data store
-                      // and to recompute clusters.
-                      this.view.watch('zoom', (zoom) => {
-                          this.setMapZoom(parseFloat(zoom));
-                      });
+                        // registers watcher for extent changes in order to update
+                        // the resultant lake point clustering layer
+                        this.view.watch('extent', () => {
+                            updateClusters(this.map, this.view).catch((e) => {
+                                this.setError(app_config.ERROR_TYPES.MAP)
+                                console.error(e)
+                            });
+                        });
 
-                      // registers watcher for extent changes in order to update
-                      // the resultant lake point clustering layer
-                      this.view.watch('extent', () => {
-                          updateClusters(this.map, this.view).catch((e) => {
-                              this.setError(app_config.ERROR_TYPES.MAP)
-                              console.error(e)
-                          });
-                      });
+                        // ???
+                        this.view.on('resize', () => {
+                            console.debug("View has been resized");
+                        });
 
-                      // ???
-                      this.view.on('resize', () => {
-                          console.debug("View has been resized");
-                      });
-
-                      this.initBounds();
+                        // 
+                        this.initBounds();
 
                     // error handling: loadFeatures
                     }).catch((err) => {
@@ -463,6 +448,56 @@ export default {
                 this.setError(app_config.ERROR_TYPES.APP);
                 console.error(err)
             });
+        },
+        loadData () {
+            // load major lake content
+            this.fetchLakes('major').then((success, firstFetch) => {
+
+                // if the fetch was successful and this was not the initial
+                // load of waterbody data reset search results and reload
+                // map features in order to synchronize any data changes.
+                if (success && !firstFetch) {
+                    //
+                    this.resetSearchResults();
+
+                    //
+                    if (this.map != null && this.view != null) {
+                        this.map.features_loaded = false;
+                        this.loadFeatures().then(() => {
+                            this.initBounds();
+                        });
+                    }
+                }
+            });
+
+            // load minor lake content
+            this.fetchLakes('minor').then(() => {});
+        }
+    }, // end methods
+    watch: {
+        zoom: function(val) {
+            if (parseFloat(this.view.zoom) != val) {
+                this.setIntroDismissed(true);
+                this.view.zoom = val;
+            }
+        },
+        filter: function(val) {
+            this.setIntroDismissed(true);
+            this.filterFeatures(val);
+        },
+        currentFocus: function() {
+            this.initBounds();
+        }
+    },
+    created () {
+        console.debug("Loading waterbody data");
+        this.loadData();
+    },
+    mounted () {
+        this.$nextTick(() => {
+            this.setLoading(true);
+            this.init();
+            this.setLoading(false);
         });
     }, // end mounted
     destroyed () {

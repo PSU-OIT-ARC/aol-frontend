@@ -4,7 +4,11 @@ const getters = {
 
     getTimeElapsed (state) {
         return (label) => {
-            return Date.now() - state.timestamp[label];
+            let ts = state.timestamp[label];
+            if (ts === undefined || ts == null) {
+                return null;
+            }
+            return Date.now() - ts
         }
     },
 
@@ -53,25 +57,32 @@ const getters = {
     },
 
     getLakes (state) {
-      return state.lakes.filter((lake) => {
-          return lake.is_major;
-      })
+        return state.lakes;
+    },
+
+    getMinorLakes (state) {
+        return state.minor_lakes;
     },
 
     getLakeByReachcode (state) {
         return (reachcode) => {
-            return state.lakes.find((lake) => {
-                return parseInt(lake.reachcode) === reachcode;
+            let majorLakes = state.lakes.find((l) => {
+                return parseInt(l.reachcode) === reachcode;
             });
+            if (majorLakes !== undefined && majorLakes != null) {
+                return majorLakes;
+            } else {
+                return state.minor_lakes.find((l) => {
+                    return parseInt(l.reachcode) === reachcode;
+                });
+            }
         }
     },
 
     getReachcodes (state) {
-        return state.lakes.filter((lake) => {
-            return lake.is_major;
-        }).map((lake) => {
+        return state.lakes.map((lake) => {
             return parseInt(lake.reachcode);
-        })
+        });
     },
 
     getCurrentFocus (state) {
