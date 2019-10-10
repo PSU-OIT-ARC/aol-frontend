@@ -22,7 +22,7 @@
 
         <div class="page-detail-body detail-body">
           <div class="page-detail-main detail-main"
-               v-html="page.content"></div>
+               v-html="cleanedHTML()"></div>
           <div class="page-detail-sidebar detail-sidebar">
             <contact-info />
           </div>
@@ -52,17 +52,17 @@ export default {
     AolFooter
   },
   computed: {
-    ...mapGetters(['getCurrentPage']),
-    page () {
-      return this.getCurrentPage;
-    },
+    ...mapGetters({page: 'getCurrentPage'}),
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
       return {'backgroundImage': 'url(' + photo + ')'}
     }
   },
   methods: {
-    ...mapActions(['fetchPage'])
+    ...mapActions(['fetchPage']),
+    cleanedHTML () {
+      return this.page.content.replace('<p>&nbsp;</p>', '');
+    },
   },
   created () {
     // fetch the flatpage object
