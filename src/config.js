@@ -20,7 +20,7 @@ const ERROR_TYPES = {
 }
 
 const config = {
-    backend_url: process.env.VUE_APP_API_URL,
+    backend_url: process.env.VUE_APP_BACKEND_URL,
     data_timeout: new Date(0, 0, 0, 0, 15, 0, 0).getMilliseconds(),
     max_search_results: 10,
     ERROR_TYPES: ERROR_TYPES,
