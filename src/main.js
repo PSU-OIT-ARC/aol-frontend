@@ -17,12 +17,12 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === 'production') {
   // Initializes sentry/browser
   Sentry.init({
     dsn: process.env.VUE_APP_SENTRY_DSN,
     integrations: [new Integrations.Vue({Vue, attachProps: true})]
   });
 
-  console.info("Installed Sentry integration.");
+  console.debug("Installed Sentry integration.");
 }
