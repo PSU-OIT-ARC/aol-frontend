@@ -10,6 +10,9 @@
     </div>
 
     <div class="nav-links">
+      <router-link :to="{name: 'flatpage', params: {slug: 'bathymetry'}}">
+        Bathymetry
+      </router-link>
       <router-link :to="{name: 'flatpage', params: {slug: 'aquatic-invasives'}}">
         Aquatic Invasives
       </router-link>
@@ -31,6 +34,10 @@
       </div>
 
       <div v-if="show_menu" class="mobile-links">
+        <router-link :to="{name: 'flatpage', params: {slug: 'bathymetry'}}">
+          <span v-on:click="show_menu = false">Bathymetry</span>
+        </router-link>
+
         <router-link :to="{name: 'flatpage', params: {slug: 'aquatic-invasives'}}">
           <span v-on:click="show_menu = false">Aquatic Invasives</span>
         </router-link>
