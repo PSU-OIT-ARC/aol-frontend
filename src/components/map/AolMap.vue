@@ -75,7 +75,7 @@ export default {
                 if (reachcode == null || reachcode == '') {
                   console.debug("Selection does not provide a reachcode")
                   return
-                } else if (this.$route.name == 'home' &&
+                } else if (this.$route.name == 'map' &&
                            this.$route.query.lake == parseInt(reachcode)) {
                   console.warn("Selection made is the current selection");
                   return
@@ -86,7 +86,7 @@ export default {
 
                 if (lake != undefined && lake != null) {
                   console.debug("Loading waterbody " + reachcode + " from index");
-                  this.$router.push({name: 'home', query: {lake: lake.reachcode}});
+                  this.$router.push({name: 'map', query: {lake: lake.reachcode}});
                 } else {
                   console.debug("Waterbody " + reachcode + " not present in index");
                 }

@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="[focus ? 'sidebar_active' : '', 'home']">
+  <div v-bind:class="[focus ? 'sidebar_active' : '', 'map-view']">
     <side-bar class='sidebar-wrapper'
       v-bind:class="[focus ? 'sidebar_active' : '']">
     </side-bar>
@@ -16,7 +16,7 @@ import MapContainer from '@/components/map/MapContainer';
 import SideBar from '@/components/SideBar';
 
 export default {
-  name: 'home',
+  name: 'map',
   components: {
     MapContainer,
     SideBar
@@ -59,7 +59,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.home {
+.map-view {
   display: grid;
   grid-template-columns: 0 auto;
   grid-template-areas: "sidebar map";
