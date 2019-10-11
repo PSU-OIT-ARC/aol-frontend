@@ -73,8 +73,6 @@ export default {
   @include respond-to(handheld) {
     height: auto;
   }
-
-  overflow: hidden;
 }
 
 </style>
