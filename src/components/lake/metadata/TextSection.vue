@@ -37,7 +37,11 @@
     },
     methods: {
       cleanedHTML () {
-        return this.lake.body.replace('<p>&nbsp;</p>', '');
+        if (this.lake.body !== undefined || this.lake.body != null) {
+          return this.lake.body.replace('<p>&nbsp;</p>', '');
+        } else {
+          return this.lake.body;
+        }
       },
       truncateText () {
         if (this.lake.summary === undefined ||

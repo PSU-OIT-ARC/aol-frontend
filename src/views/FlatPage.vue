@@ -61,7 +61,11 @@ export default {
   methods: {
     ...mapActions(['fetchPage']),
     cleanedHTML () {
-      return this.page.content.replace('<p>&nbsp;</p>', '');
+      if (this.page.content !== undefined || this.page.content != null) {
+        return this.page.content.replace('<p>&nbsp;</p>', '');
+      } else {
+        return this.page.content;
+      }
     },
   },
   created () {
