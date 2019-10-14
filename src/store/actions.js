@@ -1,7 +1,9 @@
 import config from '@/config';
 
 
-const API_URL = config.backend_url;
+const MEDIA_URL = config.backend_url + '/media';
+const API_URL = config.backend_url + '/api';
+
 const actions = {
 
     markTimestamp (context, label) {
@@ -95,7 +97,7 @@ const actions = {
     },
 
     fetchLakes (context, status) {
-        let url = `${API_URL}/lake/?format=json`+`&status=`+status;
+        let url = `${MEDIA_URL}/lakes-`+status+'.json';
         return new Promise((resolve, reject) => {
             let firstFetch = !(context.getters.getLakes != null &&
                                context.getters.getLakes.length);
