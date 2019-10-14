@@ -40,13 +40,13 @@ export default {
     height: $sidebar_desktop_height;
     @include respond-to(handheld) {
       width: $sidebar_mobile_width;
-      height: $sidebar_mobile_height;
     }
   }
 
   .sidebar-container.sidebar_active {
     @include respond-to(handheld) {
       top: calc(#{$navbar_height} + #{$map_mobile_height});
+      height: $sidebar_mobile_height;
     }
   }
 
