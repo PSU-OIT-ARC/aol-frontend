@@ -14,7 +14,7 @@ const state = {
         full: null
     },
 
-    // TODO: can we extract these into AolMap?
+    // map state
     map_focus: false,
     map_extent: null,
     map_zoom: config.zoom,
@@ -31,10 +31,12 @@ const state = {
     current_lake: null,
     current_focus: null,
 
-    // custom page state
-    current_page: false
+    // page state
+    current_page: false,
 
-    //user: {},
+    // offline assets
+    cached_lakes: {},
+    cached_pages: {}
 }
 
 export default state;

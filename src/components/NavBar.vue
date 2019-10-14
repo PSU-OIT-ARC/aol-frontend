@@ -54,6 +54,7 @@
 
 <script>
 export default {
+  name: 'nav-bar',
   data () {
     return {
       show_menu: false
@@ -120,7 +121,7 @@ export default {
     @include respond-to(handheld) {
       display: block;
       position: absolute;
-      z-index: 5000;
+      z-index: 5000;  // will be occluded by error-bar component
       right: 0px;
       top: 0px;
       width: 50%;
@@ -182,6 +183,17 @@ export default {
     }
   }
 }
+#nav.offline {
+  opacity: 0.85;
+
+  .site-title a {
+    color: #222;
+  }
+
+  .nav-links a {
+    color: #222;
+  }
+}
 
 a.router-link-active {
   border-bottom: 5px $primary_color solid;
@@ -211,4 +223,5 @@ a.router-link-active {
     color: #888;
   }
 }
+
 </style>

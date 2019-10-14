@@ -41,11 +41,11 @@ const getters = {
     },
 
     getIsLoading (state) {
-      return state.is_loading;
+        return state.is_loading;
     },
 
     getIsIntroDismissed (state) {
-      return state.intro_dismissed;
+        return state.intro_dismissed;
     },
 
     getSearchQuery (state) {
@@ -86,16 +86,41 @@ const getters = {
     },
 
     getCurrentFocus (state) {
-      return state.current_focus;
+        return state.current_focus;
     },
 
     getCurrentLake (state) {
-      return state.current_lake;
+        return state.current_lake;
+    },
+
+    getCachedLake (state) {
+        return (reachcode) => {
+            let lakes = state.cached_lakes;
+            if (lakes[reachcode] !== undefined &&
+                lakes[reachcode] != null) {
+                return lakes[reachcode];
+            } else {
+                return null;
+            }
+        }
     },
 
     getCurrentPage (state) {
         return state.current_page;
     },
+
+    getCachedPage (state) {
+        return (slug) => {
+            let pages = state.cached_pages;
+            if (pages[slug] !== undefined &&
+                pages[slug] != null) {
+                return pages[slug];
+            } else {
+                return null;
+            }
+        }
+    }
+
 }
 
 export default getters;

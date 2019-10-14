@@ -1,7 +1,7 @@
 <template>
-  <div class='map-container'>
-    <map-loader class="full" :mode='"full"'/>
-    <aol-map ref="map" :mode='"full"' :small='false'></aol-map>
+  <div class='map-container' v-bind:class="[!isOnline() ? 'offline': '']">
+    <map-loader v-show="isOnline()" class="full" :mode='"full"'/>
+    <aol-map v-show="isOnline()" ref="map" :mode='"full"' :small='false'></aol-map>
 
     <div v-show="active_state.legend" class="map-legend-wrapper">
       <a class="close-filters" @click="toggleVisibility('legend')">
@@ -65,8 +65,6 @@ import { mapActions, mapGetters } from 'vuex';
 import config from '@/components/map/config';
 
 import CloseButtonSVG from '@/components/CloseButtonSVG';
-import AolMap from '@/components/map/AolMap';
-import MapLoader from '@/components/map/MapLoader'
 import LayerSVG from '@/components/map/controls/LayerSVG';
 import LegendSVG from '@/components/map/controls/LegendSVG';
 import ZoomInSVG from '@/components/map/controls/ZoomInSVG';
@@ -74,6 +72,8 @@ import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
 import InitialExtent from '@/components/map/controls/InitialExtent';
 import LayerSwitcher from '@/components/map/controls/LayerSwitcher';
 import FilterControl from '@/components/map/controls/FilterControl';
+import MapLoader from '@/components/map/MapLoader'
+import AolMap from '@/components/map/AolMap';
 
 export default {
   name: 'map-container',
@@ -152,6 +152,9 @@ export default {
       this.resetSearchResults();
 
       return false;
+    },
+    isOnline () {
+      return navigator.onLine;
     }
   },
 }
@@ -167,6 +170,10 @@ export default {
     @include respond-to(handheld) {
       width: $sidebar_mobile_width;
     }
+  }
+
+  .map-container.offline {
+    background-image: url("~@/assets/generic_thumb_square.png");
   }
 
   .map-container.sidebar_active {

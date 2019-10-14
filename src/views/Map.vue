@@ -1,7 +1,7 @@
 <template>
   <div v-bind:class="[focus ? 'sidebar_active' : '', 'map-view']">
     <side-bar class='sidebar-wrapper'
-      v-bind:class="[focus ? 'sidebar_active' : '']">
+              v-bind:class="[focus ? 'sidebar_active' : '']">
     </side-bar>
     <map-container v-bind:class="[focus ? 'sidebar_active' : '']"
                    class='map-wrapper'></map-container>

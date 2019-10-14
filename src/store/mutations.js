@@ -69,8 +69,16 @@ const mutations = {
         state.current_lake = data;
     },
 
+    cacheLake (state, options) {
+        state.cached_lakes[options.key] = options.payload;
+    },
+
     setCurrentPage (state, page) {
         state.current_page = page;
+    },
+
+    cachePage (state, options) {
+        state.cached_pages[options.key] = options.payload;
     }
 
 }
