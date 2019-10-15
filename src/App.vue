@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import OfflineBar from '@/components/OfflineBar';
 import OfflineCard from '@/components/OfflineCard';
 import NavBar from '@/components/NavBar';
@@ -26,9 +28,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['fetchPage']),
     isOnline () {
       return navigator.onLine;
     }
+  },
+  created () {
+    // pre-fetch major flatpages
+    ['bathymetry',
+     'aquatic-invasives',
+     'about',
+     'photo-submissions'].forEach((slug) => {
+        this.fetchPage(slug);
+    });
   }
 }
 </script>
