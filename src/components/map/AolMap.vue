@@ -51,48 +51,48 @@ export default {
                        'resetSearchResults', 'fetchLakes']),
 
         onClick(event) {
-          this.view.hitTest(event).then((response) => {
+            this.view.hitTest(event).then((response) => {
 
-            let features = response.results.filter((result) => {
-                return result.graphic.layer.id == "lake_bbox_service_layer" ||
-                       (result.graphic.attributes != null &&
-                        result.graphic.attributes.cluster);
-            });
+                let features = response.results.filter((result) => {
+                    return result.graphic.layer.id == "lake_bbox_service_layer" ||
+                           (result.graphic.attributes != null &&
+                            result.graphic.attributes.cluster);
+                });
 
-            // if selected feature is a cluster, fit to the cluster
-            // else selected feature is waterbody feature, fit to it
-            for (let f of features) {
-              if (f.graphic.attributes != null && f.graphic.attributes.cluster) {
-                this.fitCluster(f.graphic.attributes.cluster_id);
-              } else { 
-                let reachcode = null;
-                if (Object.prototype.hasOwnProperty.call(f.graphic.attributes, 'ReachCode')) {
-                  reachcode = f.graphic.attributes.ReachCode
-                } else if (Object.prototype.hasOwnProperty.call(f.graphic.attributes, 'REACHCODE')) {
-                  reachcode = f.graphic.attributes.REACHCODE
+                // if selected feature is a cluster, fit to the cluster
+                // else selected feature is waterbody feature, fit to it
+                for (let f of features) {
+                    if (f.graphic.attributes != null && f.graphic.attributes.cluster) {
+                        this.fitCluster(f.graphic.attributes.cluster_id);
+                    } else {
+                        let reachcode = null;
+                        if (Object.prototype.hasOwnProperty.call(f.graphic.attributes, 'ReachCode')) {
+                            reachcode = f.graphic.attributes.ReachCode
+                        } else if (Object.prototype.hasOwnProperty.call(f.graphic.attributes, 'REACHCODE')) {
+                            reachcode = f.graphic.attributes.REACHCODE
+                        }
+
+                        if (reachcode == null || reachcode == '') {
+                          console.debug("Selection does not provide a reachcode")
+                          return
+                        } else if (this.$route.name == 'map' &&
+                                   this.$route.query.lake == parseInt(reachcode)) {
+                          console.warn("Selection made is the current selection");
+                          return
+                        }
+
+                        let gl = this.getLakeByReachcode();
+                        let lake = gl(parseInt(reachcode));
+
+                        if (lake != undefined && lake != null) {
+                          console.debug("Loading waterbody " + reachcode + " from index");
+                          this.$router.push({name: 'map', query: {lake: lake.reachcode}});
+                        } else {
+                          console.debug("Waterbody " + reachcode + " not present in index");
+                        }
+                    }
                 }
-
-                if (reachcode == null || reachcode == '') {
-                  console.debug("Selection does not provide a reachcode")
-                  return
-                } else if (this.$route.name == 'map' &&
-                           this.$route.query.lake == parseInt(reachcode)) {
-                  console.warn("Selection made is the current selection");
-                  return
-                }
-
-                let gl = this.getLakeByReachcode();
-                let lake = gl(parseInt(reachcode));
-
-                if (lake != undefined && lake != null) {
-                  console.debug("Loading waterbody " + reachcode + " from index");
-                  this.$router.push({name: 'map', query: {lake: lake.reachcode}});
-                } else {
-                  console.debug("Waterbody " + reachcode + " not present in index");
-                }
-              }
-            }
-          })
+            })
         },
         initBounds () {
             //
