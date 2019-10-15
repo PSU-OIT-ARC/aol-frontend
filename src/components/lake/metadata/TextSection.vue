@@ -72,11 +72,11 @@
           this.truncatedText = baseText;
         } else if (baseText) {
 
-          // attempt to fill about 2/3 of the compute space, leaving
-          // room for multiple rows of tabs.
-          let maxFillFactor = 0.666;
-          if (app_config.is_tiny(window)) {
-            maxFillFactor = 0.5;
+          // fill half the container on larger viewports
+          let maxFillFactor = 0.5;
+          // fill all available space on smaller viewports
+          if (app_config.is_mobile(window)) {
+            maxFillFactor = 1;
           }
 
           // proportional height of sidebar to fill
