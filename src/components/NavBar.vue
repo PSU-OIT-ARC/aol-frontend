@@ -3,7 +3,7 @@
 
     <div class="site-title">
       <h1>
-        <router-link :to="{name: 'home'}">
+        <router-link :to="{name: 'map'}">
           Atlas <span>of Oregon Lakes</span>
         </router-link>
       </h1>

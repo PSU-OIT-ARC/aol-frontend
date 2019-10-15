@@ -35,7 +35,7 @@ export default {
     },
     methods: {
         lake_href (lake) {
-            return {name: 'home', query: {'lake': lake.reachcode}};
+            return {name: 'map', query: {'lake': lake.reachcode}};
         },
         getMoreResults: _.debounce(
             function() {

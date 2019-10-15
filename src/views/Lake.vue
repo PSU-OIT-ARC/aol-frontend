@@ -79,10 +79,10 @@ export default {
   computed: {
     ...mapGetters({lake: 'getCurrentLake'}),
     sidebar_href () {
-      return {name: 'home', query: {lake: this.reachcode}};
+      return {name: 'map', query: {lake: this.reachcode}};
     },
     back_href () {
-      return {name: 'home'};
+      return {name: 'map'};
     },
     photo_style () {
       let photo = require('@/assets/generic_background.png');

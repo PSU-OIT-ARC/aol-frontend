@@ -144,7 +144,7 @@ export default {
     goToInitialExtent () {
       if (Object.keys(this.$route.query).includes('lake') ||
           Object.keys(this.$route.query).includes('f')) {
-            this.$router.push({name: 'home'});
+            this.$router.push({name: 'map'});
       }
 
       this.$refs.map.resetBounds();

@@ -72,7 +72,7 @@ export default {
       return this.searchResults != null && this.searchResults.length;
     },
     back_href () {
-      return {name: 'home'};
+      return {name: 'map'};
     },
     lake_href () {
       return {name: 'lake', params: {reachcode: this.lake.reachcode}, hash: "#text-section"};
