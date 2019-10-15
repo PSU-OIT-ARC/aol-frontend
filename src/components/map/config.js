@@ -78,6 +78,7 @@ const config = {
 
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,
     ArcGisOnlineTilesUrl: ArcGisOnlineTilesUrl,
+
     layers: [
         {
             id: "nlcd",
@@ -139,34 +140,13 @@ const config = {
             getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
         },
         {
-            id: 'publand',
-            type: "vector",
-            name: 'Ownership',
-            visible: false,
-            minScale: 0,
-            AGOLName: 'Vector_Publands',
-            getLayerUrl: getVectorTileLayerUrl,
-            input_type: 'radio',
-            input_group: 'lands',
-        },
-        {
-            id: 'nopubland',
-            type: "vector",
-            name: 'Naturalistic',
-            visible: false,
-            AGOLName: 'Vector_NoPub',
-            minScale: 0,
-            getLayerUrl: getVectorTileLayerUrl,
-            input_type: 'radio',
-            input_group: 'lands',
-        },
-        {
             id: 'bathymetry',
             type: "vector",
             name: 'Bathymetry',
             visible: true,
-            minScale: 577790.5542885,
-            AGOLName: 'Vector_Bath_Test_2',
+            minScale: 4622324.434309,
+            maxScale: 1128.497177,
+            AGOLName: 'AOL_Orig_Lakes_v2',
             getLayerUrl: getVectorTileLayerUrl,
             input_type: 'checkbox',
             input_group: 'bathymetry',

@@ -59,15 +59,17 @@ const createVectorTileLayers = (map) => {
 
                 config.layers.filter((l) => {
                     // only loading bathymetry right now
-                    return l.type == "vector" && l.id == 'bathymetry'
+                    return l.type == "vector"
                 }).forEach((layer) => {
 
                     let vector_tile_layer = new VectorTileLayer({
                         url: layer.getLayerUrl(),
                         id: layer.id,
                         visible: layer.visible,
-                        minScale: layer.minScale
+                        minScale: layer.minScale,
+                        maxScale: layer.maxScale
                     })
+
                     console.debug("Adding vector tile layer "+layer.name);
                     map.add(vector_tile_layer);
                 });
