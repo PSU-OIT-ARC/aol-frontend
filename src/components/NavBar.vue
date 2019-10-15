@@ -157,7 +157,7 @@ export default {
   .mobile-links {
     position: absolute;
     text-align: right;
-    top: 43px;
+    top: calc(#{$navbar_height} + 1px);  /* 43px;*/
     right: 0px;
     width: 100%;
     height: auto;
