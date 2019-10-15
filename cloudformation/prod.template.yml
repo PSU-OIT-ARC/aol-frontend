@@ -6,7 +6,7 @@ Resources:
     Properties:
       TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20190607/iam/application_role.template.yml
       Parameters:
-        Name: aol-frontend
+        Name: aol
         VpcStackName: vpc-prod
         EnableParameterEncryption: false
   Bucket:
