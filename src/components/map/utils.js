@@ -381,10 +381,8 @@ const prepareExtent = (view, baseExtent) => {
     if (sidebar != null && !app_config.is_mobile(window) ) {
         let dx = (extent.width / view.width) * sidebar.clientWidth;
 
-        if (map.clientWidth >= sidebar.clientWidth * 2) {
+        if (map.clientWidth >= sidebar.clientWidth) {
             extent.offset(-dx, 0, 0);
-        } else {
-            extent.offset(-dx/2, 0, 0);
         }
     }
 
