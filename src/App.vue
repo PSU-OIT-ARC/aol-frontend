@@ -4,32 +4,43 @@
 
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
+    <nav-bar v-bind:class="[!isOnline() ? 'offline' : '']"/>
+    <offline-bar v-show="!isOnline()"/>
     <error-bar v-if='error != null' :error="error"/>
-    <offline-card v-show="!online()"/>
-    <router-view v-show="online()"/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
-import NavBar from '@/components/NavBar';
+import OfflineBar from '@/components/OfflineBar';
 import OfflineCard from '@/components/OfflineCard';
+import NavBar from '@/components/NavBar';
 import ErrorBar from '@/components/ErrorBar';
 
 export default {
   name: 'app',
-  components: { NavBar, OfflineCard, ErrorBar },
+  components: { NavBar, OfflineBar, OfflineCard, ErrorBar },
   computed: {
     error () {
       return this.$store.state.error;
     }
   },
   methods: {
-    online () {
+    ...mapActions(['fetchPage']),
+    isOnline () {
       return navigator.onLine;
     }
+  },
+  created () {
+    // pre-fetch major flatpages
+    ['bathymetry',
+     'aquatic-invasives',
+     'about',
+     'photo-submissions'].forEach((slug) => {
+        this.fetchPage(slug);
+    });
   }
 }
 </script>

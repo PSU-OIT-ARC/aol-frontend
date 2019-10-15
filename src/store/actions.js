@@ -173,6 +173,7 @@ const actions = {
                     data => {
                         console.debug("Fetched lake " + reachcode);
                         context.commit("setCurrentLake", data);
+                        context.commit("cacheLake", {key: reachcode, payload: data});
                         resolve(data);
                     }
                 ).catch(
@@ -196,6 +197,7 @@ const actions = {
                 data => {
                     console.debug("Fetched page " + slug);
                     context.commit("setCurrentPage", data);
+                    context.commit("cachePage", {key: slug, payload: data});
                     resolve();
                 }
             ).catch(

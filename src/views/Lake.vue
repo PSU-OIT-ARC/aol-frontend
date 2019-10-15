@@ -1,10 +1,12 @@
 <template>
-  <div v-if='lake' class="lake-detail detail">
+  <offline-card v-if="!isOnline() && lake == null" />
+  <div v-else-if="lake != null"
+       class="lake-detail detail">
 
     <div class="lake-detail-photo-wrapper detail-photo-wrapper">
       <div class="lake-detail-photo detail-photo"
            v-bind:class="[!lake.photo ? 'photo--generic' : '']"
-           :style="photo_style">
+           v-bind:style="photo_style">
       </div>
     </div>
 
@@ -29,7 +31,7 @@
             <data-tabs :lake='lake'></data-tabs>
           </div>
 
-          <div class="lake-detail-sidebar detail-sidebar" v-if="!mobile_mode()">
+          <div class="lake-detail-sidebar detail-sidebar" v-if="!isMobileMode()">
             <watershed></watershed>
             <documents v-if="lake.documents.length" :lake="lake"></documents>
           </div>
@@ -54,12 +56,12 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 
+import OfflineCard from '@/components/OfflineCard';
 import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
 import {Watershed, Documents} from '@/components/lake/metadata';
 import AolFooter from '@/components/AolFooter';
-
 
 import config from '@/config';
 
@@ -68,7 +70,13 @@ export default {
   props: {
     reachcode: String,
   },
+  data () {
+    return {
+      lake: null
+    }
+  },
   components: {
+    OfflineCard,
     'close-button-svg': CloseButtonSVG,
     LakeCard,
     DataTabs,
@@ -77,7 +85,8 @@ export default {
     AolFooter
   },
   computed: {
-    ...mapGetters({lake: 'getCurrentLake'}),
+    ...mapGetters({currentLake: 'getCurrentLake',
+                   getCachedLake: 'getCachedLake'}),
     sidebar_href () {
       return {name: 'map', query: {lake: this.reachcode}};
     },
@@ -86,29 +95,41 @@ export default {
     },
     photo_style () {
       let photo = require('@/assets/generic_background.png');
-      if (this.lake.photo) {
+      if (this.lake != null && this.lake.photo) {
         photo = this.lake.photo;
       }
       return {'backgroundImage': 'url(' + photo + ')'}
-    }
+    },
   },
   methods: {
+    ...mapGetters(['getCachedLake']),
     ...mapActions(['fetchLake', 'resetSearchResults']),
-    ...mapActions(['fetchLake']),
-    mobile_mode () {
+    isMobileMode () {
       return config.is_mobile(window);
     },
+    isOnline () {
+      return navigator.onLine;
+    }
   },
   created () {
     // clear out any search SearchResults
     this.resetSearchResults();
 
     // fetch the non-indexed lake object
-    this.fetchLake(parseInt(this.reachcode))
+    if (this.isOnline()) {
+      this.fetchLake(parseInt(this.reachcode))
+    } else {
+      this.lake = this.getCachedLake(this.reachcode);
+    }
   },
   destroyed () {
     // unload the current lake object
     this.fetchLake(null);
+  },
+  watch: {
+    'currentLake': function () {
+      this.lake = this.currentLake;
+    }
   }
 }
 </script>

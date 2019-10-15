@@ -9,11 +9,15 @@
   position: relative;
 
   display: grid;
-  grid-template-columns: auto minmax(175px, 400px) auto;
+  grid-template-columns: 1fr minmax(175px, 400px) 1fr;
   grid-template-rows: minmax(0, 100%);
 
   top: 100px;
+
   @include respond-to(handheld) {
+    grid-template-columns: none;
+    grid-template-rows: none;
+
     top: 0px;
   } 
 
@@ -25,8 +29,10 @@
     min-height: 300px;
 
     border: 1px solid #d5d5d5;
+
     @include respond-to(handheld) {
-        border: 0px;
+      width: 100vw;
+      border: 0px;
     }
 
     img {

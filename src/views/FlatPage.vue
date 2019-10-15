@@ -1,5 +1,7 @@
 <template>
-  <div class="page-detail detail">
+  <offline-card v-if="!isOnline() && page == null"/>
+  <div v-else
+       class="page-detail detail">
 
     <div class="page-detail-photo-wrapper detail-photo-wrapper">
       <div class="page-detail-photo detail-photo" :style="photo_style"></div>
@@ -39,6 +41,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
+import OfflineCard from '@/components/OfflineCard';
 import ContactInfo from '@/components/ContactInfo';
 import AolFooter from '@/components/AolFooter';
 
@@ -47,12 +51,19 @@ export default {
   props: {
     slug: String,
   },
+  data () {
+    return {
+      page: null
+    }
+  },
   components: {
+    OfflineCard,
     ContactInfo,
     AolFooter
   },
   computed: {
-    ...mapGetters({page: 'getCurrentPage'}),
+    ...mapGetters({currentPage: 'getCurrentPage',
+                   getCachedPage: 'getCachedPage'}),
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
       return {'backgroundImage': 'url(' + photo + ')'}
@@ -67,14 +78,31 @@ export default {
         return this.page.content;
       }
     },
+    isOnline () {
+      return navigator.onLine;
+    },
   },
   created () {
-    // fetch the flatpage object
-    this.fetchPage(this.slug);
+    if (this.isOnline()) {
+      // fetch the flatpage object from network
+      this.fetchPage(this.slug);
+    } else {
+      // fetch the flatpage object from cache
+      this.page = this.getCachedPage(this.slug);
+    }
   },
   watch: {
     '$route': function () {
-      this.fetchPage(this.slug);
+      if (this.isOnline()) {
+        // fetch the flatpage object from network
+        this.fetchPage(this.slug);
+      } else {
+        // fetch the flatpage object from cache
+        this.page = this.getCachedPage(this.slug);
+      }
+    },
+    'currentPage': function () {
+      this.page = this.currentPage;
     }
   }
 }

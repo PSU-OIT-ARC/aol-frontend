@@ -1,9 +1,9 @@
 <template>
   <div class="map-image--wrapper">
-      <a name="watershed" id="watershed"></a>
-      <map-loader class="embedded" :mode='"embedded"'/>
-      <aol-map ref="map" :mode='"mini"' :small='true'></aol-map>
+    <a name="watershed" id="watershed"></a>
 
+    <map-loader v-show="isOnline()" class="embedded" :mode='"embedded"'/>
+    <aol-map v-show="isOnline()" ref="map" :mode='"mini"' :small='true'></aol-map>
     <p class="caption">
       <!-- <a href="#">Lake</a>|<a href="#">Watershed</a> -->
     </p>
@@ -11,13 +11,18 @@
 </template>
 
 <script>
-  import AolMap from '@/components/map/AolMap';
   import MapLoader from '@/components/map/MapLoader';
+  import AolMap from '@/components/map/AolMap';
 
   export default {
     name: 'watershed',
     title: 'Watershed',
-    components: { AolMap, MapLoader },
+    components: { MapLoader, AolMap },
+    methods: {
+      isOnline () {
+        return navigator.onLine;
+      }
+    }
   }
 </script>
 

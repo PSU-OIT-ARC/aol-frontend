@@ -1,6 +1,8 @@
 <template>
   <div class="lake-card">
-    <div v-bind:class="[!this.lake.photo ? 'photo--generic' : '', 'photo']" :style="photo_style"></div>
+    <div v-bind:class="[!lake.photo ? 'photo--generic' : '', 'photo']"
+         v-bind:style="photo_style">
+    </div>
     <div class="info">
       <h3>{{ lake.title }}</h3>
       <div class="data-icons" v-if="lake.is_major">
