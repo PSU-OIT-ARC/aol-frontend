@@ -89,8 +89,22 @@ const getters = {
         return state.current_focus;
     },
 
+    getCurrentFocusTitle (state) {
+        if (state.current_focus == null) {
+            return ''
+        }
+        return state.current_focus.title;
+    },
+
     getCurrentLake (state) {
         return state.current_lake;
+    },
+
+    getCurrentLakeTitle (state) {
+        if (state.current_lake == null) {
+            return ''
+        }
+        return state.current_lake.title;
     },
 
     getCachedLake (state) {
@@ -107,6 +121,13 @@ const getters = {
 
     getCurrentPage (state) {
         return state.current_page;
+    },
+
+    getCurrentPageTitle (state) {
+        if (state.current_page == null) {
+            return ''
+        }
+        return state.current_page.title;
     },
 
     getCachedPage (state) {

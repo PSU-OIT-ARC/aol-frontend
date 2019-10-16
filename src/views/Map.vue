@@ -24,7 +24,8 @@ export default {
   computed: {
     ...mapGetters({lakes: 'getLakes',
                    minorLakes: 'getMinorLakes',
-                   focus: 'getCurrentFocus'}),
+                   focus: 'getCurrentFocus',
+                   focusTitle: 'getCurrentFocusTitle'}),
   },
   methods: {
     ...mapActions(['setIntroDismissed',
@@ -53,6 +54,11 @@ export default {
   },
   created () {
     this.initializeMap(this.$route.query);
+  },
+  metaInfo () {
+    return {
+      title: this.focusTitle || 'Map'
+    }
   }
 }
 </script>
