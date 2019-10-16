@@ -1,6 +1,6 @@
 <template>
   <offline-card v-if="!isOnline() && page == null"/>
-  <div v-else
+  <div v-else-if="page != null"
        class="page-detail detail">
 
     <div class="page-detail-photo-wrapper detail-photo-wrapper">
