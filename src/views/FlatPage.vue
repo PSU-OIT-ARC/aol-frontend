@@ -63,6 +63,7 @@ export default {
   },
   computed: {
     ...mapGetters({currentPage: 'getCurrentPage',
+                   currentPageTitle: 'getCurrentPageTitle',
                    getCachedPage: 'getCachedPage'}),
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
@@ -103,6 +104,11 @@ export default {
     },
     'currentPage': function () {
       this.page = this.currentPage;
+    }
+  },
+  metaInfo () {
+    return {
+      title: this.currentPageTitle
     }
   }
 }

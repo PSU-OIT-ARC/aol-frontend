@@ -1,6 +1,6 @@
 {
-  "name": "aol_frontend",
-  "short_name": "aol_frontend",
+  "name": "Atlas of Oregon Lakes",
+  "short_name": "AOL",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

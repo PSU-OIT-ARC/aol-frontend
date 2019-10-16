@@ -86,6 +86,7 @@ export default {
   },
   computed: {
     ...mapGetters({currentLake: 'getCurrentLake',
+                   currentLakeTitle: 'getCurrentLakeTitle',
                    getCachedLake: 'getCachedLake'}),
     sidebar_href () {
       return {name: 'map', query: {lake: this.reachcode}};
@@ -129,6 +130,11 @@ export default {
   watch: {
     'currentLake': function () {
       this.lake = this.currentLake;
+    }
+  },
+  metaInfo () {
+    return {
+      title: this.currentLakeTitle
     }
   }
 }

@@ -17,4 +17,7 @@ module.exports = {
                 return options;
             });
     },
+    pwa: {
+        name: "Atlas of Oregon Lakes"
+    }
 };
