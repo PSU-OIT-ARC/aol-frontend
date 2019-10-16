@@ -33,7 +33,6 @@
     height: $minimap_height;
     width: $minimap_width;
 
-    margin-bottom: 30px;
     overflow: hidden;
 
     background-image: url("~@/assets/generic_thumb_square.png");

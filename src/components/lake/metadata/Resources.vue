@@ -1,25 +1,25 @@
 <template>
 
-  <div v-if="!mobile_mode" class="documents-wrapper">
-    <a name="documents" id="documents"></a>
-    <h3>Documents</h3>
+  <div v-if="!mobile_mode" class="resources-wrapper">
+    <a name="resources" id="resources"></a>
+    <h3>Resources</h3>
     <ul>
-      <li v-for="(doc, index) in lake.documents"
-          v-bind:item="doc"
+      <li v-for="(res, index) in lake.resources"
+          v-bind:item="res"
           v-bind:index="index"
-          v-bind:key="doc.file">
-        <a :href="doc.file" target="_">{{ doc.name }}</a>
+          v-bind:key="res.url">
+        <a :href="res.url" target="_">{{ res.name }}</a>
       </li>
     </ul>
   </div>
-  <div v-else class="documents-wrapper">
-    <h3>Documents</h3>
+  <div v-else class="resources-wrapper">
+    <h3>Resources</h3>
     <ul>
-      <li v-for="(doc, index) in lake.documents"
-          v-bind:item="doc"
+      <li v-for="(res, index) in lake.resources"
+          v-bind:item="res"
           v-bind:index="index"
-          v-bind:key="doc.file">
-        <a :href="doc.file" target="_">{{ doc.name }}</a>
+          v-bind:key="res.url">
+        <a :href="res.url" target="_">{{ res.name }}</a>
       </li>
     </ul>
   </div>
@@ -31,8 +31,8 @@ import config from '@/config';
 
 export default {
   props: ['lake'],
-  name: 'documents',
-  title: 'Documents',
+  name: 'resources',
+  title: 'Resources',
   computed: {
     mobile_mode () {
       return config.is_mobile(window);
@@ -43,14 +43,14 @@ export default {
 
 <style lang="scss" scoped>
 
-.documents-wrapper {
+.resources-wrapper {
   margin-top: 30px;
 
   @include respond-to(handheld) {
     margin-top: 0px;
   }
 
-  ul { 
+  ul {
     padding: 15px;
     background-color: white;
     box-shadow: 2px 2px 4px #aaa;
