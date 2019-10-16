@@ -202,7 +202,7 @@ const createClusterIndex = (map, layer, features) => {
 const filterClusters = (map, view, lakes) => {
     let reachcodes = lakes.map((lake) => {return lake.reachcode});
     let features = clusterLayer.featureStore.filter((feature) => {
-        return reachcodes.indexOf(feature.attributes.REACHCODE) > -1;
+        return reachcodes.indexOf(feature.attributes.ReachCode) > -1;
     });
 
     createClusterIndex(map, clusterLayer, features).then(() => {

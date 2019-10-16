@@ -109,7 +109,7 @@ const config = {
                 outline: null
               }
             },
-            AGOLName: 'OR_Lake_Points_test',
+            AGOLName: 'Oregon_NHD_Centroids',
             getLayerUrl: getServiceLayerUrl,
         },
         {
