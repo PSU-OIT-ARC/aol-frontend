@@ -3,6 +3,7 @@ import * as Integrations from '@sentry/integrations';
 
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
+import VueAnalytics from 'vue-analytics'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -24,8 +25,18 @@ if (process.env.NODE_ENV === "production") {
   // Initializes sentry/browser
   Sentry.init({
     dsn: process.env.VUE_APP_SENTRY_DSN,
-    integrations: [new Integrations.Vue({Vue, attachProps: true})]
+    integrations: [
+      new Integrations.Vue({Vue, attachProps: true})
+    ]
   });
 
-  console.info("Installed Sentry integration.");
+  console.debug("Installed Sentry integration.");
+
+  // Enables Google Analytics integration
+  Vue.use(VueAnalytics, {
+    id: 'UA-150299612-1',
+    router
+  })
+
+  console.debug("Installed GA integration.");
 }
