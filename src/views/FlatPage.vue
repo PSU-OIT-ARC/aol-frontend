@@ -81,7 +81,7 @@ export default {
     },
     isOnline () {
       return navigator.onLine;
-    },
+    }
   },
   created () {
     if (this.isOnline()) {
