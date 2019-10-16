@@ -34,6 +34,7 @@
           <div class="lake-detail-sidebar detail-sidebar" v-if="!isMobileMode()">
             <watershed></watershed>
             <documents v-if="lake.documents.length" :lake="lake"></documents>
+            <resources v-if="lake.resources.length" :lake="lake"></resources>
           </div>
         </div> <!-- end lake-detail-body -->
 
@@ -60,7 +61,7 @@ import OfflineCard from '@/components/OfflineCard';
 import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LakeCard from '@/components/lake/LakeCard';
 import DataTabs from '@/components/lake/DataTabs';
-import {Watershed, Documents} from '@/components/lake/metadata';
+import {Watershed, Documents, Resources} from '@/components/lake/metadata';
 import AolFooter from '@/components/AolFooter';
 
 import config from '@/config';
@@ -81,6 +82,7 @@ export default {
     LakeCard,
     DataTabs,
     Documents,
+    Resources,
     Watershed,
     AolFooter
   },

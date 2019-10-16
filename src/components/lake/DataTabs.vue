@@ -28,7 +28,8 @@ import {TextSection,
         PlantData,
         MusselData,
         Photos,
-        Documents} from '@/components/lake/metadata';
+        Documents,
+        Resources} from '@/components/lake/metadata';
 
 import config from '@/config';
 
@@ -36,11 +37,12 @@ export default {
   props: ['lake', 'tabs_only'],
   components: {
     TextSection,
+    Watershed,
     PlantData,
     MusselData,
-    Watershed,
-    Documents,
     Photos,
+    Documents,
+    Resources,
     Tab
   },
   data () {
@@ -51,7 +53,8 @@ export default {
         PlantData,
         MusselData,
         Photos,
-        Documents
+        Documents,
+        Resources
       ],
       sidebarSectionKeys: [
         'summary',
@@ -59,7 +62,8 @@ export default {
         'has_plants',
         'has_mussels',
         'has_photos',
-        'has_docs'
+        'has_docs',
+        'has_resources'
       ],
       detailSectionKeys: [
         'body',
@@ -68,6 +72,7 @@ export default {
         'mussels',
         'photos',
         'documents',
+        'resources'
       ],
       currentSection: null,
       currentSectionName: ''
@@ -84,7 +89,8 @@ export default {
 
         if (key === true) {
           return true
-        } else if (key == 'has_docs' || key == 'documents') {
+        } else if (key == 'has_docs' || key == 'documents' ||
+                   key == 'has_resources' || key == 'resources') {
           return config.is_mobile(window) &&
                  (self.lake[key] == true || self.lake[key].length);
         } else if (self.lake[key]) {

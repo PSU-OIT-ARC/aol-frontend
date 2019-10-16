@@ -110,7 +110,8 @@
 .tab-icon--photos {
     background-image: url(~@/assets/camera.svg);
 }
-.tab-icon--documents {
+.tab-icon--documents,
+.tab-icon--resources {
     background-image: url(~@/assets/file.svg);
 }
 .tab-icon--watershed {
@@ -161,7 +162,9 @@
     background-image: url(~@/assets/camera-white.svg);
 }
 .tab-icon--documents.not-active:focus-within,
-.tab-icon--documents.not-active:hover {
+.tab-icon--documents.not-active:hover,
+.tab-icon--resources.not-active:focus-within,
+.tab-icon--resources.not-active:hover {
     background-image: url(~@/assets/file-white.svg);
 }
 .tab-icon--watershed.not-active:focus-within,
