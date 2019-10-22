@@ -8,7 +8,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import './registerServiceWorker'
 
 // Enables management of meta tags
 Vue.use(VueMeta, {refreshOnceOnNavigation: true});
@@ -40,3 +39,6 @@ if (process.env.NODE_ENV === "production") {
 
   console.debug("Installed GA integration.");
 }
+
+// 
+import './registerServiceWorker'

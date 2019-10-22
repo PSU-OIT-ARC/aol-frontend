@@ -41,7 +41,7 @@ export default new Router({
         props: (route) => ({
             slug: route.params.slug,
         }),
-        component: () => import(/* webpackChunkName: "FlatPage" */ './views/FlatPage.vue')
+        component: () => import(/* webpackChunkName: "flatpage" */ './views/FlatPage.vue')
     },
     {
         path: '*',

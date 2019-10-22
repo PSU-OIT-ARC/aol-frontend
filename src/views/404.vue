@@ -2,7 +2,7 @@
   <div class='not-found-container card-container'>
     <div class='image-background'></div>
     <div class="not-found-card card">
-      <div class="gutter"v></div>
+      <div class="gutter"></div>
       <div class="content">
         <img src="~@/assets/offline_lake.png" />
         <div class="copy">
