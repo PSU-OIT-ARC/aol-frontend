@@ -1,6 +1,5 @@
 
 
-const LOADING = 'loading';
 const VIEWPORTS = {
     tiny: {
         width: 350

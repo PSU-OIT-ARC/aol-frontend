@@ -15,13 +15,12 @@
 import { mapActions } from 'vuex';
 
 import OfflineBar from '@/components/OfflineBar';
-import OfflineCard from '@/components/OfflineCard';
 import NavBar from '@/components/NavBar';
 import ErrorBar from '@/components/ErrorBar';
 
 export default {
   name: 'app',
-  components: { NavBar, OfflineBar, OfflineCard, ErrorBar },
+  components: { NavBar, OfflineBar, ErrorBar },
   computed: {
     error () {
       return this.$store.state.error;

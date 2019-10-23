@@ -66,7 +66,7 @@ import config from '@/components/map/config';
 
 import CloseButtonSVG from '@/components/CloseButtonSVG';
 import LayerSVG from '@/components/map/controls/LayerSVG';
-import LegendSVG from '@/components/map/controls/LegendSVG';
+// import LegendSVG from '@/components/map/controls/LegendSVG';
 import ZoomInSVG from '@/components/map/controls/ZoomInSVG';
 import ZoomOutSVG from '@/components/map/controls/ZoomOutSVG';
 import InitialExtent from '@/components/map/controls/InitialExtent';
@@ -91,7 +91,7 @@ export default {
   components: {
     'close-button-svg': CloseButtonSVG,
     'layer-svg': LayerSVG,
-    'legend-svg': LegendSVG,
+    // 'legend-svg': LegendSVG,
     'zoom-in-svg': ZoomInSVG,
     'zoom-out-svg': ZoomOutSVG,
     InitialExtent,

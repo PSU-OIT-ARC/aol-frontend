@@ -10,13 +10,12 @@
                @close="index = null">
       </gallery>
 
-      <li v-for="(image, imageIndex) in lake.photos.map(x => x.href)">
-         <img
-         v-bind:index="imageIndex"
-         v-bind:key="imageIndex"
-         @click="index = imageIndex"
-         loading="lazy"
-         :src="image" />
+      <li v-for="(image, imageIndex) in lake.photos.map(x => x.href)"
+          v-bind:index="imageIndex"
+          v-bind:key="imageIndex">
+         <img @click="index = imageIndex"
+              :src="image"
+              loading="lazy"/>
       </li>
     </ul>
   </div>
