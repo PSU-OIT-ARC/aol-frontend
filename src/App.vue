@@ -49,7 +49,8 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
-      { name: 'viewport', content: 'width=device-width,initial-scale=1.0' }
+      { name: 'viewport', content: 'width=device-width,initial-scale=1.0' },
+      { name: 'description', content: "The Atlas of Oregon Lakes is a resource for the public, resource management agencies, and scientists to enhance management and enjoyment of our lakes. The online atlas is an updated version of the popular Atlas of Oregon Lakes published in 1985." }
     ]
   }
 }
