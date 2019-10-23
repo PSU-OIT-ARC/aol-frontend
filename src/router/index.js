@@ -18,7 +18,7 @@ export default new Router({
     {
         path: '/map',
         name: 'map',
-        component: () => import(/* webpackChunkName: "map" */ './views/Map.vue')
+        component: () => import(/* webpackChunkName: "map" */ '@/views/Map.vue')
     },
     {
         path: '/lake/:reachcode',
@@ -26,7 +26,7 @@ export default new Router({
         props: (route) => ({
             reachcode: route.params.reachcode,
         }),
-        component: () => import(/* webpackChunkName: "lake" */ './views/Lake.vue')
+        component: () => import(/* webpackChunkName: "lake" */ '@/views/Lake.vue')
     },
     {
         path: '/login',
@@ -41,12 +41,12 @@ export default new Router({
         props: (route) => ({
             slug: route.params.slug,
         }),
-        component: () => import(/* webpackChunkName: "FlatPage" */ './views/FlatPage.vue')
+        component: () => import(/* webpackChunkName: "flatpage" */ '@/views/FlatPage.vue')
     },
     {
         path: '*',
         name: '404',
-        component: () => import(/* webpackChunkName: "404" */ './views/404.vue')
+        component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue')
     }
   ]
 })

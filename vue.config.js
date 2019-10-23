@@ -18,6 +18,13 @@ module.exports = {
             });
     },
     pwa: {
-        name: "Atlas of Oregon Lakes"
+        name: "Atlas of Oregon Lakes",
+        theme_color: "#4DBA87",
+        manifestOptions: {
+            short_name: "AOL",
+            start_url: "/",
+            display: "standalone"
+        },
+        iconPaths: {}
     }
 };
