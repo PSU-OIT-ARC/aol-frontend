@@ -25,6 +25,10 @@ module.exports = {
             start_url: "/",
             display: "standalone"
         },
-        iconPaths: {}
+        workboxOptions: {
+            cleanupOutdatedCaches: true,
+            dontCacheBustURLsMatching: /\.\w{8}\./,
+            offlineGoogleAnalytics: true
+        }
     }
 };
