@@ -14,7 +14,7 @@
           <div class="page-detail__nav detail__nav">
           </div>
           <div class="lake-card">
-            <div class="photo" :style="photo_style"></div> 
+            <div class="photo" :style="photo_style"></div>
             <div class="info">
               <h4>A Public Resource Since 1985</h4>
               <h2>{{ page.title }}</h2>
@@ -84,23 +84,11 @@ export default {
     }
   },
   created () {
-    if (this.isOnline()) {
-      // fetch the flatpage object from network
-      this.fetchPage(this.slug);
-    } else {
-      // fetch the flatpage object from cache
-      this.page = this.getCachedPage(this.slug);
-    }
+    this.fetchPage({slug:this.slug}).catch(() => {})
   },
   watch: {
     '$route': function () {
-      if (this.isOnline()) {
-        // fetch the flatpage object from network
-        this.fetchPage(this.slug);
-      } else {
-        // fetch the flatpage object from cache
-        this.page = this.getCachedPage(this.slug);
-      }
+      this.fetchPage({slug:this.slug});
     },
     'currentPage': function () {
       this.page = this.currentPage;

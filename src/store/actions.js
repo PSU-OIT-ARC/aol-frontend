@@ -187,25 +187,37 @@ const actions = {
         }
     },
 
-    fetchPage (context, slug) {
+    fetchPage (context, params) {
         return new Promise((resolve, reject) => {
+            let slug = params['slug'];
+            let store = params['store'] == undefined ? true : false;
+
             fetch(`${API_URL}/flatpage/${slug}/?format=json`).then(
                 response => {
-                    return response.json();
+                  if (response.status == 404) {
+                     throw Error('404');
+                  }
+                  return response.json();
                 }
             ).then(
                 data => {
                     console.debug("Fetched page " + slug);
-                    context.commit("setCurrentPage", data);
-                    context.commit("cachePage", {key: slug, payload: data});
+                    context.dispatch('setError', null)
+                    if (store) {
+                      context.commit("setCurrentPage", data);
+                    }
                     resolve();
                 }
             ).catch(
                 e => {
+                  if (e.message == '404') {
+                    context.dispatch('setError', config.ERROR_TYPES['404'])
+                  }
+                  else {
                     context.dispatch('setError', config.ERROR_TYPES.FETCH)
-                    console.error(e.message);
-                    reject();
-                }
+                  }
+                  reject(e.message);
+              }
             );
         });
     }

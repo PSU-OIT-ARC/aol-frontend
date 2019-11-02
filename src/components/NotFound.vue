@@ -10,7 +10,10 @@
           <h4>The page you're looking for could not be found.</h4>
           <p>
             Try going to the
-            <router-link :to="{ name: 'home'}">home page</router-link>
+            <router-link
+               @click.native="clearErrors"
+              :to="{ name: 'map'}">home page
+            </router-link>
             and searching &rarr;
           </p>
         </div>
@@ -19,3 +22,16 @@
     </div>
   </div>
 </template>
+
+<script>
+  import { mapActions } from 'vuex';
+
+  export default {
+    methods: {
+      ...mapActions(['setError']),
+      clearErrors () {
+        this.setError(null)
+      }
+    }
+  }
+</script>

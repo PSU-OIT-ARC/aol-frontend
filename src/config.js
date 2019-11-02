@@ -15,7 +15,8 @@ const VIEWPORTS = {
 const ERROR_TYPES = {
     APP: 'App level error. Non-recoverable',
     MAP: 'Some map element did not load or map interaction failed',
-    FETCH: 'Network connectivity or other backend issue'
+    FETCH: 'Network connectivity or other backend issue',
+    404: '404'
 }
 
 const config = {
@@ -35,7 +36,7 @@ const config = {
         return window.screen.width < VIEWPORTS.handset.width;
     },
     is_tablet: function(window) {
-        return (window.screen.width > VIEWPORTS.handset.width && 
+        return (window.screen.width > VIEWPORTS.handset.width &&
                 window.screen.width < VIEWPORTS.tablet.width);
     }
 }

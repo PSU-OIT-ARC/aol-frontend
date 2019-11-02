@@ -3,9 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const FlatPageRoutes = 'about|aquatic-invasives|bathymetry|photo-submissions';
-
-
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -36,17 +33,12 @@ export default new Router({
         }
     },
     {
-        path: `/:slug(${FlatPageRoutes})`,
+        path: `/:slug`,
         name: 'flatpage',
         props: (route) => ({
             slug: route.params.slug,
         }),
         component: () => import(/* webpackChunkName: "flatpage" */ '@/views/FlatPage.vue')
     },
-    {
-        path: '*',
-        name: '404',
-        component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue')
-    }
   ]
 })
