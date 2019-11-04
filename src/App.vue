@@ -5,31 +5,38 @@
 <template>
   <div id="app">
     <nav-bar v-bind:class="[!isOnline() ? 'offline' : '']"/>
-    <offline-bar v-show="!isOnline()"/>
-    <error-bar v-if='error != null' :error="error"/>
+    <offline-bar v-if="!isOnline()"/>
+    <not-found v-else-if="resourceNotFound()"/>
+    <error-bar v-else-if="hasError()" :error="error"/>
     <router-view />
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import OfflineBar from '@/components/OfflineBar';
 import NavBar from '@/components/NavBar';
 import ErrorBar from '@/components/ErrorBar';
+import NotFound from '@/components/NotFound';
 
 export default {
   name: 'app',
-  components: { NavBar, OfflineBar, ErrorBar },
+  components: { NavBar, OfflineBar, ErrorBar, NotFound },
   computed: {
-    error () {
-      return this.$store.state.error;
-    }
+    ...mapGetters({notFound: 'getNotFound',
+                   error: 'getError'}),
   },
   methods: {
     ...mapActions(['fetchPage']),
     isOnline () {
       return navigator.onLine;
+    },
+    resourceNotFound () {
+      return this.notFound;
+    },
+    hasError () {
+      return this.error != null;
     }
   },
   created () {
@@ -38,7 +45,7 @@ export default {
      'aquatic-invasives',
      'about',
      'photo-submissions'].forEach((slug) => {
-        this.fetchPage(slug);
+        this.fetchPage({slug:slug, store:false});
     });
   },
   metaInfo: {

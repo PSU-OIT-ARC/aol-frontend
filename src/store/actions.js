@@ -20,8 +20,12 @@ const actions = {
         context.commit("setLoading", is_loading);
     },
 
-    setError (context, error_type) {
-        context.commit("setError", error_type);
+    setNotFound (context, not_found) {
+        context.commit("setNotFound", not_found);
+    },
+
+    setError (context, error) {
+        context.commit("setError", error);
     },
 
     setIntroDismissed (context, dismissed) {
@@ -187,27 +191,50 @@ const actions = {
         }
     },
 
-    fetchPage (context, slug) {
-        return new Promise((resolve, reject) => {
-            fetch(`${API_URL}/flatpage/${slug}/?format=json`).then(
-                response => {
-                    return response.json();
-                }
-            ).then(
-                data => {
-                    console.debug("Fetched page " + slug);
-                    context.commit("setCurrentPage", data);
-                    context.commit("cachePage", {key: slug, payload: data});
-                    resolve();
-                }
-            ).catch(
-                e => {
-                    context.dispatch('setError', config.ERROR_TYPES.FETCH)
-                    console.error(e.message);
-                    reject();
-                }
-            );
-        });
+    fetchPage (context, params) {
+        let slug = params['slug'];
+        let storeData = true;
+        if (params['store'] !== undefined && params['store'] == false) {
+            storeData = false;
+        }
+
+        if (slug == null) {
+            console.debug("Depopulating current page");
+            context.commit("setCurrentPage", null);
+        } else {
+            let url = `${API_URL}/flatpage/${slug}/?format=json`;
+            return new Promise((resolve, reject) => {
+                fetch(url).then(
+                    response => {
+                        if (!response.ok) {
+                            throw new Error(response.status);
+                        } else {
+                            return response.json();
+                        }
+                    }
+                ).then(
+                    data => {
+                        console.debug("Fetched page " + slug);
+                        if (storeData) {
+                            context.commit("setCurrentPage", data);
+                        }
+                        resolve();
+                    }
+                ).catch(
+                    e => {
+                        if (e.message == '404') {
+                            context.dispatch('setNotFound', true);
+                            console.error("Resource '" + url + "' was not found.");
+                            reject("Resource '" + url + "' was not found.");
+                        } else {
+                            context.dispatch('setError', config.ERROR_TYPES.FETCH)
+                            console.error(e.message);
+                            reject(e.message);
+                        }
+                    }
+                );
+            });
+        }
     }
 }
 

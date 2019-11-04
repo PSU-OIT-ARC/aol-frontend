@@ -12,6 +12,14 @@ const getters = {
         }
     },
 
+    getNotFound (state) {
+        return state.not_found;
+    },
+
+    getError (state) {
+        return state.error;
+    },
+
     getMapObject(state) {
         return state.map_object;
     },

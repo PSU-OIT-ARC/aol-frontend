@@ -14,7 +14,7 @@
           <div class="page-detail__nav detail__nav">
           </div>
           <div class="lake-card">
-            <div class="photo" :style="photo_style"></div> 
+            <div class="photo" :style="photo_style"></div>
             <div class="info">
               <h4>A Public Resource Since 1985</h4>
               <h2>{{ page.title }}</h2>
@@ -83,12 +83,16 @@ export default {
     }
   },
   created () {
-    // fetch the flatpage object
-    this.fetchPage(this.slug);
+    // load the requested page object
+    this.fetchPage({slug: this.slug})
+  },
+  destroyed () {
+    // unload the current page object
+    this.fetchPage({slug: null});
   },
   watch: {
     '$route': function () {
-      this.fetchPage(this.slug);
+      this.fetchPage({slug: this.slug});
     },
     'currentPage': function () {
       this.page = this.currentPage;

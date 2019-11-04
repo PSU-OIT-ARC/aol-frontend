@@ -5,6 +5,7 @@ const state = {
     is_loading: false,
     intro_dismissed: false,
     timestamp: {},
+    not_found: false,
     error: null,
 
     // map objects

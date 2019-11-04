@@ -4,8 +4,12 @@ const mutations = {
         state.timestamp[options.label] = options.timestamp;
     },
 
-    setError (state, error_type) {
-        state.error = error_type;
+    setNotFound (state, not_found) {
+        state.not_found = not_found;
+    },
+
+    setError (state, error) {
+        state.error = error;
     },
 
     setMapObject (state, map_object) {

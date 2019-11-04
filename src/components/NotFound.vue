@@ -10,7 +10,9 @@
           <h4>The page you're looking for could not be found.</h4>
           <p>
             Try going to the
-            <router-link :to="{ name: 'home'}">home page</router-link>
+            <router-link :to="{ name: 'home'}">
+              home page
+            </router-link>
             and searching &rarr;
           </p>
         </div>
@@ -19,3 +21,19 @@
     </div>
   </div>
 </template>
+
+<script>
+  import { mapActions } from 'vuex';
+
+  export default {
+    name: 'not-found',
+    methods: {
+      ...mapActions(['setNotFound']),
+    },
+    watch: {
+      '$route': function () {
+          this.setNotFound(false);
+      }
+    }
+  }
+</script>
