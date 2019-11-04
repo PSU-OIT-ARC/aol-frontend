@@ -107,18 +107,6 @@ const getters = {
         return state.current_lake.title;
     },
 
-    getCachedLake (state) {
-        return (reachcode) => {
-            let lakes = state.cached_lakes;
-            if (lakes[reachcode] !== undefined &&
-                lakes[reachcode] != null) {
-                return lakes[reachcode];
-            } else {
-                return null;
-            }
-        }
-    },
-
     getCurrentPage (state) {
         return state.current_page;
     },
@@ -128,18 +116,6 @@ const getters = {
             return ''
         }
         return state.current_page.title;
-    },
-
-    getCachedPage (state) {
-        return (slug) => {
-            let pages = state.cached_pages;
-            if (pages[slug] !== undefined &&
-                pages[slug] != null) {
-                return pages[slug];
-            } else {
-                return null;
-            }
-        }
     }
 
 }
