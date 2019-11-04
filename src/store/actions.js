@@ -161,30 +161,46 @@ const actions = {
         }
     },
 
-    fetchLake (context, reachcode) {
+    fetchLake (context, params) {
+        let reachcode = params['reachcode'];
+        let storeData = true;
+        if (params['store'] !== undefined && params['store'] == false) {
+            storeData = false;
+        }
+
         if (reachcode == null) {
             console.debug("Depopulating current lake");
             context.commit("setCurrentLake", null);
         } else {
+            let url = `${API_URL}/lake/${reachcode}/?format=json`;
             return new Promise((resolve, reject) => {
-                fetch(
-                    `${API_URL}/lake/${reachcode}/?format=json`
-                ).then(
+                fetch(url).then(
                     response => {
-                        return response.json();
+                        if (!response.ok) {
+                            throw new Error(response.status);
+                        } else {
+                            return response.json();
+                        }
                     }
                 ).then(
                     data => {
                         console.debug("Fetched lake " + reachcode);
-                        context.commit("setCurrentLake", data);
-                        context.commit("cacheLake", {key: reachcode, payload: data});
+                        if (storeData) {
+                            context.commit("setCurrentLake", data);
+                        }
                         resolve(data);
                     }
                 ).catch(
                     e => {
-                        context.dispatch('setError', config.ERROR_TYPES.FETCH)
-                        console.error(e.message);
-                        reject();
+                        if (e.message == '404') {
+                            context.dispatch('setNotFound', true);
+                            console.error("Resource '" + url + "' was not found.");
+                            reject("Resource '" + url + "' was not found.");
+                        } else {
+                            context.dispatch('setError', config.ERROR_TYPES.FETCH)
+                            console.error(e.message);
+                            reject(e.message);
+                        }
                     }
                 );
             });

@@ -117,15 +117,15 @@ export default {
     this.resetSearchResults();
 
     // fetch the non-indexed lake object
-    this.fetchLake(parseInt(this.reachcode))
+    this.fetchLake({reachcode: parseInt(this.reachcode)})
   },
   destroyed () {
     // unload the current lake object
-    this.fetchLake(null);
+    this.fetchLake({reachcode: null});
   },
   watch: {
     '$route': function () {
-      this.fetchLake(parseInt(this.reachcode))
+      this.fetchLake({reachcode: parseInt(this.reachcode)})
     },
     'currentLake': function () {
       this.lake = this.currentLake;
