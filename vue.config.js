@@ -23,12 +23,13 @@ module.exports = {
         manifestOptions: {
             short_name: "AOL",
             start_url: "/",
+            scope: "/",
             display: "standalone"
         },
+        workboxPluginMode: 'InjectManifest',
         workboxOptions: {
-            cleanupOutdatedCaches: true,
+            swSrc: 'src/service-worker.js',
             dontCacheBustURLsMatching: /\.\w{8}\./,
-            offlineGoogleAnalytics: true
         }
     }
 };

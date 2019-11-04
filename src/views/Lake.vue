@@ -88,8 +88,7 @@ export default {
   },
   computed: {
     ...mapGetters({currentLake: 'getCurrentLake',
-                   currentLakeTitle: 'getCurrentLakeTitle',
-                   getCachedLake: 'getCachedLake'}),
+                   currentLakeTitle: 'getCurrentLakeTitle'}),
     sidebar_href () {
       return {name: 'map', query: {lake: this.reachcode}};
     },
@@ -105,7 +104,6 @@ export default {
     },
   },
   methods: {
-    ...mapGetters(['getCachedLake']),
     ...mapActions(['fetchLake', 'resetSearchResults']),
     isMobileMode () {
       return config.is_mobile(window);
@@ -119,17 +117,16 @@ export default {
     this.resetSearchResults();
 
     // fetch the non-indexed lake object
-    if (this.isOnline()) {
-      this.fetchLake(parseInt(this.reachcode))
-    } else {
-      this.lake = this.getCachedLake(this.reachcode);
-    }
+    this.fetchLake(parseInt(this.reachcode))
   },
   destroyed () {
     // unload the current lake object
     this.fetchLake(null);
   },
   watch: {
+    '$route': function () {
+      this.fetchLake(parseInt(this.reachcode))
+    },
     'currentLake': function () {
       this.lake = this.currentLake;
     }

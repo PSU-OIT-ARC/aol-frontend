@@ -63,8 +63,7 @@ export default {
   },
   computed: {
     ...mapGetters({currentPage: 'getCurrentPage',
-                   currentPageTitle: 'getCurrentPageTitle',
-                   getCachedPage: 'getCachedPage'}),
+                   currentPageTitle: 'getCurrentPageTitle'}),
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
       return {'backgroundImage': 'url(' + photo + ')'}
@@ -84,23 +83,12 @@ export default {
     }
   },
   created () {
-    if (this.isOnline()) {
-      // fetch the flatpage object from network
-      this.fetchPage(this.slug);
-    } else {
-      // fetch the flatpage object from cache
-      this.page = this.getCachedPage(this.slug);
-    }
+    // fetch the flatpage object
+    this.fetchPage(this.slug);
   },
   watch: {
     '$route': function () {
-      if (this.isOnline()) {
-        // fetch the flatpage object from network
-        this.fetchPage(this.slug);
-      } else {
-        // fetch the flatpage object from cache
-        this.page = this.getCachedPage(this.slug);
-      }
+      this.fetchPage(this.slug);
     },
     'currentPage': function () {
       this.page = this.currentPage;

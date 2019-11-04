@@ -33,10 +33,6 @@ const state = {
 
     // page state
     current_page: false,
-
-    // offline assets
-    cached_lakes: {},
-    cached_pages: {}
 }
 
 export default state;
