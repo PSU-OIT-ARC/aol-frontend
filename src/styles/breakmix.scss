@@ -1,7 +1,6 @@
 /* VIEWPORT BREAKPOINTS */
 $break-xsmall: 350px;
 $break-small: 600px;
-$break-small-height: 700px;
 $break-med: 900px;
 $break-large: 1200px;
 $break-xlarge: 1400px;
@@ -13,9 +12,6 @@ $break-xlarge: 1400px;
     }
   } @else if $media == handheld {
     @media only screen and (max-width: $break-small) {
-      @content;
-    }
-    @media only screen and (max-height: $break-small-height) {
       @content;
     }
   } @else if $media == medscreen {
