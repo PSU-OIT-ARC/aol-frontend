@@ -7,7 +7,16 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { setDefaultOptions } from 'esri-loader';
 import { loadModules } from 'esri-loader';
+
+// Configures esri-loader to use version 4.13 from the ArcGIS CDN.
+//
+// Strange behavior while panning in chrome with touch input was observed
+// using the most-recent release (4.14).
+//
+// NOTE: setDefaultOptions must be called before any calls to loadModules()
+setDefaultOptions({ version: '4.13' })
 
 import app_config from '@/config';
 import config from '@/components/map/config';
