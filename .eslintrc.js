@@ -8,7 +8,14 @@ module.exports = {
     'eslint:recommended'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    /*
+     * TODO: use custom console in codepaths to avoid having to
+     *       disable 'no-console' (for production builds).
+     *
+     *  https://eslint.org/docs/rules/no-console
+     */
+    // 'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   parserOptions: {
