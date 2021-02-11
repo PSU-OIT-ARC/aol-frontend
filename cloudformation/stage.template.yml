@@ -4,7 +4,7 @@ Resources:
   AppRole:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20190607/iam/application_role.template.yml
+      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/iam/application_role.template.yml
       Parameters:
         Name: aol
         VpcStackName: vpc-stage
@@ -12,11 +12,21 @@ Resources:
   Bucket:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20190607/s3/bucket.template.yml
+      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/s3/bucket.template.yml
       Parameters:
         BucketName: aol
         BucketRealm: stage.wdt.pdx.edu
         BucketRegion: us-west-2
-        CorsAllowedDomains: aol.stage.wdt.pdx.edu
-        IamPrinicipleArn: !GetAtt AppRole.Outputs.RoleArn
-        EnableStaticWebsite: true
+        IamPrinicipleArn: !GetAtt 'AppRole.Outputs.RoleArn'
+        EnableCloudFront: true
+  CloudFrontDistribution:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/cloudfront/distribution.template.yml
+      Parameters:
+        Certificate: arn:aws:acm:us-east-1:921749119607:certificate/f8ccd6bc-cda9-464b-989e-bd1371c986d8
+        HostedZone: stage.wdt.pdx.edu
+        DomainName: aol.stage.wdt.pdx.edu
+        S3Origin: !GetAtt 'Bucket.Outputs.S3Endpoint'
+        S3OriginAccessIdentity: !GetAtt 'Bucket.Outputs.CloudFrontOAI'
+Parameters: {}
