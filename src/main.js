@@ -1,8 +1,8 @@
 //
 import './registerServiceWorker'
 
-import * as Sentry from '@sentry/browser';
-import * as Integrations from '@sentry/integrations';
+import * as Sentry from '@sentry/vue';
+import { Integrations } from "@sentry/tracing";
 
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
@@ -27,9 +27,12 @@ if (process.env.NODE_ENV === "production") {
   // Initializes sentry/browser
   Sentry.init({
     dsn: process.env.VUE_APP_SENTRY_DSN,
-    integrations: [
-      new Integrations.Vue({Vue, attachProps: true})
-    ]
+    integrations: [new Integrations.BrowserTracing()],
+    attachStackTrace: true,
+    tracesSampleRate: 0.1,
+    tracingOptions: {
+      trackComponents: true,
+    },
   });
 
   console.debug("Installed Sentry integration.");
