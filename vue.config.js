@@ -8,15 +8,6 @@ module.exports = {
             }
         }
     },
-    chainWebpack: config => {
-        config.module
-            .rule('eslint')
-            .use('eslint-loader')
-            .tap(options => {
-                options.configFile = path.resolve(__dirname, ".eslintrc.js");
-                return options;
-            });
-    },
     pwa: {
         name: "Atlas of Oregon Lakes",
         theme_color: "#4DBA87",

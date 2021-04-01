@@ -1,5 +1,15 @@
-extends: emcee.backends.aws:commands.yml
-
-name: "Atlas of Oregon Lakes Frontend"
-distribution: psu.oit.wdt.aol-frontend
-package: aol
+extends: emcee:commands.yml
+project:
+  name: aol-frontend
+  full_name: Atlas of Oregon Lakes Frontend
+  namespace: aol-frontend
+  namespace_s: aol_frontend
+environment:
+  stage:
+    backend: emcee.backends.aws
+  prod:
+    backend: emcee.backends.aws
+    infrastructure:
+      s3:
+        bucket:
+          name: aol

@@ -6,7 +6,7 @@ Resources:
     Properties:
       TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/iam/application_role.template.yml
       Parameters:
-        Name: aol
+        Name: aol-frontend
         VpcStackName: vpc-stage
         EnableParameterEncryption: false
   Bucket:
@@ -14,19 +14,20 @@ Resources:
     Properties:
       TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/s3/bucket.template.yml
       Parameters:
-        BucketName: aol
+        IamPrinicipleArn: !GetAtt 'AppRole.Outputs.RoleArn'
+        KmsKey: !GetAtt 'AppRole.Outputs.KmsKeyArn'
+        EnableEncryption: true
+        EnableCloudFront: true
+        BucketName: aol-frontend
         BucketRealm: stage.wdt.pdx.edu
         BucketRegion: us-west-2
-        IamPrinicipleArn: !GetAtt 'AppRole.Outputs.RoleArn'
-        EnableCloudFront: true
-  CloudFrontDistribution:
+  Distribution:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/cloudfront/distribution.template.yml
       Parameters:
         Certificate: arn:aws:acm:us-east-1:921749119607:certificate/f8ccd6bc-cda9-464b-989e-bd1371c986d8
         HostedZone: stage.wdt.pdx.edu
-        DomainName: aol.stage.wdt.pdx.edu
+        DomainName: aol-frontend.stage.wdt.pdx.edu
         S3Origin: !GetAtt 'Bucket.Outputs.S3Endpoint'
         S3OriginAccessIdentity: !GetAtt 'Bucket.Outputs.CloudFrontOAI'
-Parameters: {}
