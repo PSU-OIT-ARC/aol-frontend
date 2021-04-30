@@ -1,7 +1,7 @@
 from emcee.runner.config import YAMLCommandConfiguration
 from emcee.runner import configs
 
-from emcee.commands.deploy import deploy
+from emcee.commands.deploy import deploy, list_builds
 from emcee.deploy import deployer
 from emcee.deploy.javascript import LocalProcessor, Deployer
 from emcee.backends.aws.deploy import S3RemoteProcessor

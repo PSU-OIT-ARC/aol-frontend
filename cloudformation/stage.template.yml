@@ -15,12 +15,12 @@ Resources:
       TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20210115/s3/bucket.template.yml
       Parameters:
         IamPrinicipleArn: !GetAtt 'AppRole.Outputs.RoleArn'
-        KmsKey: !GetAtt 'AppRole.Outputs.KmsKeyArn'
-        EnableEncryption: true
+        EnableEncryption: false
         EnableCloudFront: true
         BucketName: aol-frontend
         BucketRealm: stage.wdt.pdx.edu
         BucketRegion: us-west-2
+        AccessIdentityPath: active/*
   Distribution:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -30,4 +30,6 @@ Resources:
         HostedZone: stage.wdt.pdx.edu
         DomainName: aol-frontend.stage.wdt.pdx.edu
         S3Origin: !GetAtt 'Bucket.Outputs.S3Endpoint'
+        S3OriginPath: /active
         S3OriginAccessIdentity: !GetAtt 'Bucket.Outputs.CloudFrontOAI'
+Parameters: {}

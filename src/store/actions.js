@@ -1,7 +1,6 @@
 import config from '@/config';
 
 
-const MEDIA_URL = config.backend_url + '/media';
 const API_URL = config.backend_url + '/api';
 
 const actions = {
@@ -101,7 +100,7 @@ const actions = {
     },
 
     fetchLakes (context, status) {
-        let url = `${MEDIA_URL}/lakes-`+status+'.json';
+        let url = `${API_URL}/lake/?status=`+status;
         return new Promise((resolve, reject) => {
             let firstFetch = !(context.getters.getLakes != null &&
                                context.getters.getLakes.length);
