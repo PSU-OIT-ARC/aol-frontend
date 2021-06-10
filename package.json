@@ -1,40 +1,63 @@
 {
   "name": "aol_frontend",
-  "version": "1.0.6",
   "private": true,
+  "version": "1.0.6",
+  "description": "The Atlas of Oregon Lakes",
+  "homepage": "https://oregonlakesatlas.org",
+  "repository": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
+  "bugs": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
+  "author": "PSU Web Development Team <webteam@pdx.edu>",
+  "contributors": [
+    {
+      "name": "Jack Bouba",
+      "email": "bouba@pdx.edu"
+    },
+    {
+      "name": "Brandon Conway",
+      "email": "conwayb@pdx.edu"
+    },
+    {
+      "name": "Brennen Florey",
+      "email": "bflorey@pdx.edu"
+    },
+    {
+      "name": "Thom Linton",
+      "email": "tlinton@pdx.edu"
+    }
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@sentry/tracing": "^6.2.4",
-    "@sentry/vue": "^6.2.4",
-    "core-js": "^3.10.0",
-    "esri-loader": "^3.0.0",
-    "register-service-worker": "^1.7.2",
-    "supercluster": "^7.1.3",
-    "vue": "^2.6.12",
-    "vue-analytics": "^5.22.1",
-    "vue-gallery": "^2.0.1",
-    "vue-meta": "^2.4.0",
-    "vue-router": "^3.5.1",
-    "vuex": "^3.6.2",
+    "@sentry/tracing": "~6.6.0",
+    "@sentry/vue": "~6.6.0",
+    "core-js": "~3.14.0",
+    "esri-loader": "~3.1.0",
+    "register-service-worker": "~1.7.0",
+    "supercluster": "~7.1.0",
+    "vue": "~2.6.0",
+    "vue-analytics": "~5.22.0",
+    "vue-gallery": "~2.0.0",
+    "vue-meta": "~2.4.0",
+    "vue-router": "~3.5.0",
+    "vuex": "~3.6.0",
     "webpack": "^4.36.0 || ^5.0.0"
   },
   "devDependencies": {
-    "@vue/cli": "^4.5.12",
-    "@vue/cli-plugin-babel": "~4.5.12",
+    "@vue/cli": "~4.5.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "^4.5.12",
-    "@vue/cli-plugin-router": "^4.5.12",
-    "@vue/cli-plugin-vuex": "^4.5.12",
-    "@vue/cli-service": "^4.5.12",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^5.0.0",
-    "sass-loader": "10.1.1",
-    "vue-template-compiler": "^2.6.12"
+    "@vue/cli-plugin-pwa": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "~10.1.0",
+    "eslint": "~6.7.0",
+    "eslint-plugin-vue": "~6.2.0",
+    "node-sass": "~5.0.0",
+    "sass-loader": "~10.1.0",
+    "vue-template-compiler": "~2.6.0"
   }
 }
