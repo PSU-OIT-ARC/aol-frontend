@@ -4,7 +4,7 @@
   "version": "1.0.7",
   "description": "The Atlas of Oregon Lakes",
   "homepage": "https://oregonlakesatlas.org",
-  "repository": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
+  "repository": "https://github.com/PSU-OIT-ARC/aol-frontend",
   "bugs": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
   "author": "PSU Web Development Team <webteam@pdx.edu>",
   "contributors": [
