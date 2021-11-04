@@ -1,10 +1,10 @@
 {
   "name": "aol_frontend",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "The Atlas of Oregon Lakes",
   "homepage": "https://oregonlakesatlas.org",
-  "repository": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
+  "repository": "https://github.com/PSU-OIT-ARC/aol-frontend",
   "bugs": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
   "author": "PSU Web Development Team <webteam@pdx.edu>",
   "contributors": [
@@ -31,15 +31,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@sentry/tracing": "~6.6.0",
-    "@sentry/vue": "~6.6.0",
-    "core-js": "~3.14.0",
-    "esri-loader": "~3.1.0",
+    "@sentry/tracing": "~6.14.0",
+    "@sentry/vue": "~6.14.0",
+    "core-js": "~3.19.0",
+    "esri-loader": "~3.3.0",
     "register-service-worker": "~1.7.0",
     "supercluster": "~7.1.0",
     "vue": "~2.6.0",
-    "vue-analytics": "~5.22.0",
     "vue-gallery": "~2.0.0",
+    "vue-gtag": "~1.16.0",
     "vue-meta": "~2.4.0",
     "vue-router": "~3.5.0",
     "vuex": "~3.6.0",
@@ -54,10 +54,10 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "~10.1.0",
-    "eslint": "~6.7.0",
+    "eslint": "~6.8.0",
     "eslint-plugin-vue": "~6.2.0",
-    "node-sass": "~5.0.0",
-    "sass-loader": "~10.1.0",
+    "node-sass": "~6.0.0",
+    "sass-loader": "~10.2.0",
     "vue-template-compiler": "~2.6.0"
   }
 }

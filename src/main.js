@@ -6,7 +6,7 @@ import { Integrations } from "@sentry/tracing";
 
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
-import VueAnalytics from 'vue-analytics'
+import VueGtag from 'vue-gtag'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === "production") {
   console.debug("Installed Sentry integration.");
 
   // Enables Google Analytics integration
-  Vue.use(VueAnalytics, {
+  Vue.use(VueGtag, {
     id: 'UA-150299612-1',
     router
   })
