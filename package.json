@@ -1,7 +1,7 @@
 {
   "name": "aol_frontend",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "The Atlas of Oregon Lakes",
   "homepage": "https://oregonlakesatlas.org",
   "repository": "https://github.com/PSU-OIT-ARC/aol-frontend",
