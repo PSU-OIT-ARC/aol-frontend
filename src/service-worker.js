@@ -1,3 +1,12 @@
+import {setCacheNameDetails} from 'workbox-core';
+import {precacheAndRoute,cleanupOutdatedCaches,getCacheKeyForURL} from 'workbox-precaching';
+import {registerRoute,registerNavigationRoute} from 'workbox-routing';
+import {initialize as initializeGoogleAnalytics} from 'workbox-google-analytics';
+import {CacheFirst} from 'workbox-strategies';
+import {Plugin as CacheableResponsePlugin} from 'workbox-cacheable-response';
+import {Plugin as ExpirationPlugin} from 'workbox-expiration';
+
+
 /**
  * Welcome to your Workbox-powered service worker!
  *
@@ -7,7 +16,7 @@
  *
  */
 
-workbox.core.setCacheNameDetails({prefix: "aol_frontend"});
+setCacheNameDetails({prefix: "aol_frontend"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
@@ -20,26 +29,25 @@ self.addEventListener('message', (event) => {
  * requests for URLs in the manifest.
  * See https://goo.gl/S9QRab
  */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-workbox.precaching.cleanupOutdatedCaches();
+precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches();
 
 
 /**
  * Utilize offline analytics capabilities
  *
  */
-workbox.googleAnalytics.initialize({});
+initializeGoogleAnalytics({});
 
 
 /**
  * Handle navigation routes for SPA
  *
  */
-workbox.routing.registerNavigationRoute(
+registerNavigationRoute(
   // Assuming '/index.html' has been precached,
   // look up its corresponding cache key.
-  workbox.precaching.getCacheKeyForURL('/index.html')
+  getCacheKeyForURL('/index.html')
 );
 
 
@@ -50,8 +58,9 @@ workbox.routing.registerNavigationRoute(
  * quota, all media assets are excluded.
  *
  */
-workbox.routing.registerRoute(
-  ({url, event}) => {
+registerRoute(
+  /* ({url, event}) => { */
+  ({url}) => {
       // futher hacking must be done in order that process
       // environment variables are available within the service
       // worker scope. as a result, the production backend is
@@ -59,13 +68,13 @@ workbox.routing.registerRoute(
       let isData = url.pathname.endsWith('json') || url.search.endsWith('json');
       return url.host === 'aol-backend.wdt.pdx.edu' && isData;
   },
-  new workbox.strategies.CacheFirst({
+  new CacheFirst({
     cacheName: 'backend-api-requests',
     plugins: [
-      new workbox.cacheableResponse.Plugin({
+      new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
-      new workbox.expiration.Plugin({
+      new ExpirationPlugin({
         maxAgeSeconds: 60 * 60,
       }),
     ],
