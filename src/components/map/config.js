@@ -17,35 +17,42 @@ const getServiceLayerUrl = function () {
         `FeatureServer`;
 };
 
-const OregonMarineBoardFeatureLayerUrl = `https://services.arcgis.com/\
-uUvqNMGPm7axC2dD/arcgis/rest/services/Boating_Access_Sites/FeatureServer`;
+const OregonMarineBoardFeatureLayerUrl = `https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/Boating_Access_Public_Map/FeatureServer`;
 
 const MarineBoardTemplate = {
-    title: "{FACILNM} at {WATERBODYNM}",
+    title: "{FACILNAME} at {WATERBODYNM}",
     content: [
       {
         type: "fields",
 
         fieldInfos: [
           {
-            fieldName: "FACILNM",
-            label: "Facility Name"
-          },
-          {
             fieldName: "WATERBODYNM",
             label: "Waterbody name",
+          },
+          {
+            fieldName: "FACILNAME",
+            label: "Facility Name"
           },
           {
             fieldName: "FACILMGR",
             label: "Facility Manager",
           },
           {
+            fieldName: "STATUS",
+            label: "Facility status",
+          },
+          {
             fieldName: "TELEPHONE",
             label: "Telephone number",
           },
           {
-            fieldName: "USEFEE",
-            label: "Use fee",
+            fieldName: "OPERATORURL",
+            label: "Operator website",
+          },
+          {
+            fieldName: "PUBLICNOTE",
+            label: "Notes",
           },
 
         ]
@@ -53,10 +60,10 @@ const MarineBoardTemplate = {
       {
         type: "media",
         mediaInfos: [{
-            title: "Services",
+            title: "Photos",
             type: "image",
             value: {
-              sourceURL: "{SERVICESURL}"
+              sourceURL: "{PHOTOURL}"
             }
         }]
       }
@@ -99,16 +106,6 @@ const config = {
             name: "Lake Points",
             outFields: ["*"],
             visible: false,
-            renderer: {
-              type: "simple",
-              symbol: {
-                //style: "circle",
-                type: 'simple-marker',
-                color: "yellow",
-                size: "6px",
-                outline: null
-              }
-            },
             AGOLName: 'Oregon_NHD_Centroids',
             getLayerUrl: getServiceLayerUrl,
         },
@@ -137,6 +134,15 @@ const config = {
             visible: true,
             minScale: 288447,
             popupTemplate: MarineBoardTemplate,
+            renderer: {
+              type: "simple",
+              symbol: {
+                style: "triangle",
+                type: "simple-marker",
+                color: "turquoise",
+                size: "14px"
+              }
+            },
             getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
         },
         {
