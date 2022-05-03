@@ -1,12 +1,17 @@
 {
   "name": "aol_frontend",
+  "version": "1.0.9",
   "private": true,
-  "version": "1.0.8",
   "description": "The Atlas of Oregon Lakes",
   "homepage": "https://oregonlakesatlas.org",
   "repository": "https://github.com/PSU-OIT-ARC/aol-frontend",
   "bugs": "https://github.com/PSU-OIT-ARC/aol-frontend/issues",
   "author": "PSU Web Development Team <webteam@pdx.edu>",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
   "contributors": [
     {
       "name": "Jack Bouba",
@@ -25,11 +30,6 @@
       "email": "tlinton@pdx.edu"
     }
   ],
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
   "dependencies": {
     "@sentry/tracing": "~6.19.0",
     "@sentry/vue": "~6.19.0",
