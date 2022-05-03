@@ -38,7 +38,7 @@
     "register-service-worker": "~1.7.0",
     "sass": "~1.51.0",
     "supercluster": "~7.1.0",
-    "vue": "~2.6.0",
+    "vue": "~3.2.33",
     "vue-gallery": "~2.0.0",
     "vue-gtag": "~1.16.0",
     "vue-meta": "~2.4.0",
