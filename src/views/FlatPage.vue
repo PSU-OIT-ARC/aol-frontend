@@ -86,7 +86,7 @@ export default {
     // load the requested page object
     this.fetchPage({slug: this.slug})
   },
-  destroyed () {
+  unmounted () {
     // unload the current page object
     this.fetchPage({slug: null});
   },

@@ -119,7 +119,7 @@ export default {
     // fetch the non-indexed lake object
     this.fetchLake({reachcode: parseInt(this.reachcode)})
   },
-  destroyed () {
+  unmounted () {
     // unload the current lake object
     this.fetchLake({reachcode: null});
   },

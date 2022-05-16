@@ -487,7 +487,7 @@ export default {
             this.setLoading(false);
         });
     }, // end mounted
-    destroyed () {
+    unmounted () {
         console.debug("Unsetting map focus state");
         this.setMapFocus(false);
 
