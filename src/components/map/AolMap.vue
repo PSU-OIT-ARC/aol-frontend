@@ -7,16 +7,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { setDefaultOptions } from 'esri-loader';
-import { loadModules } from 'esri-loader';
-
-// Configures esri-loader to use version 4.13 from the ArcGIS CDN.
-//
-// Strange behavior while panning in chrome with touch input was observed
-// using the most-recent release (4.14).
-//
-// NOTE: setDefaultOptions must be called before any calls to loadModules()
-setDefaultOptions({ version: '4.13' })
+import MapView from '@arcgis/core/views/MapView';
+import Locate from '@arcgis/core/widgets/Locate';
+import { default as EsriMap } from '@arcgis/core/Map';
+import IdentityManager from '@arcgis/core/identity/IdentityManager';
 
 import app_config from '@/config';
 import config from '@/components/map/config';
@@ -279,12 +273,6 @@ export default {
             return new Promise ((resolve) => {
                 this.markTimestamp('esri-view');
 
-                loadModules([
-                    "esri/views/MapView",
-                    "esri/widgets/Locate",
-                ], config.dojo_options).then(([
-                    MapView, Locate
-                ]) => {
                     let gte = this.getTimeElapsed();
                     console.debug("Loading ESRI view modules took " + gte('esri-view') + "ms");
 
@@ -337,7 +325,6 @@ export default {
 
                     resolve();
 
-                });  // end loadModules
             });  // end Promise
         },  // end initView
         initMap () {
@@ -351,12 +338,6 @@ export default {
             return new Promise ((resolve) => {
                 this.markTimestamp('esri-map');
 
-                loadModules([
-                    "esri/Map",
-                    "esri/identity/IdentityManager",
-                ], config.dojo_options).then(([
-                      EsriMap, IdentityManager
-                ]) => {
                     let gte = this.getTimeElapsed();
                     console.debug("Loading ESRI map modules took " + gte('esri-map') + "ms");
 
@@ -398,10 +379,7 @@ export default {
                         this.setError(app_config.ERROR_TYPES.APP);
                         console.error(e)
                     }); // end getAuthToken
-                }).catch((e) => {
-                  this.setError(app_config.ERROR_TYPES.APP);
-                  console.error(e)
-                }); // end loadModules
+
             }); // end Promise
         }, //end initMap
         init () {

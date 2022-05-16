@@ -23,7 +23,7 @@ export default {
     return {
       base_maps: [
         {
-          name: 'topo',
+          name: 'topo-vector',
           label: 'Topographic'
         },
         {
@@ -31,11 +31,11 @@ export default {
           label: 'Streets'
         },
         {
-          name: 'gray',
+          name: 'gray-vector',
           label: 'Simple'
         },
       ],
-      selectedBaseMap: 'topo'
+      selectedBaseMap: 'topo-vector'
     }
   },
   methods: {

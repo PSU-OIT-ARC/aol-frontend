@@ -1,5 +1,10 @@
-import { loadModules } from 'esri-loader';
 import Supercluster from 'supercluster';
+import TileLayer from '@arcgis/core/layers/TileLayer';
+import VectorTileLayer from '@arcgis/core/layers/VectorTileLayer';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
+import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
+import Graphic from '@arcgis/core/Graphic';
 
 import app_config from '@/config';
 import config from '@/components/map/config';
@@ -30,9 +35,6 @@ const getFeaturesFromServiceLayer = (map, layer_id, where) => {
 const createNLCDTileLayer = (map) => {
     return new Promise ((resolve, reject) => {
         try {
-            loadModules(['esri/layers/TileLayer'],
-                        config.dojo_options).then(([TileLayer]) => {
-
                 let configLayer = config.layers.find(((l) => {return "nlcd" == l.id}));
                 let nlcd_layer = new TileLayer({
                     url: configLayer.url,
@@ -43,7 +45,6 @@ const createNLCDTileLayer = (map) => {
                 console.debug("Adding tile layer "+configLayer.name);
                 map.add(nlcd_layer);
                 resolve();
-            });
         } catch (err) {
             console.error(err);
             reject(err)
@@ -54,8 +55,6 @@ const createNLCDTileLayer = (map) => {
 const createVectorTileLayers = (map) => {
     return new Promise ((resolve, reject) => {
         try {
-            loadModules(['esri/layers/VectorTileLayer'],
-                        config.dojo_options).then(([VectorTileLayer]) => {
 
                 config.layers.filter((l) => {
                     // only loading bathymetry right now
@@ -74,7 +73,7 @@ const createVectorTileLayers = (map) => {
                     map.add(vector_tile_layer);
                 });
                 resolve();
-            });
+
         } catch (err) {
             console.error(err);
             reject(err)
@@ -85,8 +84,6 @@ const createVectorTileLayers = (map) => {
 const createFeatureServiceLayers = (map, view, reachcodes) => {
     return new Promise ((resolve, reject) => {
         try {
-            loadModules(['esri/layers/FeatureLayer'],
-                config.dojo_options).then(([FeatureLayer]) => {
 
                 let job = new Promise ((res, rej) => {
                     config.layers.filter((l) => {
@@ -135,7 +132,6 @@ const createFeatureServiceLayers = (map, view, reachcodes) => {
                     });
                 });
 
-            }); // end loadModules
         } catch (err) {
             console.error(err);
             reject(err)
@@ -150,11 +146,6 @@ https://github.com/highered-esricanada/clusterlayer
 const createClusterLayer = (map, features) => {
     return new Promise ((resolve, reject) => {
         try {
-            loadModules([
-                 "esri/layers/GraphicsLayer",
-            ], config.dojo_options).then(([
-                GraphicsLayer,
-            ]) => {
                 let lake_cluster_layer = new GraphicsLayer({
                     graphics: [],
                     id: 'lake_clusters'
@@ -165,7 +156,6 @@ const createClusterLayer = (map, features) => {
                     clusterLayer.featureStore = features;
                 }
                 resolve(lake_cluster_layer)
-            })
         }
         catch (e) {
             console.error(e)
@@ -211,58 +201,55 @@ const filterClusters = (map, view, lakes) => {
 };
 
 const updateClusters = (map, view) => {
-    return new Promise ((resolve, reject) => {
-        loadModules(["esri/geometry/support/webMercatorUtils"],
-            config.dojo_options).then(([webMercatorUtils,
-        ]) => {
-            //const clusterLayer =
-            //const clusterLayer = //map.findLayerById('lake_clusters')
-            //console.log(clusterLayer)
-            if (clusterLayer == undefined ) {
-                // throw new Error("layer not ready")
-                console.warn("Cluster layer is not yet defined");
-                resolve();
-                return
+    // return new Promise ((resolve, reject) => {
+    return new Promise ((resolve) => {
+        //const clusterLayer =
+        //const clusterLayer = //map.findLayerById('lake_clusters')
+        //console.log(clusterLayer)
+        if (clusterLayer == undefined ) {
+            // throw new Error("layer not ready")
+            console.warn("Cluster layer is not yet defined");
+            resolve();
+            return
+        }
+        if (clusterIndex == undefined) {
+            // throw new Error("index not ready")
+            console.warn("Cluster index is not yet defined");
+            resolve();
+            return
+        }
+
+        let extent = webMercatorToGeographic(view.extent);
+
+        let bbox = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
+        let zoom = Math.floor(view.zoom);
+
+        //let clusters = clusterLayer.cluster_index.getClusters(bbox, zoom);
+        let clusters = clusterIndex.getClusters(bbox, zoom);
+        let labels = [...clusters];
+        // This is a little hard to read, sorry.
+        Promise.all(clusters.map(convertGeoJsonToEsriFeature)).then(
+            (clusters) => {
+                clusters = clusters.filter(c => c);
+                clusterLayer.graphics.removeAll();
+                clusterLayer.graphics.addMany(clusters);
+                Promise.all(labels.map(getLabelForCluster)).then(
+                    labels => {
+                        labels = labels.filter(l => l);
+                        clusterLayer.graphics.addMany(labels);
+                        resolve()
+                    }
+                );
             }
-            if (clusterIndex == undefined) {
-                // throw new Error("index not ready")
-                console.warn("Cluster index is not yet defined");
-                resolve();
-                return
-            }
+        );
+    });
 
-            let extent = webMercatorUtils.webMercatorToGeographic(view.extent);
-
-            let bbox = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
-            let zoom = Math.floor(view.zoom);
-
-            //let clusters = clusterLayer.cluster_index.getClusters(bbox, zoom);
-            let clusters = clusterIndex.getClusters(bbox, zoom);
-            let labels = [...clusters];
-            // This is a little hard to read, sorry.
-            Promise.all(clusters.map(convertGeoJsonToEsriFeature)).then(
-                (clusters) => {
-                    clusters = clusters.filter(c => c);
-                    clusterLayer.graphics.removeAll();
-                    clusterLayer.graphics.addMany(clusters);
-                    Promise.all(labels.map(getLabelForCluster)).then(
-                        labels => {
-                            labels = labels.filter(l => l);
-                            clusterLayer.graphics.addMany(labels);
-                            resolve()
-                    });
-            });
-
-        }).catch((e) => {
-            reject(e)
-        });
-    })
 };
 
 const getLabelForCluster = (cluster) => {
     return new Promise ((resolve, reject) => {
         try {
-            loadModules(["esri/Graphic"],config.dojo_options).then(([Graphic]) => {
+
                 if (cluster.properties.point_count == undefined) resolve(); // no label needed
                 let textLabel = {
                   type: "text",
@@ -283,7 +270,7 @@ const getLabelForCluster = (cluster) => {
                     symbol: textLabel
                 });
                 resolve(label)
-            });
+
         } catch (e) {
           console.error(e);
           reject()
@@ -294,11 +281,6 @@ const getLabelForCluster = (cluster) => {
 const convertGeoJsonToEsriFeature = (geoJson) => {
     return new Promise ((resolve, reject) => {
         try {
-            loadModules([
-                "esri/Graphic"
-            ],config.dojo_options).then(([
-                Graphic
-            ]) => {
                 let size = geoJson.properties.point_count != undefined ? geoJson.properties.point_count : 1;
                 let clusterGraphic = new Graphic({
                     geometry: {
@@ -322,7 +304,7 @@ const convertGeoJsonToEsriFeature = (geoJson) => {
                     clusterGraphic.symbol[key] = attrs[key];
                 }
                 resolve(clusterGraphic)
-            })
+
         }
         catch (e) {
             console.error(e)

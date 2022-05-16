@@ -33,8 +33,8 @@
   "dependencies": {
     "@sentry/tracing": "~6.19.0",
     "@sentry/vue": "~6.19.0",
+    "@arcgis/core": "~4.23.0",
     "core-js": "~3.22.0",
-    "esri-loader": "~3.5.0",
     "register-service-worker": "~1.7.0",
     "sass": "~1.51.0",
     "supercluster": "~7.1.0",

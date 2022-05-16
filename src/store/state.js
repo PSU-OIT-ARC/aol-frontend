@@ -19,7 +19,7 @@ const state = {
     map_focus: false,
     map_extent: null,
     map_zoom: config.zoom,
-    map_basemap: 'topo',
+    map_basemap: 'topo-vector',
     map_filter: 'all_lakes',
 
     // lake state
