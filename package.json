@@ -35,9 +35,7 @@
     "@sentry/tracing": "~6.19.0",
     "@sentry/vue": "~6.19.0",
     "@vue/compat": "~3.2.0",
-    "core-js": "~3.22.0",
     "register-service-worker": "~1.7.0",
-    "sass": "~1.51.0",
     "supercluster": "~7.1.0",
     "vue": "~3.2.0",
     "vue-gallery": "~2.0.0",
@@ -58,8 +56,10 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "@vue/compiler-sfc": "^3.1.0",
+    "core-js": "~3.22.0",
     "eslint": "~8.15.0",
     "eslint-plugin-vue": "~8.7.0",
+    "sass": "~1.51.0",
     "sass-loader": "~10.2.0"
   }
 }
