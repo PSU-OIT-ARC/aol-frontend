@@ -45,17 +45,11 @@ export default {
     '$route': function (to) {
       this.initializeMap(to.query);
     },
-    lakes: {
-      function() {
-        this.initializeMap(this.$route.query);
-      },
-      deep: true
+    lakes: function () {
+      this.initializeMap(this.$route.query);
     },
-    minorLakes: {
-      function() {
-        this.initializeMap(this.$route.query);
-      },
-      deep: true
+    minorLakes: function () {
+      this.initializeMap(this.$route.query);
     }
   },
   created () {

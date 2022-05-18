@@ -98,10 +98,6 @@ const mutations = {
         state.current_lake = data;
     },
 
-    setCurrentPage (state, page) {
-        state.current_page = page;
-    },
-
 }
 
 export default mutations;

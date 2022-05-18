@@ -33,7 +33,7 @@ const state = {
     current_focus: null,
 
     // page state
-    current_page: false,
+    pages: new Map(),
 }
 
 export default state;
