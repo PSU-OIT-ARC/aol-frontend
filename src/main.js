@@ -15,7 +15,7 @@ import { Integrations } from "@sentry/tracing";
 const app = createApp(App)
 app.use(router)
 app.use(store)
-router.isReady().then(() => app.mount('#app'))
+app.mount('#app')
 
 
 // Enables management of meta tags

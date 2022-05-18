@@ -141,10 +141,10 @@ export default {
       locate.goToLocationEnabled = true;
       locate.locate()
     },
-    goToInitialExtent () {
+    async goToInitialExtent () {
       if (Object.keys(this.$route.query).includes('lake') ||
           Object.keys(this.$route.query).includes('f')) {
-            this.$router.push({name: 'map'});
+            await this.$router.push({name: 'map'});
       }
 
       this.$refs.map.resetBounds();

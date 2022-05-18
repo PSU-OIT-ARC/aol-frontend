@@ -54,7 +54,7 @@ export default {
                        'resetSearchResults', 'fetchLakes']),
 
         onClick(event) {
-            this.view.hitTest(event).then((response) => {
+            this.view.hitTest(event).then(async (response) => {
 
                 let features = response.results.filter((result) => {
                     return result.graphic.layer.id == "lake_bbox_service_layer" ||
@@ -89,7 +89,10 @@ export default {
 
                         if (lake != undefined && lake != null) {
                           console.debug("Loading waterbody " + reachcode + " from index");
-                          this.$router.push({name: 'map', query: {lake: lake.reachcode}});
+                          await this.$router.push({
+                              name: 'map',
+                              query: {lake: lake.reachcode}
+                          });
                         } else {
                           console.debug("Waterbody " + reachcode + " not present in index");
                         }
