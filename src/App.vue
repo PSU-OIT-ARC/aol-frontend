@@ -54,7 +54,6 @@ export default {
   metaInfo () {
     return {
       htmlAttrs: {'lang': 'en-US'},
-      charset: 'utf-8',
       description: "The Atlas of Oregon Lakes is a resource for the public, resource management agencies, and scientists to enhance management and enjoyment of our lakes. The online atlas is an updated version of the popular Atlas of Oregon Lakes published in 1985.",
       viewport: {tag: 'meta', content: 'width=device-width,initial-scale=1.0'}
     }
