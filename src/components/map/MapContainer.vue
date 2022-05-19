@@ -15,12 +15,14 @@
       <div class="map-buttons">
 
         <a role="button"
+           aria-label="Zoom in"
            class="map-button map-button--zoom-in"
            :class="{disabled: zoomInDisabled()}"
            @click="zoomIn">
            <zoom-in-svg/>
         </a>
         <a role="button"
+           aria-label="Zoom out"
            class="map-button map-button--zoom-out"
            :class="{disabled: zoomOutDisabled()}"
            @click="zoomOut">
@@ -28,12 +30,14 @@
         </a>
 
         <a role="button"
+           aria-label="Reset view"
            class="map-button map-button--extent"
            @click="goToInitialExtent">
           <initial-extent/>
         </a>
 
         <a role="button"
+           aria-label="Select base layers and filters"
            class="map-button map-button--layers"
            :class="{selected: active_state.filters}"
            @click="toggleVisibility('filters')">
