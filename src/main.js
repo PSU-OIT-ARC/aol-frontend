@@ -15,8 +15,6 @@ import { Integrations } from "@sentry/tracing";
 const app = createApp(App)
 app.use(router)
 app.use(store)
-app.mount('#app')
-
 
 // Enables management of meta tags
 app.use(createMetaManager());
@@ -47,3 +45,6 @@ if (process.env.NODE_ENV === "production") {
 
     console.debug("Installed GA integration.");
 }
+
+// Mount, finalize app
+app.mount('#app')
