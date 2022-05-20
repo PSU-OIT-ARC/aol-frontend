@@ -71,12 +71,6 @@ const MarineBoardTemplate = {
   };
 
 const config = {
-    dojo_options:  {
-        dojoConfig: {
-            async: true
-        }
-    },
-
     map_center: [-120.9, 44.1],
     zoom: 7,
     minZoom: 7,
