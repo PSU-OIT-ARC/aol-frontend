@@ -71,10 +71,16 @@ const MarineBoardTemplate = {
   };
 
 const config = {
+    xmin: -125,
+    ymin: 40.5,
+    xmax: -115,
+    ymax: 46.5,
     map_center: [-120.9, 44.1],
     zoom: 7,
     minZoom: 7,
     maxZoom: 16,
+    rotation: false,
+
     extent_buffer: 1.2,
 
     ArcGisOnlineServicesUrl: ArcGisOnlineServicesUrl,

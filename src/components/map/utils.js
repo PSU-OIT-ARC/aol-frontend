@@ -371,33 +371,6 @@ const prepareExtent = (view, baseExtent) => {
     return extent;
 }
 
-const checkExtent = (view, initialExtent) => {
-    // Enforces current view center point to be contained by
-    // the extentobject given by initialExtent.
-    //
-    // Refs: https://community.esri.com/thread/229431-getting-mapview-to-stay-within-bounds
-    //
-    let currentCenter = view.extent.center;
-    if (!initialExtent.contains(currentCenter)) {
-
-        let newCenter = view.extent.center;
-
-        if (currentCenter.x < initialExtent.xmin) {
-            newCenter.x = initialExtent.xmin;
-        }
-        if (currentCenter.x > initialExtent.xmax) {
-            newCenter.x = initialExtent.xmax;
-        }
-        if (currentCenter.y < initialExtent.ymin) {
-            newCenter.y = initialExtent.ymin;
-        }
-        if (currentCenter.y > initialExtent.ymax) {
-            newCenter.y = initialExtent.ymax;
-        }
-        view.goTo(newCenter, {duration: 0});
-    }
-}
-
 export {
     createNLCDTileLayer,
     createVectorTileLayers,
@@ -406,6 +379,5 @@ export {
     clusterIndex,
     filterClusters,
     updateClusters,
-    prepareExtent,
-    checkExtent
+    prepareExtent
 }
