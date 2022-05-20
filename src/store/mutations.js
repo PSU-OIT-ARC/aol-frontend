@@ -7,7 +7,7 @@
 //
 // TypeError: proxy must report the same value for the non-writable, non-configurable property '"__accessor__"'
 //
-import { markRaw } from 'vue';
+import { markRaw, shallowRef } from 'vue';
 
 
 const mutations = {
@@ -62,11 +62,11 @@ const mutations = {
     },
 
     setMapBasemap (state, basemap) {
-        state.map_basemap = basemap;
+        state.map_basemap = shallowRef(basemap);
     },
 
     setMapFilter (state, filter) {
-        state.map_filter = filter;
+        state.map_filter = shallowRef(filter);
     },
 
     setLoading (state, loading) {
@@ -74,28 +74,28 @@ const mutations = {
     },
 
     setIntroDismissed (state, dismissed) {
-      state.intro_dismissed = dismissed;
+        state.intro_dismissed = dismissed;
     },
 
     setSearchResults (state, data) {
         state.search.query = data.query;
-        state.search.results = data.results;
+        state.search.results = shallowRef(data.results);
     },
 
     setLakes (state, data) {
-      state.lakes = data;
+        state.lakes = shallowRef(data);
     },
 
     setMinorLakes (state, data) {
-      state.minor_lakes = data;
+        state.minor_lakes = shallowRef(data);
     },
 
     setCurrentFocus (state, data) {
-      state.current_focus = data;
+        state.current_focus = shallowRef(data);
     },
 
     setCurrentLake (state, data) {
-        state.current_lake = data;
+        state.current_lake = shallowRef(data);
     },
 
 }
