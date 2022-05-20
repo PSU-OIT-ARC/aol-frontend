@@ -16,6 +16,7 @@ import MapContainer from '@/components/map/MapContainer';
 import SideBar from '@/components/SideBar';
 
 export default {
+  // eslint-disable-next-line
   name: 'map',
   components: {
     MapContainer,
