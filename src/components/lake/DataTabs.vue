@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { markRaw } from 'vue';
+
 import Tab from '@/components/lake/Tab';
 import {TextSection,
         Watershed,
@@ -47,7 +49,13 @@ export default {
   },
   data () {
     return {
-      allSections: [
+      currentSection: null,
+      currentSectionName: ''
+    }
+  },
+  computed: {
+    sections () {
+      let allSections = [
         TextSection,
         Watershed,
         PlantData,
@@ -55,8 +63,8 @@ export default {
         Photos,
         Documents,
         Resources
-      ],
-      sidebarSectionKeys: [
+      ];
+      let sidebarSectionKeys = [
         'summary',
         false,
         'has_plants',
@@ -64,8 +72,8 @@ export default {
         'has_photos',
         'has_docs',
         'has_resources'
-      ],
-      detailSectionKeys: [
+      ];
+      let detailSectionKeys = [
         'body',
         false,  // temporarily disabled pending review
         'plants',
@@ -73,18 +81,13 @@ export default {
         'photos',
         'documents',
         'resources'
-      ],
-      currentSection: null,
-      currentSectionName: ''
-    }
-  },
-  computed: {
-    sections () {
+      ];
+
       let self = this;
-      let sections = this.allSections.filter(function(el, idx) {
-        var key = self.detailSectionKeys[idx];
+      let sections = allSections.filter(function(el, idx) {
+        var key = detailSectionKeys[idx];
         if (self.tabs_only ) {
-          key = self.sidebarSectionKeys[idx];
+          key = sidebarSectionKeys[idx];
         }
 
         if (key === true) {
@@ -120,10 +123,10 @@ export default {
       let component = this.sections.find(i => i.name == hash);
 
       if (component != undefined && component != null) {
-        this.currentSection = component;
+        this.currentSection = markRaw(component);
         this.currentSectionName = component.name;
       } else {
-        this.currentSection = TextSection;
+        this.currentSection = markRaw(TextSection);
         this.currentSectionName = TextSection.name;
       }
     }

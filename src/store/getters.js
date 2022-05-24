@@ -115,17 +115,9 @@ const getters = {
         return state.current_lake.title;
     },
 
-    getCurrentPage (state) {
-        return state.current_page;
-    },
-
-    getCurrentPageTitle (state) {
-        if (state.current_page == null) {
-            return ''
-        }
-        return state.current_page.title;
+    getPages (state) {
+        return state.pages;
     }
-
 }
 
 export default getters;

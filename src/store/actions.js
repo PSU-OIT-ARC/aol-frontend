@@ -208,14 +208,9 @@ const actions = {
 
     fetchPage (context, params) {
         let slug = params['slug'];
-        let storeData = true;
-        if (params['store'] !== undefined && params['store'] == false) {
-            storeData = false;
-        }
 
         if (slug == null) {
-            console.debug("Depopulating current page");
-            context.commit("setCurrentPage", null);
+            console.warn("Cannot fetch page with null slug");
         } else {
             let url = `${API_URL}/flatpage/${slug}/?format=json`;
             return new Promise((resolve, reject) => {
@@ -230,9 +225,7 @@ const actions = {
                 ).then(
                     data => {
                         console.debug("Fetched page " + slug);
-                        if (storeData) {
-                            context.commit("setCurrentPage", data);
-                        }
+                        context.state.pages.set(slug, data);
                         resolve();
                     }
                 ).catch(

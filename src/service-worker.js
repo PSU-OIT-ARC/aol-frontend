@@ -1,10 +1,10 @@
 import {setCacheNameDetails} from 'workbox-core';
-import {precacheAndRoute,cleanupOutdatedCaches,getCacheKeyForURL} from 'workbox-precaching';
-import {registerRoute,registerNavigationRoute} from 'workbox-routing';
+import {precacheAndRoute,cleanupOutdatedCaches,createHandlerBoundToURL} from 'workbox-precaching';
+import {registerRoute,NavigationRoute} from 'workbox-routing';
 import {initialize as initializeGoogleAnalytics} from 'workbox-google-analytics';
 import {CacheFirst} from 'workbox-strategies';
-import {Plugin as CacheableResponsePlugin} from 'workbox-cacheable-response';
-import {Plugin as ExpirationPlugin} from 'workbox-expiration';
+import {CacheableResponsePlugin} from 'workbox-cacheable-response';
+import {ExpirationPlugin} from 'workbox-expiration';
 
 
 /**
@@ -44,11 +44,9 @@ initializeGoogleAnalytics({});
  * Handle navigation routes for SPA
  *
  */
-registerNavigationRoute(
-  // Assuming '/index.html' has been precached,
-  // look up its corresponding cache key.
-  getCacheKeyForURL('/index.html')
-);
+const handler = createHandlerBoundToURL('/index.html');
+const navigationRoute = new NavigationRoute(handler);
+registerRoute(navigationRoute);
 
 
 /**

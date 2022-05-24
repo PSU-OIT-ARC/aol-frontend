@@ -48,12 +48,10 @@ import AolFooter from '@/components/AolFooter';
 
 export default {
   name: 'page',
-  props: {
-    slug: String,
-  },
   data () {
     return {
-      page: null
+      page: null,
+      pageTitle: null
     }
   },
   components: {
@@ -62,8 +60,7 @@ export default {
     AolFooter
   },
   computed: {
-    ...mapGetters({currentPage: 'getCurrentPage',
-                   currentPageTitle: 'getCurrentPageTitle'}),
+    ...mapGetters({pages: 'getPages'}),
     photo_style () {
       let photo = require('@/assets/intro-umpqua-lake.png');
       return {'backgroundImage': 'url(' + photo + ')'}
@@ -82,25 +79,36 @@ export default {
       return navigator.onLine;
     }
   },
-  created () {
+  async created () {
+    let slug = this.$route.params['slug'];
+
     // load the requested page object
-    this.fetchPage({slug: this.slug})
-  },
-  destroyed () {
-    // unload the current page object
-    this.fetchPage({slug: null});
+    if (!this.pages.has(this.slug)) {
+      await this.fetchPage({slug: slug})
+    }
+    this.page = this.pages.get(slug);
   },
   watch: {
-    '$route': function () {
-      this.fetchPage({slug: this.slug});
+    '$route': async function () {
+      let slug = this.$route.params['slug'];
+
+      // load the requested page object
+        if (!this.pages.has(slug)) {
+        await this.fetchPage({slug: slug})
+      }
+      this.page = this.pages.get(slug);
     },
-    'currentPage': function () {
-      this.page = this.currentPage;
+    'page': function () {
+      if (this.page != null) {
+        this.pageTitle = this.page.title;
+      } else {
+        this.pageTitle = '';
+      }
     }
   },
   metaInfo () {
     return {
-      title: this.currentPageTitle
+      title: this.pageTitle
     }
   }
 }

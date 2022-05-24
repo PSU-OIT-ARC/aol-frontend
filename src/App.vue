@@ -4,6 +4,9 @@
 
 <template>
   <div id="app">
+    <metainfo>
+      <template v-slot:title="{ content }">{{ content }} | Atlas of Oregon Lakes</template>
+    </metainfo>
     <nav-bar v-bind:class="[!isOnline() ? 'offline' : '']"/>
     <offline-bar v-if="!isOnline()"/>
     <not-found v-else-if="resourceNotFound()"/>
@@ -48,17 +51,12 @@ export default {
         this.fetchPage({slug:slug, store:false});
     });
   },
-  metaInfo: {
-    titleTemplate: '%s | Atlas of Oregon Lakes',
-    htmlAttrs: {
-      lang: 'en-US'
-    },
-    meta: [
-      { charset: 'utf-8' },
-      { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
-      { name: 'viewport', content: 'width=device-width,initial-scale=1.0' },
-      { name: 'description', content: "The Atlas of Oregon Lakes is a resource for the public, resource management agencies, and scientists to enhance management and enjoyment of our lakes. The online atlas is an updated version of the popular Atlas of Oregon Lakes published in 1985." }
-    ]
+  metaInfo () {
+    return {
+      htmlAttrs: {'lang': 'en-US'},
+      description: "The Atlas of Oregon Lakes is a resource for the public, resource management agencies, and scientists to enhance management and enjoyment of our lakes. The online atlas is an updated version of the popular Atlas of Oregon Lakes published in 1985.",
+      viewport: {tag: 'meta', content: 'width=device-width,initial-scale=1.0,user-scalable=no'}
+    }
   }
 }
 </script>

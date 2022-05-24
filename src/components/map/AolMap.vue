@@ -7,16 +7,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { setDefaultOptions } from 'esri-loader';
-import { loadModules } from 'esri-loader';
-
-// Configures esri-loader to use version 4.13 from the ArcGIS CDN.
-//
-// Strange behavior while panning in chrome with touch input was observed
-// using the most-recent release (4.14).
-//
-// NOTE: setDefaultOptions must be called before any calls to loadModules()
-setDefaultOptions({ version: '4.13' })
+import MapView from '@arcgis/core/views/MapView';
+import Locate from '@arcgis/core/widgets/Locate';
+import { default as EsriMap } from '@arcgis/core/Map';
+import IdentityManager from '@arcgis/core/identity/IdentityManager';
 
 import app_config from '@/config';
 import config from '@/components/map/config';
@@ -30,8 +24,7 @@ import {
     clusterIndex,
     filterClusters,
     updateClusters,
-    prepareExtent,
-    checkExtent
+    prepareExtent
 } from '@/components/map/utils';
 
 export default {
@@ -60,7 +53,7 @@ export default {
                        'resetSearchResults', 'fetchLakes']),
 
         onClick(event) {
-            this.view.hitTest(event).then((response) => {
+            this.view.hitTest(event).then(async (response) => {
 
                 let features = response.results.filter((result) => {
                     return result.graphic.layer.id == "lake_bbox_service_layer" ||
@@ -95,7 +88,10 @@ export default {
 
                         if (lake != undefined && lake != null) {
                           console.debug("Loading waterbody " + reachcode + " from index");
-                          this.$router.push({name: 'map', query: {lake: lake.reachcode}});
+                          await this.$router.push({
+                              name: 'map',
+                              query: {lake: lake.reachcode}
+                          });
                         } else {
                           console.debug("Waterbody " + reachcode + " not present in index");
                         }
@@ -277,67 +273,45 @@ export default {
             }
 
             return new Promise ((resolve) => {
-                this.markTimestamp('esri-view');
+                this.view = new MapView({
+                    map: this.map,
+                    container: 'esri-map',
+                    zoom: this.zoom,
+                    center: config.map_center
+                });
 
-                loadModules([
-                    "esri/views/MapView",
-                    "esri/widgets/Locate",
-                ], config.dojo_options).then(([
-                    MapView, Locate
-                ]) => {
-                    let gte = this.getTimeElapsed();
-                    console.debug("Loading ESRI view modules took " + gte('esri-view') + "ms");
+                let dimension = this.view.width + "x" + this.view.height;
+                console.debug("Created map view with dimensions " + dimension);
 
-                    this.view = new MapView({
-                        map: this.map,
-                        container: 'esri-map',
-                        zoom: this.zoom,
-                        center: config.map_center
+                if (this.mode == 'full') {
+                    // we're using custom controls
+                    let locateWidget = new Locate({
+                        viewModel: {view: this.view},
+                        goToLocationEnabled: false,  // otherwise it starts immediately?
+                        declaredClass: 'aol-locate-widget'
                     });
+                    this.view.ui.components = [locateWidget];
+                }
 
-                    let dimension = this.view.width + "x" + this.view.height;
-                    console.debug("Created map view with dimensions " + dimension);
-
-                    if (this.mode == 'full') {
-                        // we're using custom controls
-                        let locateWidget = new Locate({
-                            viewModel: {view: this.view},
-                            goToLocationEnabled: false,  // otherwise it starts immediately?
-                            declaredClass: 'aol-locate-widget'
-                        });
-                        this.view.ui.components = [locateWidget];
+                this.view.constraints = {
+                    minZoom: config.minZoom,
+                    maxZoom: config.maxZoom,
+                    rotationEnabled: config.rotation,
+                    geometry: {
+                        type: "extent",
+                        xmin: config.xmin,
+                        ymin: config.ymin,
+                        xmax: config.xmax,
+                        ymax: config.ymax
                     }
+                };
+                this.view.navigation.browserTouchPanEnabled = false;
+                this.view.when().then(()=> {
+                    this.setMapView({type: this.mode, view: this.view})
+                });
 
-                    this.view.constraints = {
-                        minZoom: config.minZoom,
-                        maxZoom: config.maxZoom,
-                        snapToZoom: true,
-                        rotationEnabled: false
-                    };
-                    this.view.when().then(()=> {
-                        this.setMapView({type: this.mode, view: this.view})
+                resolve();
 
-                        // bounds checking is configurable in map config module
-                        if (config.checkBounds) {
-                            let initialExtent = this.view.extent.clone();
-                            this.view.on('drag', () => {checkExtent(this.view, initialExtent)});
-                            this.view.on('key-down', (e) => {
-                                const arrow_keys = [
-                                    'ArrowDown',
-                                    'ArrowUp',
-                                    'ArrowRight',
-                                    'ArrowLeft'
-                                ];
-                                if (arrow_keys.indexOf(e.key > -1)) {
-                                    checkExtent(this.view, initialExtent);
-                                }
-                            });
-                        }
-                    });
-
-                    resolve();
-
-                });  // end loadModules
             });  // end Promise
         },  // end initView
         initMap () {
@@ -349,59 +323,46 @@ export default {
             }
 
             return new Promise ((resolve) => {
-                this.markTimestamp('esri-map');
 
-                loadModules([
-                    "esri/Map",
-                    "esri/identity/IdentityManager",
-                ], config.dojo_options).then(([
-                      EsriMap, IdentityManager
-                ]) => {
-                    let gte = this.getTimeElapsed();
-                    console.debug("Loading ESRI map modules took " + gte('esri-map') + "ms");
+                this.getAuthToken().then((data) => {
+                    let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
+                    IdentityManager.registerToken({
+                        'server': config.ArcGisOnlineTilesUrl,
+                        'token': data.access_token,
+                        'expires': timeout
+                    });
+                    IdentityManager.registerToken({
+                        'server': config.ArcGisOnlineServicesUrl,
+                        'token': data.access_token,
+                        'expires': timeout
+                    });
 
-                    this.getAuthToken().then((data) => {
-                        let timeout = Date.now() + (parseInt(data.expires_in) * 1000)
-                        IdentityManager.registerToken({
-                            'server': config.ArcGisOnlineTilesUrl,
-                            'token': data.access_token,
-                            'expires': timeout
-                        });
-                        IdentityManager.registerToken({
-                            'server': config.ArcGisOnlineServicesUrl,
-                            'token': data.access_token,
-                            'expires': timeout
-                        });
+                    let map = new EsriMap({basemap: this.basemap});
+                    this.setMapObject(map);
 
-                        let map = new EsriMap({basemap: this.basemap});
-                        this.setMapObject(map);
-
-                        // TODO: The following utilities load layers which are hosted
-                        //       as secure (i.e., private) data sources. Such data sources
-                        //       are incompatible with app-based logins.
-                        this.markTimestamp('esri-tile-layers');
-                        Promise.all([
-                            // NOTE: temporarily remove custom baselayers
-                            // createNLCDTileLayer(this.map),
-                            createVectorTileLayers(this.map),
-                        ]).then(() => {
-                            let gte = this.getTimeElapsed();
-                            console.debug("Loading map tile layers took " + gte('esri-tile-layers') + "ms");
-                        }).catch((e) => {
-                            this.setError(app_config.ERROR_TYPES.APP);
-                            console.error(e)
-                        })
-
-                        resolve();
-
+                    // TODO: The following utilities load layers which are hosted
+                    //       as secure (i.e., private) data sources. Such data sources
+                    //       are incompatible with app-based logins.
+                    this.markTimestamp('esri-tile-layers');
+                    Promise.all([
+                        // NOTE: temporarily remove custom baselayers
+                        // createNLCDTileLayer(this.map),
+                        createVectorTileLayers(this.map),
+                    ]).then(() => {
+                        let gte = this.getTimeElapsed();
+                        console.debug("Loading map tile layers took " + gte('esri-tile-layers') + "ms");
                     }).catch((e) => {
                         this.setError(app_config.ERROR_TYPES.APP);
                         console.error(e)
-                    }); // end getAuthToken
+                    })
+
+                    resolve();
+
                 }).catch((e) => {
-                  this.setError(app_config.ERROR_TYPES.APP);
-                  console.error(e)
-                }); // end loadModules
+                    this.setError(app_config.ERROR_TYPES.APP);
+                    console.error(e)
+                }); // end getAuthToken
+
             }); // end Promise
         }, //end initMap
         init () {
@@ -509,7 +470,7 @@ export default {
             this.setLoading(false);
         });
     }, // end mounted
-    destroyed () {
+    unmounted () {
         console.debug("Unsetting map focus state");
         this.setMapFocus(false);
 

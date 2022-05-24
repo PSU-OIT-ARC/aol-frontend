@@ -16,6 +16,7 @@ import MapContainer from '@/components/map/MapContainer';
 import SideBar from '@/components/SideBar';
 
 export default {
+  // eslint-disable-next-line
   name: 'map',
   components: {
     MapContainer,
@@ -45,10 +46,10 @@ export default {
     '$route': function (to) {
       this.initializeMap(to.query);
     },
-    lakes: function() {
+    lakes: function () {
       this.initializeMap(this.$route.query);
     },
-    minorLakes: function() {
+    minorLakes: function () {
       this.initializeMap(this.$route.query);
     }
   },

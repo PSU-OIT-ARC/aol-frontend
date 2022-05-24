@@ -1,47 +1,50 @@
 //
 import './registerServiceWorker'
 
-import * as Sentry from '@sentry/vue';
-import { Integrations } from "@sentry/tracing";
-
-import Vue from 'vue'
-import VueMeta from 'vue-meta'
-import VueGtag from 'vue-gtag'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import { createApp } from 'vue'
+import { createMetaManager, plugin as vueMetaPlugin } from 'vue-meta'
+import VueGtag from 'vue-gtag'
+import * as Sentry from '@sentry/vue';
+import { Integrations } from "@sentry/tracing";
+
+
+const app = createApp(App)
+app.use(router)
+app.use(store)
 
 // Enables management of meta tags
-Vue.use(VueMeta, {refreshOnceOnNavigation: true});
-// Disables console tip regarding running in development mode
-Vue.config.productionTip = false;
+app.use(createMetaManager());
+app.use(vueMetaPlugin);
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
-
+// Initializes sentry/browser
 if (process.env.NODE_ENV === "production") {
-  // Initializes sentry/browser
-  Sentry.init({
-    dsn: process.env.VUE_APP_SENTRY_DSN,
-    integrations: [new Integrations.BrowserTracing()],
-    attachStackTrace: true,
-    tracesSampleRate: 0.1,
-    tracingOptions: {
-      trackComponents: true,
-    },
-  });
+    Sentry.init({
+      dsn: process.env.VUE_APP_SENTRY_DSN,
+      integrations: [new Integrations.BrowserTracing()],
+      attachStackTrace: true,
+      tracesSampleRate: 0.1,
+      tracingOptions: {
+        trackComponents: true,
+      },
+    });
 
-  console.debug("Installed Sentry integration.");
-
-  // Enables Google Analytics integration
-  Vue.use(VueGtag, {
-    id: 'UA-150299612-1',
-    router
-  })
-
-  console.debug("Installed GA integration.");
+    console.debug("Installed Sentry integration.");
 }
+
+// Enables Google Analytics integration
+if (process.env.NODE_ENV === "production") {
+    app.use(
+        VueGtag, {
+            id: 'UA-150299612-1',
+        }
+    )
+
+    console.debug("Installed GA integration.");
+}
+
+// Mount, finalize app
+app.mount('#app')
