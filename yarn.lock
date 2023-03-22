@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@a11y/focus-trap@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@a11y/focus-trap/-/focus-trap-1.0.5.tgz#0748189c37ca21255c702aa5de3ee00ed4821d22"
-  integrity sha512-3JOd6g+BALysWS8LNf0qdB8ltR651H/RCLAvUmfS0LIHwHO579XfjZUIZbURYiAZrcbp1CBAq4QZ2YwKNQZ1hw==
-
 "@achrinza/node-ipc@^9.2.5":
   version "9.2.6"
   resolved "https://registry.yarnpkg.com/@achrinza/node-ipc/-/node-ipc-9.2.6.tgz#75c89e95fe38ff9e3dd33a0d2681dc28f1c31f33"
@@ -148,17 +143,17 @@
   dependencies:
     xss "^1.0.8"
 
-"@arcgis/core@~4.25.0":
-  version "4.25.5"
-  resolved "https://registry.yarnpkg.com/@arcgis/core/-/core-4.25.5.tgz#8737b739c542ad060f55949b2b0ffc746a1b70fb"
-  integrity sha512-c4KgUeXLn11wHoorR4/6UmYxg/sYEJolbWqpio82yCLE0gPBGdXAOSZEgnQ6IuGdjiEU3AJyZg3r16aN80itKQ==
+"@arcgis/core@~4.26.5":
+  version "4.26.5"
+  resolved "https://registry.yarnpkg.com/@arcgis/core/-/core-4.26.5.tgz#45bba56f414b0025de766b1ea60c5bc622341675"
+  integrity sha512-Z8KoJrTD1ZQwVVZAIpkdjAQVT/MjAaWAr5u0krifKd6Y1m0TrEb8/iK86KvyWX8yNNWEroEP9SiE19vH/JKquQ==
   dependencies:
     "@esri/arcgis-html-sanitizer" "~3.0.1"
-    "@esri/calcite-colors" "~6.0.1"
-    "@esri/calcite-components" "1.0.0-beta.97"
+    "@esri/calcite-colors" "~6.1.0"
+    "@esri/calcite-components" "~1.0.7"
     "@popperjs/core" "~2.11.6"
-    focus-trap "~7.0.0"
-    luxon "~3.0.4"
+    focus-trap "~7.2.0"
+    luxon "~3.2.1"
     sortablejs "~1.15.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.18.6":
@@ -1212,36 +1207,36 @@
   dependencies:
     xss "1.0.13"
 
-"@esri/calcite-colors@~6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@esri/calcite-colors/-/calcite-colors-6.0.1.tgz#770ec4d77bbbd4da32a66450eb93f4c780c0ff28"
-  integrity sha512-iGUIIpeMCJSTDGw4ZsxLwwxkml0QzOUJTtysjRryGbhSt183NEtwWKS+yQO19utXQz5LbQWjoav6x6CsawElkw==
+"@esri/calcite-colors@~6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@esri/calcite-colors/-/calcite-colors-6.1.0.tgz#2d75e859a88772d8de91ccae40cbe29b8a4d27b8"
+  integrity sha512-wHQYWFtDa6c328EraXEVZvgOiaQyYr0yuaaZ0G3cB4C3lSkWefW34L/e5TLAhtuG3zJ/wR6pl5X1YYNfBc0/4Q==
 
-"@esri/calcite-components@1.0.0-beta.97":
-  version "1.0.0-beta.97"
-  resolved "https://registry.yarnpkg.com/@esri/calcite-components/-/calcite-components-1.0.0-beta.97.tgz#ed86ec153cf26d4cc43425b59f52c3fa2bb3a42a"
-  integrity sha512-pvuOQI01DCIr6kS+Jof/b5kLWRaDlYZStP8QUB5r4FYofHHST25iKlOS6525WD4S9xejthfb8S1PehTeMn5Wxg==
+"@esri/calcite-components@~1.0.7":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@esri/calcite-components/-/calcite-components-1.0.8.tgz#430230436561f8ed1cfb59e26efb24cdc1b18000"
+  integrity sha512-aeBSZQdtv7CRGbcGZh49RT4Z481muFspnY+98X6RRnf8QHdjpwTk+JbyS1pLAvenyLqTV+Gwa/Q5BPhbsfLiRw==
   dependencies:
-    "@a11y/focus-trap" "1.0.5"
-    "@floating-ui/dom" "1.0.3"
-    "@stencil/core" "2.18.1"
+    "@floating-ui/dom" "1.2.1"
+    "@stencil/core" "2.20.0"
     "@types/color" "3.0.3"
     color "4.2.3"
+    focus-trap "7.2.0"
     form-request-submit-polyfill "2.0.0"
     lodash-es "4.17.21"
     sortablejs "1.15.0"
 
-"@floating-ui/core@^1.0.1":
+"@floating-ui/core@^1.2.1":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.2.4.tgz#89e6311b021190c9e121fcf20306e76ac66e4066"
   integrity sha512-SQOeVbMwb1di+mVWWJLpsUTToKfqVNioXys011beCAhyOIFtS+GQoW4EQSneuxzmQKddExDwQ+X0hLl4lJJaSQ==
 
-"@floating-ui/dom@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.3.tgz#b439c8a66436c2cae8d97e889f0b76cce757a6ec"
-  integrity sha512-6H1kwjkOZKabApNtXRiYHvMmYJToJ1DV7rQ3xc/WJpOABhQIOJJOdz2AOejj8X+gcybaFmBpisVTZxBZAM3V0w==
+"@floating-ui/dom@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.2.1.tgz#8f93906e1a3b9f606ce78afb058e874344dcbe07"
+  integrity sha512-Rt45SmRiV8eU+xXSB9t0uMYiQ/ZWGE/jumse2o3i5RGlyvcbqOF4q+1qBnzLE2kZ5JGhq0iMkcGXUKbFe7MpTA==
   dependencies:
-    "@floating-ui/core" "^1.0.1"
+    "@floating-ui/core" "^1.2.1"
 
 "@graphql-tools/merge@8.3.1":
   version "8.3.1"
@@ -1641,10 +1636,10 @@
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
-"@stencil/core@2.18.1":
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.18.1.tgz#f45e99b7abe2a0fa90d3141363601a68df5c08a7"
-  integrity sha512-/fXkh1lwZ+X9JQCw50mPjhBogzEHOBvVC5pLoDLZqodVYK0DGWILM2YLV4dcIUBNEK8/HMDpO/Rq81/rS3mNOw==
+"@stencil/core@2.20.0":
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.20.0.tgz#0e68b5b42e727233803291eb0367ab2b53f7f1f3"
+  integrity sha512-ka+eOW+dNteXIfLCRipNbbAlBEQjqJ2fkx3fxzlKgnNHEQMdZiuIjlWt63KzvOJStNeuADdQXo89BB1dC2VRUw==
 
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   version "2.2.3"
@@ -4839,12 +4834,12 @@ flow-parser@0.*:
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.202.0.tgz#534178266d3ceec5368415e59990db97eece5bd0"
   integrity sha512-ZiXxSIXK3zPmY3zrzCofFonM2T+/3Jz5QZKJyPVtUERQEJUnYkXBQ+0H3FzyqiyJs+VXqb/UNU6/K6sziVYdxw==
 
-focus-trap@~7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.0.0.tgz#4e2cd9aab5b673e2cbad945c52bd232f6160c2cb"
-  integrity sha512-uT4Bl8TwU+5vVAx/DHil/1eVS54k9unqhK/vGy2KSh7esPmqgC0koAB9J2sJ+vtj8+vmiFyGk2unLkhNLQaxoA==
+focus-trap@7.2.0, focus-trap@~7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.2.0.tgz#25af61b5635d3c18cd2fd176087db7b60be72c6b"
+  integrity sha512-v4wY6HDDYvzkBy4735kW5BUEuw6Yz9ABqMYLuTNbzAFPcBOGiGHwwcNVMvUz4G0kgSYh13wa/7TG3XwTeT4O/A==
   dependencies:
-    tabbable "^6.0.0"
+    tabbable "^6.0.1"
 
 follow-redirects@^1.0.0:
   version "1.15.2"
@@ -6384,10 +6379,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-luxon@~3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.0.4.tgz#d179e4e9f05e092241e7044f64aaa54796b03929"
-  integrity sha512-aV48rGUwP/Vydn8HT+5cdr26YYQiUZ42NM6ToMoaGKwYfWbfLeRkEu1wXWMHBZT6+KyLfcbbtVcoQFCbbPjKlw==
+luxon@~3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.2.1.tgz#14f1af209188ad61212578ea7e3d518d18cee45f"
+  integrity sha512-QrwPArQCNLAKGO/C+ZIilgIuDnEnKx5QYODdDtbFaxzsbZcc/a7WFq7MhsVYgRlwawLtvOUESTlfJ+hc/USqPg==
 
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.9"
@@ -8653,7 +8648,7 @@ symbol-observable@^1.0.4:
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
 
-tabbable@^6.0.0:
+tabbable@^6.0.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.1.1.tgz#40cfead5ed11be49043f04436ef924c8890186a0"
   integrity sha512-4kl5w+nCB44EVRdO0g/UGoOp3vlwgycUVtkk/7DPyeLZUCuNFFKCFG6/t/DgHLrUPHjrZg6s5tNm+56Q2B0xyg==
