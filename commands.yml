@@ -3,11 +3,5 @@ project:
   name: aol-frontend
   full_name: Atlas of Oregon Lakes Frontend
 environment:
-  stage:
+  cloud:
     backend: emcee.backends.aws
-  prod:
-    backend: emcee.backends.aws
-    infrastructure:
-      s3:
-        bucket:
-          name: aol
