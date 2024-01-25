@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 
 import Vue, { createApp } from 'vue'
-import { createMetaManager, plugin as vueMetaPlugin } from 'vue-meta'
+import { VueHeadMixin, createHead } from '@unhead/vue'
 import VueGtag from 'vue-gtag'
 import * as Sentry from '@sentry/vue';
 import { Integrations } from "@sentry/tracing";
@@ -26,8 +26,9 @@ app.use(router)
 app.use(store)
 
 // Enables management of meta tags
-app.use(createMetaManager());
-app.use(vueMetaPlugin);
+const head = createHead()
+app.mixin(VueHeadMixin)
+app.use(head)
 
 // Initializes sentry/browser
 if (process.env.NODE_ENV === "production") {

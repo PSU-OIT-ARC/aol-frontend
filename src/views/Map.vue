@@ -18,6 +18,11 @@ import SideBar from '@/components/SideBar';
 export default {
   // eslint-disable-next-line
   name: 'map',
+  head () {
+    return {
+      title: this.focusTitle || 'Map'
+    }
+  },
   components: {
     MapContainer,
     SideBar
@@ -55,11 +60,6 @@ export default {
   },
   created () {
     this.initializeMap(this.$route.query);
-  },
-  metaInfo () {
-    return {
-      title: this.focusTitle || 'Map'
-    }
   }
 }
 </script>
