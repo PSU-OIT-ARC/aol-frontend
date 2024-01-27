@@ -25,7 +25,23 @@ import NotFound from '@/components/NotFound';
 
 export default {
   name: 'app',
-  components: { NavBar, OfflineBar, ErrorBar, NotFound },
+  head () {
+    return {
+      htmlAttrs: {'lang': 'en-US'},
+      meta: [
+        {name: "description",
+         content: "The Atlas of Oregon Lakes is a resource for the public, resource management agencies, and scientists to enhance management and enjoyment of our lakes. The online atlas is an updated version of the popular Atlas of Oregon Lakes published in 1985."},
+        {name: "viewport",
+         content: "width=device-width,initial-scale=1.0,user-scalable=no"}
+      ]
+    }
+  },
+  components: {
+    NavBar,
+    OfflineBar,
+    ErrorBar,
+    NotFound
+  },
   computed: {
     ...mapGetters({notFound: 'getNotFound',
                    error: 'getError'}),
@@ -50,13 +66,6 @@ export default {
      'photo-submissions'].forEach((slug) => {
         this.fetchPage({slug:slug, store:false});
     });
-  },
-  metaInfo () {
-    return {
-      htmlAttrs: {'lang': 'en-US'},
-      description: "The Atlas of Oregon Lakes is a resource for the public, resource management agencies, and scientists to enhance management and enjoyment of our lakes. The online atlas is an updated version of the popular Atlas of Oregon Lakes published in 1985.",
-      viewport: {tag: 'meta', content: 'width=device-width,initial-scale=1.0,user-scalable=no'}
-    }
   }
 }
 </script>

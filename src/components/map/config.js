@@ -17,6 +17,7 @@ const getServiceLayerUrl = function () {
         `FeatureServer`;
 };
 
+/*
 const OregonMarineBoardFeatureLayerUrl = `https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/Boating_Access_Public_Map/FeatureServer`;
 
 const MarineBoardTemplate = {
@@ -69,6 +70,7 @@ const MarineBoardTemplate = {
       }
     ]
   };
+*/
 
 const config = {
     xmin: -125,
@@ -127,6 +129,7 @@ const config = {
             AGOLName: 'NHDH_bounding_selection_shp',
             getLayerUrl: getServiceLayerUrl,
         },
+        /*
         {
             id: 'marine_board_facilities_service_layer',
             type: "feature",
@@ -144,7 +147,8 @@ const config = {
               }
             },
             getLayerUrl: () => OregonMarineBoardFeatureLayerUrl,
-        },
+            },
+        */
         {
             id: 'bathymetry',
             type: "vector",

@@ -48,6 +48,11 @@ import AolFooter from '@/components/AolFooter';
 
 export default {
   name: 'page',
+  head () {
+    return {
+      title: this.pageTitle
+    }
+  },
   data () {
     return {
       page: null,
@@ -104,11 +109,6 @@ export default {
       } else {
         this.pageTitle = '';
       }
-    }
-  },
-  metaInfo () {
-    return {
-      title: this.pageTitle
     }
   }
 }

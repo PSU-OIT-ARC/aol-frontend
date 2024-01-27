@@ -68,6 +68,11 @@ import config from '@/config';
 
 export default {
   name: 'lake',
+  head () {
+    return {
+      title: this.currentLakeTitle
+    }
+  },
   props: {
     reachcode: String,
   },
@@ -129,11 +134,6 @@ export default {
     },
     'currentLake': function () {
       this.lake = this.currentLake;
-    }
-  },
-  metaInfo () {
-    return {
-      title: this.currentLakeTitle
     }
   }
 }
