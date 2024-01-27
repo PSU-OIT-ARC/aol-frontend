@@ -64,7 +64,7 @@ registerRoute(
       // worker scope. as a result, the production backend is
       // hardcoded here.
       let isData = url.pathname.endsWith('json') || url.search.endsWith('json');
-      return url.host === 'aol-backend.wdt.pdx.edu' && isData;
+      return url.host === 'aol-backend.cloud.wdt.pdx.edu' && isData;
   },
   new CacheFirst({
     cacheName: 'backend-api-requests',

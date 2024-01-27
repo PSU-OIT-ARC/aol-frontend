@@ -19,7 +19,6 @@ Resources:
         EnableCloudFront: true
         BucketName: aol-frontend
         BucketRealm: cloud.wdt.pdx.edu
-        BucketRegion: us-west-2
         AccessPath: active/*
         DeletionPolicy: Retain
   Distribution:
@@ -27,9 +26,10 @@ Resources:
     Properties:
       TemplateURL: https://s3-us-west-2.amazonaws.com/cloudformation-templates.wdt.pdx.edu/20221006/cloudfront/distribution.template.yml
       Parameters:
-        Certificate: arn:aws:acm:us-east-1:921749119607:certificate/73aac8b0-db34-4498-b80f-1b8a13b1c43a
+        Certificate: arn:aws:acm:us-east-1:921749119607:certificate/2fd5a7ef-795e-42b6-89df-570ac19cfb12
         HostedZone: oregonlakesatlas.org
         DomainName: oregonlakesatlas.org
         S3Origin: !GetAtt 'Bucket.Outputs.S3Endpoint'
         S3OriginPath: /active
         S3OriginAccessIdentity: !GetAtt 'Bucket.Outputs.CloudFrontOAI'
+Parameters: {}
